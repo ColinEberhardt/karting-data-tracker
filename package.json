@@ -1,0 +1,21 @@
+{
+  "name": "karting-firebase",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.0.0",
+    "svelte": "^5.35.5",
+    "vite": "^7.0.4"
+  },
+  "dependencies": {
+    "firebase": "^10.14.1",
+    "firebaseui": "^6.1.0",
+    "svelte-spa-router": "^4.0.1"
+  }
+}

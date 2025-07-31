@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Tyres collection rules
+    match /tyres/{tyreId} {
+      // Allow read and write if:
+      // 1. User is authenticated AND
+      // 2. Either the user owns the document OR user has admin claim
+      allow read, write: if request.auth != null && (
+        request.auth.uid == resource.data.userId ||
+        request.auth.token.admin == true
+      );
+      
+      // Allow create if user is authenticated (they'll be the owner)
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.userId;
+    }
+  }
+}

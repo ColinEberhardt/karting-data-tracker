@@ -7,8 +7,10 @@
 
   export let params = {};
 
-  let brand = '';
+  let make = '';
+  let type = '';
   let description = '';
+  let retired = false;
   let loading = false;
   let error = '';
   let tyreId = '';
@@ -27,8 +29,10 @@
       
       if (tyreSnap.exists()) {
         const tyreData = tyreSnap.data();
-        brand = tyreData.brand;
-        description = tyreData.description;
+        make = tyreData.make || tyreData.brand || ''; // Handle legacy brand field
+        type = tyreData.type || '';
+        description = tyreData.description || '';
+        retired = tyreData.retired || false;
       } else {
         error = 'Tyre not found';
       }
@@ -40,8 +44,8 @@
   };
 
   const handleSubmit = async () => {
-    if (!brand.trim()) {
-      error = 'Please fill in all fields';
+    if (!make.trim() || !type.trim()) {
+      error = 'Please fill in all required fields (Make and Type)';
       return;
     }
 
@@ -49,7 +53,7 @@
     error = '';
 
     try {
-      await updateTyre(tyreId, brand.trim(), description.trim());
+      await updateTyre(tyreId, make.trim(), type.trim(), description.trim(), retired);
       push('/tyres');
     } catch (err) {
       error = err.message;
@@ -79,15 +83,29 @@
   {:else}
     <form on:submit|preventDefault={handleSubmit} class="tyre-form">
       <div class="form-group">
-        <label for="brand">Brand:</label>
+        <label for="make">Make: *</label>
         <input
           type="text"
-          id="brand"
-          bind:value={brand}
-          placeholder="e.g., Bridgestone, Dunlop, MG"
+          id="make"
+          bind:value={make}
+          placeholder="e.g., Mojo, Maxxi"
           required
           disabled={loading}
         />
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type: *</label>
+        <select
+          id="type"
+          bind:value={type}
+          required
+          disabled={loading}
+        >
+          <option value="">Select type</option>
+          <option value="Dry">Dry</option>
+          <option value="Wet">Wet</option>
+        </select>
       </div>
 
       <div class="form-group">
@@ -99,6 +117,17 @@
           rows="4"
           disabled={loading}
         ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            bind:checked={retired}
+            disabled={loading}
+          />
+          Retired
+        </label>
       </div>
 
       <div class="form-actions">
@@ -155,7 +184,7 @@
     font-weight: 500;
   }
 
-  input, textarea {
+  input, textarea, select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ced4da;
@@ -165,15 +194,27 @@
     font-family: inherit;
   }
 
-  input:focus, textarea:focus {
+  input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
   }
 
-  input:disabled, textarea:disabled {
+  input:disabled, textarea:disabled, select:disabled {
     background-color: #f8f9fa;
     opacity: 0.6;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
   }
 
   textarea {

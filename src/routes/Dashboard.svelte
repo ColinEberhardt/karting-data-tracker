@@ -61,15 +61,22 @@
   {:else}
     <div class="tyres-grid">
       {#each tyres as tyre (tyre.id)}
-        <div class="tyre-card">
+        <div class="tyre-card" class:retired={tyre.retired}>
           <div class="tyre-header">
-            <h3>{tyre.brand}</h3>
+            <h3>{tyre.make} - {tyre.type}</h3>
             <div class="tyre-actions">
               <a href="/tyres/{tyre.id}" use:link class="edit-btn">Edit</a>
               <button on:click={() => handleDelete(tyre.id)} class="delete-btn">Delete</button>
             </div>
           </div>
-          <p class="description">{tyre.description}</p>
+          <div class="tyre-status">
+            <span class="status-badge" class:retired={tyre.retired}>
+              {tyre.retired ? 'Retired' : 'Active'}
+            </span>
+          </div>
+          {#if tyre.description}
+            <p class="description">{tyre.description}</p>
+          {/if}
           <div class="tyre-meta">
             <small>Created: {formatDate(tyre.createdAt)}</small>
           </div>
@@ -149,8 +156,32 @@
     transition: box-shadow 0.2s;
   }
 
+  .tyre-card.retired {
+    opacity: 0.7;
+    border-color: #dc3545;
+  }
+
   .tyre-card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .tyre-status {
+    margin-bottom: 1rem;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    background-color: #28a745;
+    color: white;
+  }
+
+  .status-badge.retired {
+    background-color: #dc3545;
   }
 
   .tyre-header {

@@ -52,7 +52,7 @@
 
 <div class="login-container">
   <div class="login-card">
-    <h1>🏎️ Tyre Manager</h1>
+    <h1>🏎️ Kart Manager</h1>
     <h2>{isSignUp ? 'Create Account' : 'Sign In'}</h2>
 
     {#if error}

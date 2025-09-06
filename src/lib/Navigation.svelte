@@ -15,12 +15,11 @@
 
 <nav class="navbar">
   <div class="nav-brand">
-    <a href="/" use:link>🏎️ Tyre Manager</a>
+    <a href="/" use:link>🏎️ Kart Manager</a>
   </div>
   
   <div class="nav-links">
-    <a href="/tyres" use:link>My Tyres</a>
-    <a href="/tyres/new" use:link>Add Tyre</a>
+    <a href="/tyres" use:link>Tyres</a>
     
     <div class="user-info">
       <span>👤 {$user?.email}</span>

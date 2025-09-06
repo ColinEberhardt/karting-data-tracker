@@ -20,6 +20,7 @@
   
   <div class="nav-links">
     <a href="/tyres" use:link>Tyres</a>
+    <a href="/sessions" use:link>Sessions</a>
     
     <div class="user-info">
       <span>👤 {$user?.email}</span>

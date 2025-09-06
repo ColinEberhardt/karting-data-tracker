@@ -5,6 +5,9 @@
   import Dashboard from './routes/Dashboard.svelte';
   import NewTyre from './routes/NewTyre.svelte';
   import EditTyre from './routes/EditTyre.svelte';
+  import Sessions from './routes/Sessions.svelte';
+  import NewSession from './routes/NewSession.svelte';
+  import EditSession from './routes/EditSession.svelte';
   import Navigation from './lib/Navigation.svelte';
 
   // Define routes
@@ -13,7 +16,10 @@
     '/login': Login,
     '/tyres': Dashboard,
     '/tyres/new': NewTyre,
-    '/tyres/:id': EditTyre
+    '/tyres/:id': EditTyre,
+    '/sessions': Sessions,
+    '/sessions/new': NewSession,
+    '/sessions/:id': EditSession
   };
 </script>
 

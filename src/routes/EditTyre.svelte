@@ -78,7 +78,7 @@
     <div class="error">{error}</div>
   {/if}
 
-  {#if loading && !brand}
+  {#if loading}
     <div class="loading">Loading tyre details...</div>
   {:else}
     <form on:submit|preventDefault={handleSubmit} class="tyre-form">

@@ -3,7 +3,6 @@
   import { signOut } from 'firebase/auth';
   import { auth } from './firebase.js';
   import { user } from './stores.js';
-  import { isAdmin } from './stores.js';
 
   const handleSignOut = async () => {
     try {
@@ -22,10 +21,6 @@
   <div class="nav-links">
     <a href="/tyres" use:link>My Tyres</a>
     <a href="/tyres/new" use:link>Add Tyre</a>
-    
-    {#if isAdmin($user)}
-      <a href="/admin/tyres" use:link class="admin-link">Admin View</a>
-    {/if}
     
     <div class="user-info">
       <span>👤 {$user?.email}</span>
@@ -68,15 +63,6 @@
 
   .nav-links a:hover {
     background-color: #e9ecef;
-  }
-
-  .admin-link {
-    background-color: #ffc107;
-    color: #212529 !important;
-  }
-
-  .admin-link:hover {
-    background-color: #ffca2c !important;
   }
 
   .user-info {

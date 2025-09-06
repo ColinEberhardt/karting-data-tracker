@@ -53,22 +53,6 @@ firebase use --add
 firebase deploy --only firestore:rules
 ```
 
-## Step 7: Create Admin User (Optional)
-
-To make a user an admin, you can either:
-
-### Option A: Update the admin check in code
-Edit `src/lib/stores.js` and add your email to the admin check:
-
-```javascript
-export const isAdmin = (user) => {
-  return user?.email === 'your-admin-email@example.com' || user?.customClaims?.admin === true;
-};
-```
-
-### Option B: Use Firebase Functions to set custom claims
-Create a Firebase function to set admin claims for specific users.
-
 ## Environment Variables (Production)
 
 For production deployment, consider using environment variables:

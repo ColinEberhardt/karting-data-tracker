@@ -53,25 +53,6 @@ export const getUserTyres = async () => {
   }
 };
 
-// Get all tyres (admin only)
-export const getAllTyres = async () => {
-  if (!auth.currentUser) {
-    throw new Error('User must be logged in');
-  }
-
-  try {
-    const q = query(collection(db, 'tyres'), orderBy('createdAt', 'desc'));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-  } catch (error) {
-    console.error('Error getting all tyres:', error);
-    throw error;
-  }
-};
-
 // Update a tyre
 export const updateTyre = async (tyreId, brand, description) => {
   if (!auth.currentUser) {

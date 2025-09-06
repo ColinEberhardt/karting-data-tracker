@@ -1,13 +1,12 @@
 # 🏎️ Tyre Management MVP (SvelteKit + Firebase)
 
-A simple, secure, multi-user web application for tracking go-kart tyres. Users can log tyres with brand and description details, with authentication-based access control and admin functionality.
+A simple, secure, multi-user web application for tracking go-kart tyres. Users can log tyres with brand and description details, with authentication-based access control.
 
 ## ✨ Features
 
 - **Authentication**: Email/password and Google login via Firebase Auth
 - **Tyre Management**: Create, read, update, and delete tyre entries
 - **User Security**: Users can only access their own tyre data
-- **Admin Access**: Admin users can view all tyres from all users
 - **Responsive Design**: Mobile-friendly interface
 - **Real-time Database**: Cloud Firestore for data persistence
 
@@ -69,18 +68,7 @@ The app will be available at `http://localhost:5173`
 
 The Firestore security rules ensure:
 - Users can only read/write their own tyre data
-- Admin users (with custom claims) can access all data
 - All operations require authentication
-
-## 👑 Admin Setup
-
-To make a user an admin, use Firebase Admin SDK or Functions to set custom claims:
-
-```javascript
-admin.auth().setCustomUserClaims(uid, { admin: true });
-```
-
-Alternatively, update `src/lib/stores.js` to check for specific admin emails.
 
 ## 📁 Project Structure
 
@@ -95,8 +83,7 @@ src/
 │   ├── Login.svelte     # Authentication page
 │   ├── Dashboard.svelte # User's tyres dashboard
 │   ├── NewTyre.svelte   # Add new tyre form
-│   ├── EditTyre.svelte  # Edit tyre form
-│   └── AdminTyres.svelte # Admin view of all tyres
+│   └── EditTyre.svelte  # Edit tyre form
 └── App.svelte           # Main app with routing
 ```
 
@@ -134,7 +121,6 @@ The built files in `dist/` can be deployed to any static hosting service like Ve
 - ✅ Create new tyre
 - ✅ View user's tyres
 - ✅ Edit/delete tyre
-- ✅ Admin view of all tyres
 - ✅ Data security per user
 - ✅ Deployment ready (Firebase Hosting)
 
@@ -157,7 +143,6 @@ const firebaseConfig = {
 - Update colors and styling in component `<style>` sections
 - Modify tyre schema in `src/lib/tyres.js`
 - Add more fields to the tyre form components
-- Customize admin logic in `src/lib/stores.js`
 
 ## 📄 License
 

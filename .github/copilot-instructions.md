@@ -8,14 +8,14 @@ This is a SvelteKit web application with Firebase integration for managing go-ka
 
 - **Authentication**: Email/password and Google login using Firebase Auth
 - **Database**: Cloud Firestore for storing tyre data
-- **Security**: User-based access control with admin functionality
+- **Security**: User-based access control
 - **UI**: Simple, clean interface using Svelte components
 
 ## Architecture
 
 - **Frontend**: SvelteKit with Firebase SDK
 - **Backend**: Firebase services (Auth, Firestore)
-- **Authentication**: Firebase Auth with custom claims for admin users
+- **Authentication**: Firebase Auth
 - **Database**: Firestore with security rules
 
 ## Key Features
@@ -23,8 +23,7 @@ This is a SvelteKit web application with Firebase integration for managing go-ka
 1. User authentication (email/password and Google)
 2. CRUD operations for tyre management
 3. User-specific data access
-4. Admin view for all tyres
-5. Responsive design
+4. Responsive design
 
 ## Development Guidelines
 
@@ -40,5 +39,4 @@ This is a SvelteKit web application with Firebase integration for managing go-ka
 
 - All database operations must check user authentication
 - Firestore security rules enforce data access policies
-- Admin functionality requires proper custom claims
 - Never expose Firebase config secrets in client code

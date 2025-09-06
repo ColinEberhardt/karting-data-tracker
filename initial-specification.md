@@ -1,5 +1,7 @@
 # 🛠️ Technical Specification: Tyre Management MVP (Firebase + SvelteKit)
 
+This is the specification that was used as the 'seed' for the application, created via this chat: https://chatgpt.com/share/e/68bc1ad0-093c-8012-a613-1e1bb6315f7a
+
 ## 🎯 Goal
 
 Build a simple, secure, multi-user web app where users can **l| Feature                        | Included     |

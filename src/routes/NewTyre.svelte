@@ -8,7 +8,7 @@
   let error = '';
 
   const handleSubmit = async () => {
-    if (!brand.trim() || !description.trim()) {
+    if (!brand.trim()) {
       error = 'Please fill in all fields';
       return;
     }
@@ -60,7 +60,6 @@
         bind:value={description}
         placeholder="e.g., Used on wet track at Rowrah, Front tyres from last race"
         rows="4"
-        required
         disabled={loading}
       ></textarea>
     </div>

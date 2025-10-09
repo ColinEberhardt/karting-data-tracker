@@ -5,6 +5,12 @@
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
+  import Card from '@smui/card';
+  import Textfield from '@smui/textfield';
+  import Select, { Option } from '@smui/select';
+  import Checkbox from '@smui/checkbox';
+  import FormField from '@smui/form-field';
+  import Button from '@smui/button';
 
   // Session Information
   let date = '';
@@ -162,29 +168,23 @@
     <div class="error">{error}</div>
   {/if}
 
-  <form on:submit|preventDefault={handleSubmit}>
-    <!-- Session Information Section -->
-    <div class="form-section">
+  <Card style="padding: 2rem;">
+    <form on:submit|preventDefault={handleSubmit}>
+      <!-- Session Information Section -->
+      <div class="form-section">
       <h3>Session Information</h3>
       
       <div class="form-group">
-        <label for="date">Date: *</label>
-        <input
-          type="date"
-          id="date"
-          bind:value={date}
-          required
-        />
+        <Textfield variant="outlined" type="date" bind:value={date} label="Date *" required style="width: 100%;" />
       </div>
 
       <div class="form-group">
-        <label for="circuitId">Circuit: *</label>
-        <select id="circuitId" bind:value={circuitId} required>
-          <option value="">Select a track...</option>
+        <Select variant="outlined" bind:value={circuitId} label="Circuit *" required style="width: 100%;">
+          <Option value="">Select a track...</Option>
           {#each tracks as track (track.id)}
-            <option value={track.id}>{track.name}</option>
+            <Option value={track.id}>{track.name}</Option>
           {/each}
-        </select>
+        </Select>
         {#if tracks.length === 0}
           <p class="no-items">
             No tracks found. <a href="/tracks/new">Add a track first</a>.
@@ -194,37 +194,20 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label for="temp">Temperature (°C): *</label>
-          <input
-            type="number"
-            id="temp"
-            bind:value={temp}
-            min="0"
-            max="50"
-            placeholder="e.g., 20"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C) *" required input$min="0" input$max="50" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <label for="condition">Track Condition: *</label>
-          <select id="condition" bind:value={condition} required>
+          <Select variant="outlined" bind:value={condition} label="Track Condition *" required style="width: 100%;">
             {#each conditionOptions as conditionOption}
-              <option value={conditionOption}>{conditionOption}</option>
+              <Option value={conditionOption}>{conditionOption}</Option>
             {/each}
-          </select>
+          </Select>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="session">Session Type: *</label>
-        <input
-          type="text"
-          id="session"
-          bind:value={session}
-          placeholder="e.g., Practice, Qualifying, Heat 1"
-          required
-        />
+        <Textfield variant="outlined" bind:value={session} label="Session Type *" required style="width: 100%;" />
       </div>
     </div>
 
@@ -233,13 +216,12 @@
       <h3>Equipment Setup</h3>
       
       <div class="form-group">
-        <label for="tyreId">Tyre Used: *</label>
-        <select id="tyreId" bind:value={tyreId} required>
-          <option value="">Select a tyre...</option>
+        <Select variant="outlined" bind:value={tyreId} label="Tyre Used *" required style="width: 100%;">
+          <Option value="">Select a tyre...</Option>
           {#each tyres as tyre (tyre.id)}
-            <option value={tyre.id}>{tyre.name || `${tyre.make} ${tyre.type}`}</option>
+            <Option value={tyre.id}>{tyre.name || `${tyre.make} ${tyre.type}`}</Option>
           {/each}
-        </select>
+        </Select>
         {#if tyres.length === 0}
           <p class="no-items">
             No active tyres found. <a href="/tyres/new">Add a tyre first</a>.
@@ -248,13 +230,12 @@
       </div>
 
       <div class="form-group">
-        <label for="engineId">Engine: *</label>
-        <select id="engineId" bind:value={engineId} required>
-          <option value="">Select an engine...</option>
+        <Select variant="outlined" bind:value={engineId} label="Engine *" required style="width: 100%;">
+          <Option value="">Select an engine...</Option>
           {#each engines as engine (engine.id)}
-            <option value={engine.id}>{engine.name || `${engine.make} ${engine.model}`}</option>
+            <Option value={engine.id}>{engine.name || `${engine.make} ${engine.model}`}</Option>
           {/each}
-        </select>
+        </Select>
         {#if engines.length === 0}
           <p class="no-items">
             No active engines found. <a href="/engines/new">Add an engine first</a>.
@@ -269,115 +250,53 @@
       
       <div class="form-row">
         <div class="form-group">
-          <label for="rearSprocket">Rear Sprocket (teeth): *</label>
-          <input
-            type="number"
-            id="rearSprocket"
-            bind:value={rearSprocket}
-            min="1"
-            placeholder="e.g., 72"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={rearSprocket} label="Rear Sprocket (teeth) *" required input$min="1" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <label for="frontSprocket">Front Sprocket (teeth): *</label>
-          <input
-            type="number"
-            id="frontSprocket"
-            bind:value={frontSprocket}
-            min="1"
-            placeholder="e.g., 12"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={frontSprocket} label="Front Sprocket (teeth) *" required input$min="1" style="width: 100%;" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="caster">Caster: *</label>
-          <select id="caster" bind:value={caster} required>
+          <Select variant="outlined" bind:value={caster} label="Caster *" required style="width: 100%;">
             {#each casterOptions as casterOption}
-              <option value={casterOption}>{casterOption}</option>
+              <Option value={casterOption}>{casterOption}</Option>
             {/each}
-          </select>
+          </Select>
         </div>
 
         <div class="form-group">
-          <label for="rideHeight">Ride Height: *</label>
-          <select id="rideHeight" bind:value={rideHeight} required>
+          <Select variant="outlined" bind:value={rideHeight} label="Ride Height *" required style="width: 100%;">
             {#each rideHeightOptions as heightOption}
-              <option value={heightOption}>{heightOption}</option>
+              <Option value={heightOption}>{heightOption}</Option>
             {/each}
-          </select>
+          </Select>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="jet">Jet Size: *</label>
-        <input
-          type="number"
-          id="jet"
-          bind:value={jet}
-          min="1"
-          placeholder="e.g., 95"
-          required
-        />
+        <Textfield variant="outlined" type="number" bind:value={jet} label="Jet Size *" required input$min="1" style="width: 100%;" />
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="rearInner">Rear Inner Pressure (psi): *</label>
-          <input
-            type="number"
-            id="rearInner"
-            bind:value={rearInner}
-            min="0"
-            step="0.1"
-            placeholder="e.g., 10.5"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={rearInner} label="Rear Inner Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <label for="rearOuter">Rear Outer Pressure (psi): *</label>
-          <input
-            type="number"
-            id="rearOuter"
-            bind:value={rearOuter}
-            min="0"
-            step="0.1"
-            placeholder="e.g., 10.0"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={rearOuter} label="Rear Outer Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="frontInner">Front Inner Pressure (psi): *</label>
-          <input
-            type="number"
-            id="frontInner"
-            bind:value={frontInner}
-            min="0"
-            step="0.1"
-            placeholder="e.g., 12.0"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={frontInner} label="Front Inner Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <label for="frontOuter">Front Outer Pressure (psi): *</label>
-          <input
-            type="number"
-            id="frontOuter"
-            bind:value={frontOuter}
-            min="0"
-            step="0.1"
-            placeholder="e.g., 12.5"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={frontOuter} label="Front Outer Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
       </div>
     </div>
@@ -388,27 +307,11 @@
       
       <div class="form-row">
         <div class="form-group">
-          <label for="laps">Number of Laps: *</label>
-          <input
-            type="number"
-            id="laps"
-            bind:value={laps}
-            min="1"
-            placeholder="e.g., 15"
-            required
-          />
+          <Textfield variant="outlined" type="number" bind:value={laps} label="Number of Laps *" required input$min="1" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <label for="fastest">Fastest Lap Time (seconds):</label>
-          <input
-            type="number"
-            id="fastest"
-            bind:value={fastest}
-            min="0"
-            step="0.001"
-            placeholder="e.g., 58.234"
-          />
+          <Textfield variant="outlined" type="number" bind:value={fastest} label="Fastest Lap Time (seconds)" input$min="0" input$step="0.001" style="width: 100%;" />
         </div>
       </div>
     </div>
@@ -418,85 +321,49 @@
       <h3>Race Information (Optional)</h3>
       
       <div class="form-group checkbox-group">
-        <label for="isRace" class="checkbox-label">
-          <input
-            type="checkbox"
-            id="isRace"
-            bind:checked={isRace}
-          />
-          This was a race session
-        </label>
+        <FormField>
+          <Checkbox bind:checked={isRace} />
+          <span slot="label">This was a race session</span>
+        </FormField>
       </div>
 
       {#if isRace}
         <div class="race-fields">
           <div class="form-row">
             <div class="form-group">
-              <label for="entries">Number of Entries:</label>
-              <input
-                type="number"
-                id="entries"
-                bind:value={entries}
-                min="1"
-                placeholder="e.g., 24"
-              />
+              <Textfield variant="outlined" type="number" bind:value={entries} label="Number of Entries" input$min="1" style="width: 100%;" />
             </div>
 
             <div class="form-group">
-              <label for="startPos">Starting Position:</label>
-              <input
-                type="number"
-                id="startPos"
-                bind:value={startPos}
-                min="1"
-                placeholder="e.g., 8"
-              />
+              <Textfield variant="outlined" type="number" bind:value={startPos} label="Starting Position" input$min="1" style="width: 100%;" />
             </div>
 
             <div class="form-group">
-              <label for="endPos">Finishing Position:</label>
-              <input
-                type="number"
-                id="endPos"
-                bind:value={endPos}
-                min="1"
-                placeholder="e.g., 5"
-              />
+              <Textfield variant="outlined" type="number" bind:value={endPos} label="Finishing Position" input$min="1" style="width: 100%;" />
             </div>
           </div>
 
           <div class="form-group">
-            <label for="penalties">Penalties:</label>
-            <input
-              type="text"
-              id="penalties"
-              bind:value={penalties}
-              placeholder="e.g., +5 seconds for track limits"
-            />
+            <Textfield variant="outlined" bind:value={penalties} label="Penalties" style="width: 100%;" />
           </div>
         </div>
       {/if}
 
       <div class="form-group">
-        <label for="notes">Session Notes:</label>
-        <textarea
-          id="notes"
-          bind:value={notes}
-          rows="4"
-          placeholder="Additional notes about setup, conditions, incidents, etc."
-        ></textarea>
+        <Textfield variant="outlined" bind:value={notes} label="Session Notes" textarea style="width: 100%;" input$rows={4} />
       </div>
     </div>
 
     <div class="form-actions">
-      <button type="button" on:click={() => push('/sessions')} class="cancel-btn">
+      <Button type="button" onclick={() => push('/sessions')} variant="outlined">
         Cancel
-      </button>
-      <button type="submit" disabled={loading || tyres.length === 0 || tracks.length === 0 || engines.length === 0} class="submit-btn">
+      </Button>
+      <Button type="submit" disabled={loading || tyres.length === 0 || tracks.length === 0 || engines.length === 0} variant="raised" style="background-color: #007bff;">
         {loading ? 'Adding...' : 'Add Session'}
-      </button>
+      </Button>
     </div>
   </form>
+  </Card>
 </div>
 
 <style>
@@ -539,14 +406,6 @@
     margin-bottom: 1rem;
   }
 
-  form {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
-  }
-
   .form-section {
     margin-bottom: 2.5rem;
     padding-bottom: 2rem;
@@ -576,45 +435,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #333;
-  }
-
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  input[type="checkbox"] {
-    width: auto;
-    margin: 0;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
-
-  textarea {
-    resize: vertical;
     min-height: 100px;
   }
 
@@ -650,41 +470,6 @@
     gap: 1rem;
     justify-content: flex-end;
     margin-top: 2rem;
-  }
-
-  .cancel-btn {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-  }
-
-  .cancel-btn:hover {
-    background-color: #5a6268;
-  }
-
-  .submit-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-  }
-
-  .submit-btn:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-
-  .submit-btn:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
   }
 
   @media (max-width: 768px) {

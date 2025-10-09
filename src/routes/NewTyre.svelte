@@ -1,6 +1,12 @@
 <script>
   import { push } from 'svelte-spa-router';
   import { addTyre } from '../lib/tyres.js';
+  import Card from '@smui/card';
+  import Textfield from '@smui/textfield';
+  import Select, { Option } from '@smui/select';
+  import Checkbox from '@smui/checkbox';
+  import FormField from '@smui/form-field';
+  import Button from '@smui/button';
 
   let name = '';
   let make = '';
@@ -43,76 +49,67 @@
     <div class="error">{error}</div>
   {/if}
 
-  <form on:submit|preventDefault={handleSubmit} class="tyre-form">
-    <div class="form-group">
-      <label for="name">Name: *</label>
-      <input
-        type="text"
-        id="name"
-        bind:value={name}
-        placeholder="e.g., Front Race Set, Wet Weather Tyres"
-        required
-        disabled={loading}
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="make">Make: *</label>
-      <input
-        type="text"
-        id="make"
-        bind:value={make}
-        placeholder="e.g., Mojo, Maxxi"
-        required
-        disabled={loading}
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="type">Type: *</label>
-      <select
-        id="type"
-        bind:value={type}
-        required
-        disabled={loading}
-      >
-        <option value="">Select type</option>
-        <option value="Dry">Dry</option>
-        <option value="Wet">Wet</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="description">Description:</label>
-      <textarea
-        id="description"
-        bind:value={description}
-        placeholder="e.g., Used on wet track at Rowrah, Front tyres from last race"
-        rows="4"
-        disabled={loading}
-      ></textarea>
-    </div>
-
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input
-          type="checkbox"
-          bind:checked={retired}
+  <Card style="padding: 2rem;">
+    <form on:submit|preventDefault={handleSubmit}>
+      <div class="form-group">
+        <Textfield
+          variant="outlined"
+          bind:value={name}
+          label="Name *"
+          required
           disabled={loading}
+          style="width: 100%;"
         />
-        Retired
-      </label>
-    </div>
+      </div>
 
-    <div class="form-actions">
-      <button type="button" on:click={handleCancel} class="cancel-btn" disabled={loading}>
-        Cancel
-      </button>
-      <button type="submit" class="submit-btn" disabled={loading}>
-        {loading ? 'Adding...' : 'Add Tyre'}
-      </button>
-    </div>
-  </form>
+      <div class="form-group">
+        <Textfield
+          variant="outlined"
+          bind:value={make}
+          label="Make *"
+          required
+          disabled={loading}
+          style="width: 100%;"
+        />
+      </div>
+
+      <div class="form-group">
+        <Select variant="outlined" bind:value={type} label="Type *" required disabled={loading} style="width: 100%;">
+          <Option value="">Select type</Option>
+          <Option value="Dry">Dry</Option>
+          <Option value="Wet">Wet</Option>
+        </Select>
+      </div>
+
+      <div class="form-group">
+        <Textfield
+          variant="outlined"
+          bind:value={description}
+          label="Description"
+          textarea
+          disabled={loading}
+          style="width: 100%;"
+          input$rows={4}
+        />
+      </div>
+
+      <div class="form-group">
+        <FormField>
+          <Checkbox bind:checked={retired} disabled={loading} />
+          <span slot="label">Retired</span>
+        </FormField>
+      </div>
+
+      <div class="form-actions">
+        <Button type="button" onclick={handleCancel} variant="outlined" disabled={loading}>
+          Cancel
+        </Button>
+        <Button type="submit" variant="raised" disabled={loading} style="background-color: #28a745;">
+          {loading ? 'Adding...' : 'Add Tyre'}
+        </Button>
+      </div>
+    </form>
+  </Card>
 </div>
 
 <style>
@@ -131,61 +128,8 @@
     margin: 0;
   }
 
-  .tyre-form {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid #dee2e6;
-  }
-
   .form-group {
     margin-bottom: 1.5rem;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #495057;
-    font-weight: 500;
-  }
-
-  input, textarea, select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-    font-family: inherit;
-  }
-
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
-
-  input:disabled, textarea:disabled, select:disabled {
-    background-color: #f8f9fa;
-    opacity: 0.6;
-  }
-
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-  }
-
-  .checkbox-label input[type="checkbox"] {
-    width: auto;
-    margin: 0;
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 100px;
   }
 
   .form-actions {
@@ -193,39 +137,6 @@
     gap: 1rem;
     justify-content: flex-end;
     margin-top: 2rem;
-  }
-
-  .cancel-btn, .submit-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: 500;
-  }
-
-  .cancel-btn {
-    background-color: #6c757d;
-    color: white;
-  }
-
-  .cancel-btn:hover:not(:disabled) {
-    background-color: #545b62;
-  }
-
-  .submit-btn {
-    background-color: #28a745;
-    color: white;
-  }
-
-  .submit-btn:hover:not(:disabled) {
-    background-color: #218838;
-  }
-
-  .cancel-btn:disabled, .submit-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
   }
 
   .error {
@@ -242,16 +153,8 @@
       padding: 1rem;
     }
 
-    .tyre-form {
-      padding: 1.5rem;
-    }
-
     .form-actions {
       flex-direction: column;
-    }
-
-    .cancel-btn, .submit-btn {
-      width: 100%;
     }
   }
 </style>

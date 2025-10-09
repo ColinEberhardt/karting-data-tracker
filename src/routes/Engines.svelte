@@ -2,6 +2,9 @@
   import { onMount } from 'svelte';
   import { push, link } from 'svelte-spa-router';
   import { getUserEngines, deleteEngine, retireEngine } from '../lib/engines.js';
+  import Card from '@smui/card';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
 
   let engines = [];
   let loading = true;
@@ -60,7 +63,10 @@
   {/if}
 
   {#if loading}
-    <div class="loading">Loading engines...</div>
+    <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading engines...</p>
+    </div>
   {:else if engines.length === 0}
     <div class="empty">
       <h3>No engines found</h3>
@@ -70,8 +76,8 @@
   {:else}
     <div class="engines-grid">
       {#each engines as engine (engine.id)}
-        <div class="engine-card" class:retired={engine.retired}>
-          <div class="engine-header">
+        <Card class="engine-card" style={engine.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
+          <div class="engine-header" style={engine.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
             <h3>{engine.name || `${engine.make} ${engine.model}`}</h3>
             {#if engine.retired}
               <span class="retired-badge">Retired</span>
@@ -107,17 +113,17 @@
           </div>
 
           <div class="engine-actions">
-            <a href="/engines/{engine.id}" use:link class="edit-btn">Edit</a>
+            <Button href="/engines/{engine.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
             {#if !engine.retired}
-              <button on:click={() => handleRetire(engine.id)} class="retire-btn">
+              <Button onclick={() => handleRetire(engine.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
                 Retire
-              </button>
+              </Button>
             {/if}
-            <button on:click={() => handleDelete(engine.id)} class="delete-btn">
+            <Button onclick={() => handleDelete(engine.id)} variant="raised" style="background-color: #dc3545;">
               Delete
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       {/each}
     </div>
   {/if}
@@ -170,6 +176,10 @@
     padding: 3rem;
     color: #666;
     font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .empty {
@@ -189,36 +199,22 @@
     gap: 1.5rem;
   }
 
-  .engine-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
+  :global(.engine-card) {
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .engine-card:hover {
+  :global(.engine-card:hover) {
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 
-  .engine-card.retired {
-    opacity: 0.7;
-    border-color: #dc3545;
-  }
-
   .engine-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     padding: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-
-  .engine-card.retired .engine-header {
-    background: linear-gradient(135deg, #dc3545, #c82333);
   }
 
   .engine-header h3 {
@@ -260,50 +256,6 @@
     border-top: 1px solid #e9ecef;
     display: flex;
     gap: 0.75rem;
-  }
-
-  .edit-btn {
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-  }
-
-  .edit-btn:hover {
-    background-color: #218838;
-  }
-
-  .retire-btn {
-    background-color: #ffc107;
-    color: #212529;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .retire-btn:hover {
-    background-color: #e0a800;
-  }
-
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .delete-btn:hover {
-    background-color: #c82333;
   }
 
   @media (max-width: 768px) {

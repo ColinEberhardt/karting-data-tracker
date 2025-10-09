@@ -5,6 +5,10 @@
   import { getUserEngines } from '../lib/engines.js';
   import { getUserSessions } from '../lib/sessions.js';
   import { getUserTracks } from '../lib/tracks.js';
+  import Card from '@smui/card';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
+  import LayoutGrid, { Cell } from '@smui/layout-grid';
 
   let tyres = [];
   let engines = [];
@@ -46,65 +50,67 @@
   {/if}
 
   {#if loading}
-    <div class="loading">Loading dashboard...</div>
+    <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading dashboard...</p>
+    </div>
   {:else}
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">🏁</div>
-        <div class="stat-content">
+    <LayoutGrid>
+      <Cell span={3}>
+        <Card style="padding: 2rem; text-align: center;">
+          <div class="stat-icon">🏁</div>
           <h3>Sessions</h3>
           <div class="stat-number">{sessions.length}</div>
           <div class="stat-actions">
-            <a href="/sessions" use:link class="view-btn">View All</a>
-            <a href="/sessions/new" use:link class="add-btn">Add Session</a>
+            <Button href="/sessions" {link} variant="outlined">View All</Button>
+            <Button href="/sessions/new" {link} variant="raised" color="primary">Add Session</Button>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Cell>
 
-      <div class="stat-card">
-        <div class="stat-icon">🛞</div>
-        <div class="stat-content">
+      <Cell span={3}>
+        <Card style="padding: 2rem; text-align: center;">
+          <div class="stat-icon">🛞</div>
           <h3>Tyres</h3>
           <div class="stat-number">{tyres.length}</div>
           <div class="stat-actions">
-            <a href="/tyres" use:link class="view-btn">View All</a>
-            <a href="/tyres/new" use:link class="add-btn">Add Tyre</a>
+            <Button href="/tyres" {link} variant="outlined">View All</Button>
+            <Button href="/tyres/new" {link} variant="raised" color="primary">Add Tyre</Button>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Cell>
 
-      <div class="stat-card">
-        <div class="stat-icon">⚙️</div>
-        <div class="stat-content">
+      <Cell span={3}>
+        <Card style="padding: 2rem; text-align: center;">
+          <div class="stat-icon">⚙️</div>
           <h3>Engines</h3>
           <div class="stat-number">{engines.length}</div>
           <div class="stat-actions">
-            <a href="/engines" use:link class="view-btn">View All</a>
-            <a href="/engines/new" use:link class="add-btn">Add Engine</a>
+            <Button href="/engines" {link} variant="outlined">View All</Button>
+            <Button href="/engines/new" {link} variant="raised" color="primary">Add Engine</Button>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Cell>
 
-      <div class="stat-card">
-        <div class="stat-icon">🏁</div>
-        <div class="stat-content">
+      <Cell span={3}>
+        <Card style="padding: 2rem; text-align: center;">
+          <div class="stat-icon">🏁</div>
           <h3>Tracks</h3>
           <div class="stat-number">{tracks.length}</div>
           <div class="stat-actions">
-            <a href="/tracks" use:link class="view-btn">View All</a>
-            <a href="/tracks/new" use:link class="add-btn">Add Track</a>
+            <Button href="/tracks" {link} variant="outlined">View All</Button>
+            <Button href="/tracks/new" {link} variant="raised" color="primary">Add Track</Button>
           </div>
-        </div>
-      </div>
-    </div>
+        </Card>
+      </Cell>
+    </LayoutGrid>
 
-    <!-- Recent Sessions -->
     {#if sessions.length > 0}
       <div class="recent-section">
         <h2>Recent Sessions</h2>
         <div class="recent-sessions">
           {#each sessions.slice(0, 3) as session}
-            <div class="session-card">
+            <Card style="padding: 1.5rem;">
               <div class="session-date">
                 {new Date(session.date).toLocaleDateString()}
               </div>
@@ -115,8 +121,8 @@
                   <div><strong>Best Lap:</strong> {session.fastest}s</div>
                 {/if}
               </div>
-              <a href="/sessions/{session.id}" use:link class="edit-session-btn">View</a>
-            </div>
+              <Button href="/sessions/{session.id}" {link} variant="raised" style="background-color: #28a745; margin-top: 1rem;">View</Button>
+            </Card>
           {/each}
         </div>
         <div class="view-all-sessions">
@@ -151,6 +157,10 @@
     padding: 3rem;
     color: #666;
     font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .error {
@@ -162,45 +172,21 @@
     margin-bottom: 2rem;
   }
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  }
-
   .stat-icon {
     font-size: 3rem;
-    text-align: center;
     margin-bottom: 1rem;
   }
 
-  .stat-content h3 {
+  h3 {
     margin: 0 0 1rem 0;
     color: #495057;
     font-size: 1.25rem;
-    text-align: center;
   }
 
   .stat-number {
     font-size: 2.5rem;
     font-weight: bold;
     color: #007bff;
-    text-align: center;
     margin-bottom: 1.5rem;
   }
 
@@ -208,33 +194,7 @@
     display: flex;
     gap: 0.75rem;
     justify-content: center;
-  }
-
-  .view-btn, .add-btn {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-
-  .view-btn {
-    background-color: #6c757d;
-    color: white;
-  }
-
-  .view-btn:hover {
-    background-color: #5a6268;
-  }
-
-  .add-btn {
-    background-color: #007bff;
-    color: white;
-  }
-
-  .add-btn:hover {
-    background-color: #0056b3;
+    flex-wrap: wrap;
   }
 
   .recent-section {
@@ -254,19 +214,6 @@
     margin-bottom: 1.5rem;
   }
 
-  .session-card {
-    background: white;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-  }
-
-  .session-card:hover {
-    transform: translateY(-2px);
-  }
-
   .session-date {
     font-size: 0.9rem;
     color: #6c757d;
@@ -280,20 +227,6 @@
   .session-details div {
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-  }
-
-  .edit-session-btn {
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-  }
-
-  .edit-session-btn:hover {
-    background-color: #218838;
   }
 
   .view-all-sessions {
@@ -317,14 +250,6 @@
 
     .header h1 {
       font-size: 2rem;
-    }
-
-    .stats-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .stat-actions {
-      flex-direction: column;
     }
 
     .recent-sessions {

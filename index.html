@@ -4,7 +4,35 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Svelte</title>
+    <title>Karting Data Tracker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/svelte-material-ui@7.0.0/bare.min.css">
+    
+    <style>
+      :root {
+        --mdc-theme-primary: #007bff;
+        --mdc-theme-secondary: #6c757d;
+        --mdc-theme-background: #f8f9fa;
+        --mdc-theme-surface: #ffffff;
+        --mdc-theme-error: #dc3545;
+        --mdc-theme-on-primary: #ffffff;
+        --mdc-theme-on-secondary: #ffffff;
+        --mdc-theme-on-surface: #000000;
+        --mdc-theme-on-error: #ffffff;
+      }
+      
+      body {
+        margin: 0;
+        font-family: 'Roboto', Arial, sans-serif;
+        background-color: var(--mdc-theme-background);
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

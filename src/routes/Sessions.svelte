@@ -5,6 +5,9 @@
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
+  import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
 
   let sessions = [];
   let tyres = [];
@@ -82,7 +85,10 @@
   {/if}
 
   {#if loading}
-    <div class="loading">Loading sessions...</div>
+    <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading sessions...</p>
+    </div>
   {:else if sessions.length === 0}
     <div class="empty-state">
       <h2>No Sessions Yet</h2>
@@ -91,33 +97,35 @@
     </div>
   {:else}
     <div class="table-container">
-      <table class="sessions-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Session</th>
-            <th>Circuit</th>
-            <th>Laps</th>
-            <th>Fastest Lap</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+      <DataTable style="width: 100%;">
+        <Head>
+          <Row>
+            <Cell>Date</Cell>
+            <Cell>Session</Cell>
+            <Cell>Circuit</Cell>
+            <Cell>Laps</Cell>
+            <Cell>Fastest Lap</Cell>
+            <Cell>Actions</Cell>
+          </Row>
+        </Head>
+        <Body>
           {#each sessions as session (session.id)}
-            <tr class="session-row" on:click={() => window.location.hash = `/sessions/view/${session.id}`}>
-              <td>{formatDate(session.date)}</td>
-              <td>{session.session}</td>
-              <td>{getTrackName(session.circuitId)}</td>
-              <td>{session.laps}</td>
-              <td>{formatFastestLap(session.fastest)}</td>
-              <td class="actions-cell" on:click|stopPropagation>
-                <a href="/sessions/edit/{session.id}" use:link class="edit-btn">Edit</a>
-                <button on:click={() => handleDelete(session.id)} class="delete-btn">Delete</button>
-              </td>
-            </tr>
+            <Row class="session-row" on:click={() => window.location.hash = `/sessions/view/${session.id}`}>
+              <Cell>{formatDate(session.date)}</Cell>
+              <Cell>{session.session}</Cell>
+              <Cell>{getTrackName(session.circuitId)}</Cell>
+              <Cell>{session.laps}</Cell>
+              <Cell>{formatFastestLap(session.fastest)}</Cell>
+              <Cell>
+                <div class="actions-cell" on:click|stopPropagation>
+                  <Button href="/sessions/edit/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745; margin-right: 0.5rem;">Edit</Button>
+                  <Button onclick={() => handleDelete(session.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+                </div>
+              </Cell>
+            </Row>
           {/each}
-        </tbody>
-      </table>
+        </Body>
+      </DataTable>
     </div>
   {/if}
 </div>
@@ -168,6 +176,10 @@
     text-align: center;
     padding: 2rem;
     color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .empty-state {
@@ -193,75 +205,20 @@
     overflow-x: auto;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .sessions-table {
-    width: 100%;
-    border-collapse: collapse;
     background: white;
-    border-radius: 10px;
-    overflow: hidden;
   }
 
-  .sessions-table th {
-    background-color: #f8f9fa;
-    color: #495057;
-    font-weight: 600;
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 2px solid #dee2e6;
-  }
-
-  .sessions-table td {
-    padding: 1rem;
-    border-bottom: 1px solid #e9ecef;
-  }
-
-  .session-row {
+  :global(.session-row) {
     cursor: pointer;
     transition: background-color 0.2s;
   }
 
-  .session-row:hover {
+  :global(.session-row:hover) {
     background-color: #f8f9fa;
   }
 
   .actions-cell {
     cursor: default;
-  }
-
-  .actions-cell .edit-btn,
-  .actions-cell .delete-btn {
-    margin-right: 0.5rem;
-  }
-
-  .edit-btn {
-    background-color: #28a745;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-  }
-
-  .edit-btn:hover {
-    background-color: #218838;
-  }
-
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-  }
-
-  .delete-btn:hover {
-    background-color: #c82333;
   }
 
   @media (max-width: 768px) {
@@ -277,18 +234,6 @@
 
     .table-container {
       margin-top: 1rem;
-    }
-
-    .sessions-table th,
-    .sessions-table td {
-      padding: 0.75rem 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    .actions-cell .edit-btn,
-    .actions-cell .delete-btn {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
     }
   }
 </style>

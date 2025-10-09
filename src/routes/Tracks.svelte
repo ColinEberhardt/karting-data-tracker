@@ -2,6 +2,9 @@
   import { onMount } from 'svelte';
   import { link } from 'svelte-spa-router';
   import { getUserTracks, deleteTrack } from '../lib/tracks.js';
+  import Card from '@smui/card';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
 
   let tracks = [];
   let loading = true;
@@ -59,7 +62,10 @@
   {/if}
 
   {#if loading}
-    <div class="loading">Loading tracks...</div>
+    <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading tracks...</p>
+    </div>
   {:else if tracks.length === 0}
     <div class="empty-state">
       <h2>No tracks yet</h2>
@@ -69,12 +75,12 @@
   {:else}
     <div class="tracks-grid">
       {#each tracks as track (track.id)}
-        <div class="track-card">
+        <Card style="padding: 1.5rem;">
           <div class="track-header">
             <h3>{track.name}</h3>
             <div class="track-actions">
-              <a href="/tracks/{track.id}" use:link class="edit-btn">Edit</a>
-              <button on:click={() => handleDelete(track.id)} class="delete-btn">Delete</button>
+              <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+              <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
             </div>
           </div>
           <div class="track-location">
@@ -90,7 +96,7 @@
           <div class="track-meta">
             <small>Created: {formatDate(track.createdAt)}</small>
           </div>
-        </div>
+        </Card>
       {/each}
     </div>
   {/if}
@@ -143,6 +149,10 @@
     padding: 3rem;
     color: #666;
     font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .empty-state {
@@ -169,19 +179,6 @@
     gap: 1.5rem;
   }
 
-  .track-card {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.2s;
-  }
-
-  .track-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-
   .track-header {
     display: flex;
     justify-content: space-between;
@@ -200,35 +197,6 @@
   .track-actions {
     display: flex;
     gap: 0.5rem;
-  }
-
-  .edit-btn {
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
-  }
-
-  .edit-btn:hover {
-    background-color: #218838;
-  }
-
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .delete-btn:hover {
-    background-color: #c82333;
   }
 
   .track-location {

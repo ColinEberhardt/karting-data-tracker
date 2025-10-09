@@ -2,6 +2,9 @@
   import { onMount } from 'svelte';
   import { push, link } from 'svelte-spa-router';
   import { getUserTyres, deleteTyre, retireTyre } from '../lib/tyres.js';
+  import Card from '@smui/card';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
 
   let tyres = [];
   let loading = true;
@@ -79,7 +82,10 @@
   {/if}
 
   {#if loading}
-    <div class="loading">Loading tyres...</div>
+    <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading tyres...</p>
+    </div>
   {:else if tyres.length === 0}
     <div class="empty">
       <h3>No tyres found</h3>
@@ -89,8 +95,8 @@
   {:else}
     <div class="tyres-grid">
       {#each tyres as tyre (tyre.id)}
-        <div class="tyre-card" class:retired={tyre.retired}>
-          <div class="tyre-header">
+        <Card class="tyre-card" style={tyre.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
+          <div class="tyre-header" style={tyre.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
             <h3>{tyre.name}</h3>
             {#if tyre.retired}
               <span class="retired-badge">Retired</span>
@@ -122,17 +128,17 @@
           </div>
 
           <div class="tyre-actions">
-            <a href="/tyres/{tyre.id}" use:link class="edit-btn">Edit</a>
+            <Button href="/tyres/{tyre.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
             {#if !tyre.retired}
-              <button on:click={() => handleRetire(tyre.id)} class="retire-btn">
+              <Button onclick={() => handleRetire(tyre.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
                 Retire
-              </button>
+              </Button>
             {/if}
-            <button on:click={() => handleDelete(tyre.id)} class="delete-btn">
+            <Button onclick={() => handleDelete(tyre.id)} variant="raised" style="background-color: #dc3545;">
               Delete
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       {/each}
     </div>
   {/if}
@@ -165,6 +171,7 @@
     border-radius: 4px;
     font-weight: 500;
     transition: background-color 0.2s;
+    display: inline-block;
   }
 
   .add-btn:hover {
@@ -185,6 +192,10 @@
     padding: 3rem;
     color: #666;
     font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .empty {
@@ -204,36 +215,22 @@
     gap: 1.5rem;
   }
 
-  .tyre-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
+  :global(.tyre-card) {
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .tyre-card:hover {
+  :global(.tyre-card:hover) {
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 
-  .tyre-card.retired {
-    opacity: 0.7;
-    border-color: #dc3545;
-  }
-
   .tyre-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     padding: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-
-  .tyre-card.retired .tyre-header {
-    background: linear-gradient(135deg, #dc3545, #c82333);
   }
 
   .tyre-header h3 {
@@ -275,50 +272,6 @@
     border-top: 1px solid #e9ecef;
     display: flex;
     gap: 0.75rem;
-  }
-
-  .edit-btn {
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-  }
-
-  .edit-btn:hover {
-    background-color: #218838;
-  }
-
-  .retire-btn {
-    background-color: #ffc107;
-    color: #212529;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .retire-btn:hover {
-    background-color: #e0a800;
-  }
-
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .delete-btn:hover {
-    background-color: #c82333;
   }
 
   @media (max-width: 768px) {

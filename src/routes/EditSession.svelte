@@ -1,9 +1,10 @@
 <script>
   import { onMount } from 'svelte';
-  import { push } from 'svelte-spa-router';
+  import { push, link } from 'svelte-spa-router';
   import { updateSession, getUserSessions } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
+  import { getUserEngines } from '../lib/engines.js';
 
   export let params = {};
   let sessionId = params.id;
@@ -44,6 +45,7 @@
 
   let tyres = [];
   let tracks = [];
+  let engines = [];
   let loading = false;
   let error = '';
   let initialLoading = true;
@@ -55,13 +57,15 @@
   const loadData = async () => {
     try {
       initialLoading = true;
-      const [sessions, tyresData, tracksData] = await Promise.all([
+      const [sessions, tyresData, tracksData, enginesData] = await Promise.all([
         getUserSessions(),
         getUserTyres(),
-        getUserTracks()
+        getUserTracks(),
+        getUserEngines()
       ]);
       tyres = tyresData.filter(tyre => !tyre.retired);
       tracks = tracksData;
+      engines = enginesData.filter(engine => !engine.retired);
 
       // Find and load the existing session
       const sessionData = sessions.find(s => s.id === sessionId);
@@ -196,7 +200,7 @@
 <div class="new-session">
   <div class="header">
     <h1>Edit Karting Session</h1>
-    <a href="/sessions" class="back-btn">← Back to Sessions</a>
+    <a href="/sessions" use:link class="back-btn">← Back to Sessions</a>
   </div>
 
   {#if error}
@@ -292,14 +296,18 @@
         </div>
 
         <div class="form-group">
-          <label for="engineId">Engine ID: *</label>
-          <input
-            type="text"
-            id="engineId"
-            bind:value={engineId}
-            placeholder="e.g., ENG001, Honda GX200"
-            required
-          />
+          <label for="engineId">Engine: *</label>
+          <select id="engineId" bind:value={engineId} required>
+            <option value="">Select an engine...</option>
+            {#each engines as engine (engine.id)}
+              <option value={engine.id}>{engine.make} {engine.model}</option>
+            {/each}
+          </select>
+          {#if engines.length === 0}
+            <p class="no-items">
+              No active engines found. <a href="/engines/new">Add an engine first</a>.
+            </p>
+          {/if}
         </div>
       </div>
 
@@ -532,7 +540,7 @@
         <button type="button" on:click={() => push('/sessions')} class="cancel-btn">
           Cancel
         </button>
-        <button type="submit" disabled={loading || tyres.length === 0 || tracks.length === 0} class="submit-btn">
+        <button type="submit" disabled={loading || tyres.length === 0 || tracks.length === 0 || engines.length === 0} class="submit-btn">
           {loading ? 'Updating...' : 'Update Session'}
         </button>
       </div>

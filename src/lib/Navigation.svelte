@@ -20,6 +20,7 @@
   
   <div class="nav-links">
     <a href="/tyres" use:link>Tyres</a>
+    <a href="/engines" use:link>Engines</a>
     <a href="/sessions" use:link>Sessions</a>
     <a href="/tracks" use:link>Tracks</a>
     

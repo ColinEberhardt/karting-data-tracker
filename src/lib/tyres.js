@@ -89,3 +89,21 @@ export const deleteTyre = async (tyreId) => {
     throw error;
   }
 };
+
+// Retire a tyre (mark as retired without deleting)
+export const retireTyre = async (tyreId) => {
+  if (!auth.currentUser) {
+    throw new Error('User must be logged in to retire tyres');
+  }
+
+  try {
+    const tyreRef = doc(db, 'tyres', tyreId);
+    await updateDoc(tyreRef, {
+      retired: true,
+      retiredAt: new Date()
+    });
+  } catch (error) {
+    console.error('Error retiring tyre:', error);
+    throw error;
+  }
+};

@@ -5,21 +5,28 @@
   import Dashboard from './routes/Dashboard.svelte';
   import NewTyre from './routes/NewTyre.svelte';
   import EditTyre from './routes/EditTyre.svelte';
+  import Engines from './routes/Engines.svelte';
+  import NewEngine from './routes/NewEngine.svelte';
+  import EditEngine from './routes/EditEngine.svelte';
   import Sessions from './routes/Sessions.svelte';
   import NewSession from './routes/NewSession.svelte';
   import EditSession from './routes/EditSession.svelte';
   import Tracks from './routes/Tracks.svelte';
   import NewTrack from './routes/NewTrack.svelte';
   import EditTrack from './routes/EditTrack.svelte';
+  import Tyres from './routes/Tyres.svelte';
   import Navigation from './lib/Navigation.svelte';
 
   // Define routes
   const routes = {
     '/': Dashboard,
     '/login': Login,
-    '/tyres': Dashboard,
+    '/tyres': Tyres,
     '/tyres/new': NewTyre,
     '/tyres/:id': EditTyre,
+    '/engines': Engines,
+    '/engines/new': NewEngine,
+    '/engines/:id': EditEngine,
     '/sessions': Sessions,
     '/sessions/new': NewSession,
     '/sessions/:id': EditSession,

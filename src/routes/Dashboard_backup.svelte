@@ -332,3 +332,80 @@
     }
   }
 </style>
+  }
+
+  .tyre-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .edit-btn {
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+  }
+
+  .edit-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .delete-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+
+  .description {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .tyre-meta {
+    border-top: 1px solid #dee2e6;
+    padding-top: 0.75rem;
+  }
+
+  .tyre-meta small {
+    color: #6c757d;
+  }
+
+  .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .tyre-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .tyre-actions {
+      justify-content: flex-end;
+    }
+  }
+</style>

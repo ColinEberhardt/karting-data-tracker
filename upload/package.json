@@ -1,0 +1,13 @@
+{
+  "name": "karting-firebase-upload",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Upload script for karting tyre data",
+  "main": "upload-tyres.js",
+  "scripts": {
+    "upload": "node upload-tyres.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

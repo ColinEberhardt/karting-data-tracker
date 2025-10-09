@@ -3,6 +3,7 @@ import {
   collection, 
   addDoc, 
   getDocs, 
+  getDoc,
   doc, 
   updateDoc, 
   deleteDoc, 
@@ -83,6 +84,37 @@ export const getUserSessions = async () => {
     }));
   } catch (error) {
     console.error('Error getting sessions:', error);
+    throw error;
+  }
+};
+
+// Get a single session by ID
+export const getSession = async (sessionId) => {
+  if (!auth.currentUser) {
+    throw new Error('User must be logged in to view sessions');
+  }
+
+  try {
+    const sessionRef = doc(db, 'sessions', sessionId);
+    const sessionSnap = await getDoc(sessionRef);
+    
+    if (!sessionSnap.exists()) {
+      throw new Error('Session not found');
+    }
+    
+    const sessionData = sessionSnap.data();
+    
+    // Verify the session belongs to the current user
+    if (sessionData.userId !== auth.currentUser.uid) {
+      throw new Error('Access denied');
+    }
+    
+    return {
+      id: sessionSnap.id,
+      ...sessionData
+    };
+  } catch (error) {
+    console.error('Error getting session:', error);
     throw error;
   }
 };

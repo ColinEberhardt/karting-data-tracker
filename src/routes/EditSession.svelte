@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { push, link } from 'svelte-spa-router';
-  import { updateSession, getUserSessions } from '../lib/sessions.js';
+  import { updateSession, getSession } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
@@ -57,8 +57,8 @@
   const loadData = async () => {
     try {
       initialLoading = true;
-      const [sessions, tyresData, tracksData, enginesData] = await Promise.all([
-        getUserSessions(),
+      const [sessionData, tyresData, tracksData, enginesData] = await Promise.all([
+        getSession(sessionId),
         getUserTyres(),
         getUserTracks(),
         getUserEngines()
@@ -66,13 +66,6 @@
       tyres = tyresData.filter(tyre => !tyre.retired);
       tracks = tracksData;
       engines = enginesData.filter(engine => !engine.retired);
-
-      // Find and load the existing session
-      const sessionData = sessions.find(s => s.id === sessionId);
-      if (!sessionData) {
-        error = 'Session not found';
-        return;
-      }
 
       // Load existing data
       const sessionDate = sessionData.date ? (sessionData.date.toDate ? sessionData.date.toDate() : new Date(sessionData.date)) : new Date();

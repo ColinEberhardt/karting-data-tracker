@@ -3,18 +3,24 @@
   import { link } from 'svelte-spa-router';
   import { getUserSessions, deleteSession } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
+  import { getUserTracks } from '../lib/tracks.js';
+  import { getUserEngines } from '../lib/engines.js';
 
   let sessions = [];
   let tyres = [];
+  let tracks = [];
+  let engines = [];
   let loading = true;
   let error = '';
 
   const loadData = async () => {
     try {
       loading = true;
-      [sessions, tyres] = await Promise.all([
+      [sessions, tyres, tracks, engines] = await Promise.all([
         getUserSessions(),
-        getUserTyres()
+        getUserTyres(),
+        getUserTracks(),
+        getUserEngines()
       ]);
     } catch (err) {
       error = err.message;
@@ -36,15 +42,30 @@
     }
   };
 
-  const formatDateTime = (dateTime) => {
-    if (!dateTime) return '';
-    const d = dateTime.toDate ? dateTime.toDate() : new Date(dateTime);
-    return d.toLocaleString();
+  const formatDate = (date) => {
+    if (!date) return '';
+    const d = date.toDate ? date.toDate() : new Date(date);
+    return d.toLocaleDateString();
+  };
+
+  const formatFastestLap = (time) => {
+    if (!time) return '-';
+    return `${time.toFixed(3)}s`;
+  };
+
+  const getTrackName = (trackId) => {
+    const track = tracks.find(t => t.id === trackId);
+    return track ? track.name : 'Unknown Track';
   };
 
   const getTyreName = (tyreId) => {
     const tyre = tyres.find(t => t.id === tyreId);
     return tyre ? `${tyre.make} ${tyre.type}` : 'Unknown Tyre';
+  };
+
+  const getEngineName = (engineId) => {
+    const engine = engines.find(e => e.id === engineId);
+    return engine ? `${engine.make} ${engine.model}` : 'Unknown Engine';
   };
 
   onMount(loadData);
@@ -69,33 +90,34 @@
       <a href="/sessions/new" use:link class="add-btn">Add Your First Session</a>
     </div>
   {:else}
-    <div class="sessions-grid">
-      {#each sessions as session (session.id)}
-        <div class="session-card">
-          <div class="session-header">
-            <h3>{formatDateTime(session.dateTime)}</h3>
-            <div class="actions">
-              <a href="/sessions/{session.id}" use:link class="edit-btn">Edit</a>
-              <button on:click={() => handleDelete(session.id)} class="delete-btn">Delete</button>
-            </div>
-          </div>
-          
-          <div class="session-details">
-            <div class="detail-item">
-              <span class="label">Rear Sprocket:</span>
-              <span class="value">{session.rearSprocket}T</span>
-            </div>
-            <div class="detail-item">
-              <span class="label">Front Sprocket:</span>
-              <span class="value">{session.frontSprocket}T</span>
-            </div>
-            <div class="detail-item">
-              <span class="label">Tyre:</span>
-              <span class="value">{getTyreName(session.tyreId)}</span>
-            </div>
-          </div>
-        </div>
-      {/each}
+    <div class="table-container">
+      <table class="sessions-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Session</th>
+            <th>Circuit</th>
+            <th>Laps</th>
+            <th>Fastest Lap</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each sessions as session (session.id)}
+            <tr class="session-row" on:click={() => window.location.hash = `/sessions/view/${session.id}`}>
+              <td>{formatDate(session.date)}</td>
+              <td>{session.session}</td>
+              <td>{getTrackName(session.circuitId)}</td>
+              <td>{session.laps}</td>
+              <td>{formatFastestLap(session.fastest)}</td>
+              <td class="actions-cell" on:click|stopPropagation>
+                <a href="/sessions/edit/{session.id}" use:link class="edit-btn">Edit</a>
+                <button on:click={() => handleDelete(session.id)} class="delete-btn">Delete</button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
     </div>
   {/if}
 </div>
@@ -166,46 +188,51 @@
     margin-bottom: 2rem;
   }
 
-  .sessions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+  .table-container {
     margin-top: 2rem;
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 
-  .session-card {
+  .sessions-table {
+    width: 100%;
+    border-collapse: collapse;
     background: white;
     border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
-    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
   }
 
-  .session-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  .sessions-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
   }
 
-  .session-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
+  .sessions-table td {
+    padding: 1rem;
     border-bottom: 1px solid #e9ecef;
   }
 
-  .session-header h3 {
-    margin: 0;
-    color: #333;
-    font-size: 1.1rem;
-    flex: 1;
+  .session-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
   }
 
-  .actions {
-    display: flex;
-    gap: 0.5rem;
+  .session-row:hover {
+    background-color: #f8f9fa;
+  }
+
+  .actions-cell {
+    cursor: default;
+  }
+
+  .actions-cell .edit-btn,
+  .actions-cell .delete-btn {
+    margin-right: 0.5rem;
   }
 
   .edit-btn {
@@ -237,28 +264,6 @@
     background-color: #c82333;
   }
 
-  .session-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .label {
-    font-weight: 500;
-    color: #666;
-  }
-
-  .value {
-    color: #333;
-    font-weight: 600;
-  }
-
   @media (max-width: 768px) {
     .sessions-dashboard {
       padding: 1rem;
@@ -270,18 +275,20 @@
       align-items: stretch;
     }
 
-    .sessions-grid {
-      grid-template-columns: 1fr;
+    .table-container {
+      margin-top: 1rem;
     }
 
-    .session-header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
+    .sessions-table th,
+    .sessions-table td {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.9rem;
     }
 
-    .actions {
-      justify-content: flex-end;
+    .actions-cell .edit-btn,
+    .actions-cell .delete-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
     }
   }
 </style>

@@ -11,6 +11,7 @@
   import Sessions from './routes/Sessions.svelte';
   import NewSession from './routes/NewSession.svelte';
   import EditSession from './routes/EditSession.svelte';
+  import ViewSession from './routes/ViewSession.svelte';
   import Tracks from './routes/Tracks.svelte';
   import NewTrack from './routes/NewTrack.svelte';
   import EditTrack from './routes/EditTrack.svelte';
@@ -29,7 +30,8 @@
     '/engines/:id': EditEngine,
     '/sessions': Sessions,
     '/sessions/new': NewSession,
-    '/sessions/:id': EditSession,
+    '/sessions/view/:id': ViewSession,
+    '/sessions/edit/:id': EditSession,
     '/tracks': Tracks,
     '/tracks/new': NewTrack,
     '/tracks/:id': EditTrack

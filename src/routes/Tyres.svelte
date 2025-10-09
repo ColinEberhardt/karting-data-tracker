@@ -10,7 +10,20 @@
   const loadTyres = async () => {
     try {
       loading = true;
-      tyres = await getUserTyres();
+      const rawTyres = await getUserTyres();
+      
+      // Sort tyres: active tyres first (by createdAt desc), then retired tyres (by createdAt desc)
+      tyres = rawTyres.sort((a, b) => {
+        // If one is retired and the other isn't, retired goes to bottom
+        if (a.retired !== b.retired) {
+          return a.retired ? 1 : -1;
+        }
+        
+        // Both have same retirement status, sort by createdAt (most recent first)
+        const aDate = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+        const bDate = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        return bDate - aDate;
+      });
     } catch (err) {
       error = err.message;
     } finally {

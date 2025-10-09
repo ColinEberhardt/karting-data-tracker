@@ -1,14 +1,17 @@
-# 🏎️ Tyre Management MVP (SvelteKit + Firebase)
+# 🏎️ Karting Performance Tracker (SvelteKit + Firebase)
 
-A simple, secure, multi-user web application for tracking go-kart tyres. Users can log tyres with brand and description details, with authentication-based access control.
+A comprehensive web application for tracking go-kart performance data. Manage your karting equipment, sessions, and performance data with secure user authentication and real-time data synchronization.
 
 ## ✨ Features
 
 - **Authentication**: Email/password and Google login via Firebase Auth
-- **Tyre Management**: Create, read, update, and delete tyre entries
-- **User Security**: Users can only access their own tyre data
-- **Responsive Design**: Mobile-friendly interface
-- **Real-time Database**: Cloud Firestore for data persistence
+- **Equipment Management**: Track tyres, engines, and circuits/tracks
+- **Session Logging**: Record detailed session data including lap times, setup configurations, and race results
+- **Performance Analytics**: Monitor your karting performance across different tracks and conditions
+- **User Security**: Users can only access their own data
+- **Responsive Design**: Mobile-friendly interface for trackside use
+- **Real-time Database**: Cloud Firestore for instant data synchronization
+- **Data Import**: CSV import functionality for bulk data migration
 
 ## 🚀 Quick Start
 
@@ -64,28 +67,19 @@ npm run dev
 
 The app will be available at `http://localhost:5173`
 
-## 🔐 Security Rules
+## 🔐 Security
 
 The Firestore security rules ensure:
-- Users can only read/write their own tyre data
+- Users can only read/write their own data (tyres, engines, tracks, sessions)
 - All operations require authentication
+- Data isolation between users
 
-## 📁 Project Structure
+## � Security
 
-```
-src/
-├── lib/
-│   ├── firebase.js      # Firebase configuration
-│   ├── stores.js        # Svelte stores for user state
-│   ├── tyres.js         # Firestore CRUD operations
-│   └── Navigation.svelte # Navigation component
-├── routes/
-│   ├── Login.svelte     # Authentication page
-│   ├── Dashboard.svelte # User's tyres dashboard
-│   ├── NewTyre.svelte   # Add new tyre form
-│   └── EditTyre.svelte  # Edit tyre form
-└── App.svelte           # Main app with routing
-```
+The Firestore security rules ensure:
+- Users can only read/write their own data (tyres, engines, tracks, sessions)
+- All operations require authentication
+- Data isolation between users
 
 ## 🚀 Deployment
 
@@ -115,34 +109,13 @@ The built files in `dist/` can be deployed to any static hosting service like Ve
 - `firebase deploy --only firestore:rules` - Deploy security rules only
 - `firebase deploy --only hosting` - Deploy hosting only
 
-## 📋 MVP Checklist
+## � Data Import
 
-- ✅ Login/signup (email or Google)
-- ✅ Create new tyre
-- ✅ View user's tyres
-- ✅ Edit/delete tyre
-- ✅ Data security per user
-- ✅ Deployment ready (Firebase Hosting)
+The project includes CSV import utilities in the `upload/` directory for migrating existing karting data:
 
-## 🔧 Configuration
-
-### Environment Variables
-
-For production, consider using environment variables for Firebase config:
-
-```javascript
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  // ... other config
-};
-```
-
-### Customization
-
-- Update colors and styling in component `<style>` sections
-- Modify tyre schema in `src/lib/tyres.js`
-- Add more fields to the tyre form components
+- **Tyres**: Import tyre inventory from CSV
+- **Sessions**: Import session/lap data with automatic linking to equipment and tracks
+- **Bulk Operations**: Efficient batch processing for large datasets
 
 ## 📄 License
 

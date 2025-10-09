@@ -52,26 +52,26 @@
   });
 </script>
 
-<div class="engines">
-  <div class="header">
+<div class="container container-lg">
+  <div class="page-header">
     <h1>Engines</h1>
-    <a href="/engines/new" use:link class="add-btn">+ Add New Engine</a>
+    <Button href="/engines/new" tag="a" use={[link]} variant="raised" color="primary">+ Add New Engine</Button>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   {#if loading}
-    <div class="loading">
+    <div class="loading-state">
       <CircularProgress style="height: 48px; width: 48px;" indeterminate />
       <p>Loading engines...</p>
     </div>
   {:else if engines.length === 0}
-    <div class="empty">
+    <div class="empty-state">
       <h3>No engines found</h3>
       <p>Get started by adding your first engine.</p>
-      <a href="/engines/new" use:link class="add-btn">Add Engine</a>
+      <Button href="/engines/new" tag="a" use={[link]} variant="raised" color="primary">Add Engine</Button>
     </div>
   {:else}
     <div class="engines-grid">
@@ -130,68 +130,6 @@
 </div>
 
 <style>
-  .engines {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .header h1 {
-    margin: 0;
-    color: #333;
-  }
-
-  .add-btn {
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-
-  .add-btn:hover {
-    background-color: #0056b3;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 1rem;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .empty {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-  }
-
-  .empty h3 {
-    margin-bottom: 1rem;
-    color: #333;
-  }
 
   .engines-grid {
     display: grid;
@@ -259,16 +197,6 @@
   }
 
   @media (max-width: 768px) {
-    .engines {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
     .engines-grid {
       grid-template-columns: 1fr;
     }

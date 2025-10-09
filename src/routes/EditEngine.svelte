@@ -92,7 +92,7 @@
 <div class="edit-engine">
   <div class="header">
     <h1>Edit Engine</h1>
-    <a href="/engines" use:link class="back-btn">← Back to Engines</a>
+    <Button href="/engines" tag="a" use={[link]} variant="outlined">← Back to Engines</Button>
   </div>
 
   {#if error}
@@ -180,18 +180,6 @@
     color: #333;
   }
 
-  .back-btn {
-    color: #007bff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .back-btn:hover {
-    background-color: #f8f9fa;
-  }
-
   .error {
     background-color: #f8d7da;
     color: #721c24;
@@ -234,7 +222,6 @@
   }
 
   .form-group {
-    margin-bottom: 1.5rem;
     position: relative;
   }
 
@@ -244,30 +231,9 @@
     gap: 1rem;
   }
 
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-  }
-
   @media (max-width: 768px) {
-    .edit-engine {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
     .form-row {
       grid-template-columns: 1fr;
-    }
-
-    .form-actions {
-      flex-direction: column;
     }
   }
 </style>

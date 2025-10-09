@@ -71,26 +71,26 @@
   });
 </script>
 
-<div class="tyres">
-  <div class="header">
+<div class="container container-lg">
+  <div class="page-header">
     <h1>Tyres</h1>
-    <a href="/tyres/new" use:link class="add-btn">+ Add New Tyre</a>
+    <Button href="/tyres/new" tag="a" use={[link]} variant="raised" color="primary">+ Add New Tyre</Button>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   {#if loading}
-    <div class="loading">
+    <div class="loading-state">
       <CircularProgress style="height: 48px; width: 48px;" indeterminate />
       <p>Loading tyres...</p>
     </div>
   {:else if tyres.length === 0}
-    <div class="empty">
+    <div class="empty-state">
       <h3>No tyres found</h3>
       <p>Get started by adding your first tyre.</p>
-      <a href="/tyres/new" use:link class="add-btn">Add Tyre</a>
+      <Button href="/tyres/new" tag="a" use={[link]} variant="raised" color="primary">Add Tyre</Button>
     </div>
   {:else}
     <div class="tyres-grid">
@@ -145,69 +145,6 @@
 </div>
 
 <style>
-  .tyres {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .header h1 {
-    margin: 0;
-    color: #333;
-  }
-
-  .add-btn {
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: background-color 0.2s;
-    display: inline-block;
-  }
-
-  .add-btn:hover {
-    background-color: #0056b3;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 1rem;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .empty {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-  }
-
-  .empty h3 {
-    margin-bottom: 1rem;
-    color: #333;
-  }
 
   .tyres-grid {
     display: grid;
@@ -275,16 +212,6 @@
   }
 
   @media (max-width: 768px) {
-    .tyres {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
     .tyres-grid {
       grid-template-columns: 1fr;
     }

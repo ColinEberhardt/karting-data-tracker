@@ -51,18 +51,18 @@
   onMount(loadTracks);
 </script>
 
-<div class="tracks">
-  <div class="header">
+<div class="container container-lg">
+  <div class="page-header">
     <h1>My Tracks</h1>
-    <a href="/tracks/new" use:link class="add-btn">+ Add New Track</a>
+    <Button href="/tracks/new" tag="a" use={[link]} variant="raised" style="background-color: #007bff;">+ Add New Track</Button>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   {#if loading}
-    <div class="loading">
+    <div class="loading-state">
       <CircularProgress style="height: 48px; width: 48px;" indeterminate />
       <p>Loading tracks...</p>
     </div>
@@ -70,7 +70,7 @@
     <div class="empty-state">
       <h2>No tracks yet</h2>
       <p>Start tracking your racing locations by adding your first track.</p>
-      <a href="/tracks/new" use:link class="add-btn">Add Your First Track</a>
+      <Button href="/tracks/new" tag="a" use={[link]} variant="raised" style="background-color: #007bff;">Add Your First Track</Button>
     </div>
   {:else}
     <div class="tracks-grid">
@@ -103,75 +103,6 @@
 </div>
 
 <style>
-  .tracks {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .header h1 {
-    margin: 0;
-    color: #333;
-  }
-
-  .add-btn {
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-
-  .add-btn:hover {
-    background-color: #0056b3;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    border: 1px solid #f5c6cb;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 3rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-  }
-
-  .empty-state h2 {
-    color: #495057;
-    margin-bottom: 1rem;
-  }
-
-  .empty-state p {
-    color: #6c757d;
-    margin-bottom: 2rem;
-  }
 
   .tracks-grid {
     display: grid;
@@ -234,16 +165,6 @@
   }
 
   @media (max-width: 768px) {
-    .tracks {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
     .tracks-grid {
       grid-template-columns: 1fr;
     }

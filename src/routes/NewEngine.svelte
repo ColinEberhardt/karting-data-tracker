@@ -54,14 +54,14 @@
   };
 </script>
 
-<div class="new-engine">
-  <div class="header">
+<div class="container container-md">
+  <div class="page-header">
     <h1>Add New Engine</h1>
-    <a href="/engines" use:link class="back-btn">← Back to Engines</a>
+    <Button href="/engines" tag="a" use={[link]} variant="outlined">← Back to Engines</Button>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   <Card style="padding: 2rem;">
@@ -120,44 +120,6 @@
 </div>
 
 <style>
-  .new-engine {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .header h1 {
-    margin: 0;
-    color: #333;
-  }
-
-  .back-btn {
-    color: #007bff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .back-btn:hover {
-    background-color: #f8f9fa;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 1rem;
-  }
 
   .form-section {
     margin-bottom: 2.5rem;
@@ -181,7 +143,6 @@
   }
 
   .form-group {
-    margin-bottom: 1.5rem;
     position: relative;
   }
 
@@ -191,30 +152,9 @@
     gap: 1rem;
   }
 
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-  }
-
   @media (max-width: 768px) {
-    .new-engine {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
     .form-row {
       grid-template-columns: 1fr;
-    }
-
-    .form-actions {
-      flex-direction: column;
     }
   }
 </style>

@@ -77,7 +77,7 @@
 <div class="sessions-dashboard">
   <div class="header">
     <h1>My Karting Sessions</h1>
-    <a href="/sessions/new" use:link class="add-btn">+ Add New Session</a>
+    <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">+ Add New Session</Button>
   </div>
 
   {#if error}
@@ -93,7 +93,7 @@
     <div class="empty-state">
       <h2>No Sessions Yet</h2>
       <p>Start tracking your karting sessions!</p>
-      <a href="/sessions/new" use:link class="add-btn">Add Your First Session</a>
+      <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">Add Your First Session</Button>
     </div>
   {:else}
     <div class="table-container">
@@ -147,20 +147,6 @@
   .header h1 {
     margin: 0;
     color: #333;
-  }
-
-  .add-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-
-  .add-btn:hover {
-    background-color: #0056b3;
   }
 
   .error {

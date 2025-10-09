@@ -40,17 +40,17 @@
   onMount(loadData);
 </script>
 
-<div class="dashboard">
+<div class="container container-lg">
   <div class="header">
     <h1>🏎️ Kart Manager Dashboard</h1>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   {#if loading}
-    <div class="loading">
+    <div class="loading-state">
       <CircularProgress style="height: 48px; width: 48px;" indeterminate />
       <p>Loading dashboard...</p>
     </div>
@@ -62,8 +62,8 @@
           <h3>Sessions</h3>
           <div class="stat-number">{sessions.length}</div>
           <div class="stat-actions">
-            <Button href="/sessions" {link} variant="outlined">View All</Button>
-            <Button href="/sessions/new" {link} variant="raised" color="primary">Add Session</Button>
+            <Button href="/sessions" tag="a" use={[link]} variant="outlined">View All</Button>
+            <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">Add Session</Button>
           </div>
         </Card>
       </Cell>
@@ -74,8 +74,8 @@
           <h3>Tyres</h3>
           <div class="stat-number">{tyres.length}</div>
           <div class="stat-actions">
-            <Button href="/tyres" {link} variant="outlined">View All</Button>
-            <Button href="/tyres/new" {link} variant="raised" color="primary">Add Tyre</Button>
+            <Button href="/tyres" tag="a" use={[link]} variant="outlined">View All</Button>
+            <Button href="/tyres/new" tag="a" use={[link]} variant="raised" color="primary">Add Tyre</Button>
           </div>
         </Card>
       </Cell>
@@ -86,8 +86,8 @@
           <h3>Engines</h3>
           <div class="stat-number">{engines.length}</div>
           <div class="stat-actions">
-            <Button href="/engines" {link} variant="outlined">View All</Button>
-            <Button href="/engines/new" {link} variant="raised" color="primary">Add Engine</Button>
+            <Button href="/engines" tag="a" use={[link]} variant="outlined">View All</Button>
+            <Button href="/engines/new" tag="a" use={[link]} variant="raised" color="primary">Add Engine</Button>
           </div>
         </Card>
       </Cell>
@@ -98,8 +98,8 @@
           <h3>Tracks</h3>
           <div class="stat-number">{tracks.length}</div>
           <div class="stat-actions">
-            <Button href="/tracks" {link} variant="outlined">View All</Button>
-            <Button href="/tracks/new" {link} variant="raised" color="primary">Add Track</Button>
+            <Button href="/tracks" tag="a" use={[link]} variant="outlined">View All</Button>
+            <Button href="/tracks/new" tag="a" use={[link]} variant="raised" color="primary">Add Track</Button>
           </div>
         </Card>
       </Cell>
@@ -121,7 +121,7 @@
                   <div><strong>Best Lap:</strong> {session.fastest}s</div>
                 {/if}
               </div>
-              <Button href="/sessions/{session.id}" {link} variant="raised" style="background-color: #28a745; margin-top: 1rem;">View</Button>
+              <Button href="/sessions/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745; margin-top: 1rem;">View</Button>
             </Card>
           {/each}
         </div>
@@ -134,12 +134,6 @@
 </div>
 
 <style>
-  .dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
   .header {
     text-align: center;
     margin-bottom: 3rem;
@@ -150,26 +144,6 @@
     margin: 0;
     font-size: 2.5rem;
     font-weight: 600;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 2rem;
   }
 
   .stat-icon {
@@ -244,10 +218,6 @@
   }
 
   @media (max-width: 768px) {
-    .dashboard {
-      padding: 1rem;
-    }
-
     .header h1 {
       font-size: 2rem;
     }

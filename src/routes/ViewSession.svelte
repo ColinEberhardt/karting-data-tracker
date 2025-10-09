@@ -72,7 +72,7 @@
   <div class="header">
     <h1>Session Details</h1>
     <div class="header-actions">
-      <a href="/sessions" use:link class="back-btn">← Back to Sessions</a>
+      <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
       {#if session}
         <Button href="/sessions/edit/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit Session</Button>
       {/if}
@@ -254,7 +254,7 @@
     <div class="empty-state">
       <h2>Session Not Found</h2>
       <p>The session you're looking for doesn't exist or you don't have access to it.</p>
-      <a href="/sessions" use:link class="back-btn">Back to Sessions</a>
+      <Button href="/sessions" tag="a" use={[link]} variant="outlined">Back to Sessions</Button>
     </div>
   {/if}
 </div>
@@ -281,18 +281,6 @@
   .header-actions {
     display: flex;
     gap: 1rem;
-  }
-
-  .back-btn {
-    color: #007bff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .back-btn:hover {
-    background-color: #f8f9fa;
   }
 
   .error {

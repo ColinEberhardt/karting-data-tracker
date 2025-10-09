@@ -161,7 +161,7 @@
 <div class="new-session">
   <div class="header">
     <h1>Add New Karting Session</h1>
-    <a href="/sessions" use:link class="back-btn">← Back to Sessions</a>
+    <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
   </div>
 
   {#if error}
@@ -385,18 +385,6 @@
     color: #333;
   }
 
-  .back-btn {
-    color: #007bff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .back-btn:hover {
-    background-color: #f8f9fa;
-  }
-
   .error {
     background-color: #f8d7da;
     color: #721c24;
@@ -425,10 +413,6 @@
     font-weight: 600;
     border-left: 4px solid #007bff;
     padding-left: 1rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
   }
 
   .form-row {

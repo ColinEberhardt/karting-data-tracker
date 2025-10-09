@@ -59,7 +59,7 @@
     <h2>{isSignUp ? 'Create Account' : 'Sign In'}</h2>
 
     {#if error}
-      <div class="error">{error}</div>
+      <div class="error-message">{error}</div>
     {/if}
 
     <form on:submit|preventDefault={handleEmailAuth}>
@@ -179,14 +179,5 @@
 
   .google-icon {
     font-size: 1.2rem;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    border: 1px solid #f5c6cb;
   }
 </style>

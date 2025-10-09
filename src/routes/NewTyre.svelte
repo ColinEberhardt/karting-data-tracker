@@ -40,13 +40,13 @@
   };
 </script>
 
-<div class="new-tyre">
-  <div class="header">
+<div class="container container-sm">
+  <div class="page-header">
     <h1>Add New Tyre</h1>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   <Card style="padding: 2rem;">
@@ -113,48 +113,5 @@
 </div>
 
 <style>
-  .new-tyre {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    margin-bottom: 2rem;
-  }
-
-  h1 {
-    color: #495057;
-    margin: 0;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    border: 1px solid #f5c6cb;
-  }
-
-  @media (max-width: 768px) {
-    .new-tyre {
-      padding: 1rem;
-    }
-
-    .form-actions {
-      flex-direction: column;
-    }
-  }
+  /* Component-specific styles only - utilities handled by global.css */
 </style>

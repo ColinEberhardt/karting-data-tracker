@@ -104,17 +104,17 @@
   onMount(loadTrack);
 </script>
 
-<div class="edit-track">
-  <div class="header">
+<div class="container container-sm">
+  <div class="page-header">
     <h1>Edit Track</h1>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   {#if trackLoading}
-    <div class="loading">
+    <div class="loading-state">
       <CircularProgress style="height: 48px; width: 48px;" indeterminate />
       <p>Loading track...</p>
     </div>
@@ -131,7 +131,7 @@
             <p>Update the track's GPS coordinates or use your current location.</p>
             <Button
               type="button"
-              on:click={handleUseCurrentLocation}
+              onclick={handleUseCurrentLocation}
               disabled={gettingLocation || loading}
               variant="raised"
               style="background-color: #17a2b8;"
@@ -182,7 +182,7 @@
         <div class="form-actions">
           <Button
             type="button"
-            on:click={handleCancel}
+            onclick={handleCancel}
             disabled={loading || gettingLocation}
             variant="outlined"
           >
@@ -207,39 +207,8 @@
 </div>
 
 <style>
-  .edit-track {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header h1 {
+  .page-header h1 {
     margin: 0 0 2rem 0;
-    color: #333;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    border: 1px solid #f5c6cb;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
   }
 
   .location-section {
@@ -283,20 +252,7 @@
     font-size: 0.875rem;
   }
 
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #dee2e6;
-  }
-
   @media (max-width: 768px) {
-    .edit-track {
-      padding: 1rem;
-    }
-
     .coordinates-grid {
       grid-template-columns: 1fr;
     }
@@ -304,10 +260,6 @@
     .location-header {
       flex-direction: column;
       align-items: stretch;
-    }
-
-    .form-actions {
-      flex-direction: column;
     }
   }
 </style>

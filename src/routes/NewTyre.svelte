@@ -2,6 +2,7 @@
   import { push } from 'svelte-spa-router';
   import { addTyre } from '../lib/tyres.js';
 
+  let name = '';
   let make = '';
   let type = '';
   let description = '';
@@ -10,8 +11,8 @@
   let error = '';
 
   const handleSubmit = async () => {
-    if (!make.trim() || !type.trim()) {
-      error = 'Please fill in all required fields (Make and Type)';
+    if (!name.trim() || !make.trim() || !type.trim()) {
+      error = 'Please fill in all required fields (Name, Make and Type)';
       return;
     }
 
@@ -19,7 +20,7 @@
     error = '';
 
     try {
-      await addTyre(make.trim(), type.trim(), description.trim(), retired);
+      await addTyre(name.trim(), make.trim(), type.trim(), description.trim(), retired);
       push('/tyres');
     } catch (err) {
       error = err.message;
@@ -43,6 +44,18 @@
   {/if}
 
   <form on:submit|preventDefault={handleSubmit} class="tyre-form">
+    <div class="form-group">
+      <label for="name">Name: *</label>
+      <input
+        type="text"
+        id="name"
+        bind:value={name}
+        placeholder="e.g., Front Race Set, Wet Weather Tyres"
+        required
+        disabled={loading}
+      />
+    </div>
+
     <div class="form-group">
       <label for="make">Make: *</label>
       <input

@@ -237,7 +237,7 @@
         <select id="tyreId" bind:value={tyreId} required>
           <option value="">Select a tyre...</option>
           {#each tyres as tyre (tyre.id)}
-            <option value={tyre.id}>{tyre.make} {tyre.type}</option>
+            <option value={tyre.id}>{tyre.name || `${tyre.make} ${tyre.type}`}</option>
           {/each}
         </select>
         {#if tyres.length === 0}
@@ -252,7 +252,7 @@
         <select id="engineId" bind:value={engineId} required>
           <option value="">Select an engine...</option>
           {#each engines as engine (engine.id)}
-            <option value={engine.id}>{engine.make} {engine.model}</option>
+            <option value={engine.id}>{engine.name || `${engine.make} ${engine.model}`}</option>
           {/each}
         </select>
         {#if engines.length === 0}

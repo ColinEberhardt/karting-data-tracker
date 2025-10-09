@@ -3,6 +3,7 @@
   import { push, link } from 'svelte-spa-router';
   import { addEngine } from '../lib/engines.js';
 
+  let name = '';
   let make = '';
   let model = '';
   let serialNumber = '';
@@ -21,8 +22,8 @@
   };
 
   const handleSubmit = async () => {
-    if (!make || !model) {
-      error = 'Make and model are required';
+    if (!name || !make || !model) {
+      error = 'Name, make and model are required';
       return;
     }
 
@@ -31,6 +32,7 @@
 
     try {
       const engineData = {
+        name: name.trim(),
         make: make.trim(),
         model: model.trim(),
         serialNumber: serialNumber.trim() || null,
@@ -62,6 +64,19 @@
   <form on:submit|preventDefault={handleSubmit}>
     <div class="form-section">
       <h3>Engine Information</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Name: *</label>
+          <input
+            type="text"
+            id="name"
+            bind:value={name}
+            placeholder="e.g., My Race Engine, Backup Motor"
+            required
+          />
+        </div>
+      </div>
       
       <div class="form-row">
         <div class="form-group">

@@ -72,13 +72,18 @@
       {#each engines as engine (engine.id)}
         <div class="engine-card" class:retired={engine.retired}>
           <div class="engine-header">
-            <h3>{engine.make} {engine.model}</h3>
+            <h3>{engine.name || `${engine.make} ${engine.model}`}</h3>
             {#if engine.retired}
               <span class="retired-badge">Retired</span>
             {/if}
           </div>
           
           <div class="engine-details">
+            {#if engine.name}
+              <div class="detail">
+                <strong>Make/Model:</strong> {engine.make} {engine.model}
+              </div>
+            {/if}
             {#if engine.serialNumber}
               <div class="detail">
                 <strong>Serial Number:</strong> {engine.serialNumber}

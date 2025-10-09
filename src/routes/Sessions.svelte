@@ -60,12 +60,12 @@
 
   const getTyreName = (tyreId) => {
     const tyre = tyres.find(t => t.id === tyreId);
-    return tyre ? `${tyre.make} ${tyre.type}` : 'Unknown Tyre';
+    return tyre ? (tyre.name || `${tyre.make} ${tyre.type}`) : 'Unknown Tyre';
   };
 
   const getEngineName = (engineId) => {
     const engine = engines.find(e => e.id === engineId);
-    return engine ? `${engine.make} ${engine.model}` : 'Unknown Engine';
+    return engine ? (engine.name || `${engine.make} ${engine.model}`) : 'Unknown Engine';
   };
 
   onMount(loadData);

@@ -78,13 +78,16 @@
       {#each tyres as tyre (tyre.id)}
         <div class="tyre-card" class:retired={tyre.retired}>
           <div class="tyre-header">
-            <h3>{tyre.make} - {tyre.type}</h3>
+            <h3>{tyre.name}</h3>
             {#if tyre.retired}
               <span class="retired-badge">Retired</span>
             {/if}
           </div>
           
           <div class="tyre-details">
+            <div class="detail">
+              <strong>Make/Type:</strong> {tyre.make} - {tyre.type}
+            </div>
             {#if tyre.description}
               <div class="detail">
                 <strong>Description:</strong> {tyre.description}

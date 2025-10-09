@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 
 // Add a new tyre
-export const addTyre = async (make, type, description, retired) => {
+export const addTyre = async (name, make, type, description, retired) => {
   if (!auth.currentUser) {
     throw new Error('User must be logged in to add tyres');
   }
@@ -20,6 +20,7 @@ export const addTyre = async (make, type, description, retired) => {
   try {
     await addDoc(collection(db, 'tyres'), {
       userId: auth.currentUser.uid,
+      name,
       make,
       type,
       description: description || '',
@@ -56,7 +57,7 @@ export const getUserTyres = async () => {
 };
 
 // Update a tyre
-export const updateTyre = async (tyreId, make, type, description, retired) => {
+export const updateTyre = async (tyreId, name, make, type, description, retired) => {
   if (!auth.currentUser) {
     throw new Error('User must be logged in to update tyres');
   }
@@ -64,6 +65,7 @@ export const updateTyre = async (tyreId, make, type, description, retired) => {
   try {
     const tyreRef = doc(db, 'tyres', tyreId);
     await updateDoc(tyreRef, {
+      name,
       make,
       type,
       description: description || '',

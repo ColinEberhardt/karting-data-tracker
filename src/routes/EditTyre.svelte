@@ -7,6 +7,7 @@
 
   export let params = {};
 
+  let name = '';
   let make = '';
   let type = '';
   let description = '';
@@ -29,6 +30,7 @@
       
       if (tyreSnap.exists()) {
         const tyreData = tyreSnap.data();
+        name = tyreData.name || '';
         make = tyreData.make || tyreData.brand || ''; // Handle legacy brand field
         type = tyreData.type || '';
         description = tyreData.description || '';
@@ -44,8 +46,8 @@
   };
 
   const handleSubmit = async () => {
-    if (!make.trim() || !type.trim()) {
-      error = 'Please fill in all required fields (Make and Type)';
+    if (!name.trim() || !make.trim() || !type.trim()) {
+      error = 'Please fill in all required fields (Name, Make and Type)';
       return;
     }
 
@@ -53,7 +55,7 @@
     error = '';
 
     try {
-      await updateTyre(tyreId, make.trim(), type.trim(), description.trim(), retired);
+      await updateTyre(tyreId, name.trim(), make.trim(), type.trim(), description.trim(), retired);
       push('/tyres');
     } catch (err) {
       error = err.message;
@@ -82,6 +84,18 @@
     <div class="loading">Loading tyre details...</div>
   {:else}
     <form on:submit|preventDefault={handleSubmit} class="tyre-form">
+      <div class="form-group">
+        <label for="name">Name: *</label>
+        <input
+          type="text"
+          id="name"
+          bind:value={name}
+          placeholder="e.g., Front Race Set, Wet Weather Tyres"
+          required
+          disabled={loading}
+        />
+      </div>
+
       <div class="form-group">
         <label for="make">Make: *</label>
         <input

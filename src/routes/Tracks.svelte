@@ -77,27 +77,26 @@
     <LayoutGrid>
       {#each tracks as track (track.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
-          <Card class="card-hover">
-            <div class="card-header card-header-active">
-              <h3>{track.name}</h3>
-            </div>
+          <Card class="card-hover track-card">
+            {#if track.latitude && track.longitude}
+              <img 
+                src="https://maps.googleapis.com/maps/api/staticmap?center={track.latitude},{track.longitude}&zoom=16&size=300x200&maptype=satellite&key=AIzaSyAls1lFlW5xpL4JGB9bss985id7nURl-c4"
+                alt="Satellite view of {track.name}"
+                class="track-map"
+              />
+            {:else}
+              <div class="no-location">No location data available</div>
+            {/if}
             
-            <div class="card-details">
-              <div class="track-location">
-                <div class="coordinate">
-                  <span class="label">Latitude:</span>
-                  <span class="value">{formatCoordinate(track.latitude, 'latitude')}</span>
-                </div>
-                <div class="coordinate">
-                  <span class="label">Longitude:</span>
-                  <span class="value">{formatCoordinate(track.longitude, 'longitude')}</span>
-                </div>
+            <div class="card-overlay">
+              <div class="card-header">
+                <h3>{track.name}</h3>
               </div>
-            </div>
-
-            <div class="card-actions">
-              <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
-              <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+              
+              <div class="card-actions">
+                <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+                <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+              </div>
             </div>
           </Card>
         </Cell>
@@ -107,8 +106,55 @@
 </div>
 
 <style>
-  .track-location {
-    margin-bottom: 1rem;
+  .track-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  .track-map {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(1.4) contrast(2);
+  }
+
+  .card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.7) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  .card-header h3 {
+    color: white;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .no-location {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .coordinate {

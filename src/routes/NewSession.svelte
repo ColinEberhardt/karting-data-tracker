@@ -385,15 +385,6 @@
     color: #333;
   }
 
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 1rem;
-  }
-
   .form-section {
     margin-bottom: 2.5rem;
     padding-bottom: 2rem;

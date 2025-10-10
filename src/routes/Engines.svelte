@@ -146,22 +146,3 @@
     </LayoutGrid>
   {/if}
 </div>
-            </div>
-
-            <div class="card-actions">
-              <Button href="/engines/{engine.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
-              {#if !engine.retired}
-                <Button onclick={() => handleRetire(engine.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
-                  Retire
-                </Button>
-              {/if}
-              <Button onclick={() => handleDelete(engine.id)} variant="raised" style="background-color: #dc3545;">
-                Delete
-              </Button>
-            </div>
-          </Card>
-        </Cell>
-      {/each}
-    </LayoutGrid>
-  {/if}
-</div>

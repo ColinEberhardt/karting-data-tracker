@@ -57,10 +57,12 @@
 <style>
   .loading {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-size: 1.2rem;
+    gap: var(--spacing-sm);
   }
 
   .container {

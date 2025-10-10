@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { link } from 'svelte-spa-router';
+  import { link, push } from 'svelte-spa-router';
   import { getUserSessions, deleteSession } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
@@ -71,6 +71,10 @@
     return engine ? (engine.name || `${engine.make} ${engine.model}`) : 'Unknown Engine';
   };
 
+  const handleRowClick = (sessionId) => {
+    push(`/sessions/view/${sessionId}`);
+  };
+
   onMount(loadData);
 </script>
 
@@ -105,23 +109,25 @@
             <Cell>Circuit</Cell>
             <Cell>Laps</Cell>
             <Cell>Fastest Lap</Cell>
-            <Cell>Actions</Cell>
           </Row>
         </Head>
         <Body>
           {#each sessions as session (session.id)}
-            <Row class="session-row" on:click={() => window.location.hash = `/sessions/view/${session.id}`}>
-              <Cell>{formatDate(session.date)}</Cell>
-              <Cell>{session.session}</Cell>
-              <Cell>{getTrackName(session.circuitId)}</Cell>
-              <Cell>{session.laps}</Cell>
-              <Cell>{formatFastestLap(session.fastest)}</Cell>
-              <Cell>
-                <div class="actions-cell" on:click|stopPropagation>
-                  <Button href="/sessions/edit/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745; margin-right: 0.5rem;">Edit</Button>
-                  <Button onclick={() => handleDelete(session.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
-                </div>
-              </Cell>
+            <Row class="session-row">
+              <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
+                <Cell>{formatDate(session.date)}</Cell>
+                <Cell>
+                  <div class="session-name">
+                    {#if session.isRace}
+                      <span class="race-icon">🏁</span>
+                    {/if}
+                    {session.session}
+                  </div>
+                </Cell>
+                <Cell>{getTrackName(session.circuitId)}</Cell>
+                <Cell>{session.laps}</Cell>
+                <Cell>{formatFastestLap(session.fastest)}</Cell>
+              </div>
             </Row>
           {/each}
         </Body>
@@ -182,6 +188,30 @@
 
   :global(.session-row:hover) {
     background-color: #f8f9fa;
+  }
+
+  .clickable-row {
+    display: contents;
+    cursor: pointer;
+  }
+
+  .clickable-row:focus {
+    outline: 2px solid #007bff;
+    outline-offset: -2px;
+  }
+
+  :global(.session-row .mdc-data-table__cell) {
+    vertical-align: middle;
+  }
+
+  .session-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .race-icon {
+    font-size: 1.1em;
   }
 
   .actions-cell {

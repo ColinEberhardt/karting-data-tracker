@@ -117,7 +117,12 @@
 
           <div class="detail-item">
             <span class="label">Session Type:</span>
-            <span class="value">{session.session}</span>
+            <span class="value">
+              {#if session.isRace}
+                <span class="race-icon">🏁</span>
+              {/if}
+              {session.session}
+            </span>
           </div>
         </div>
       </div>
@@ -353,6 +358,11 @@
     margin: 0;
     color: #333;
     line-height: 1.5;
+  }
+
+  .race-icon {
+    margin-right: 0.5rem;
+    font-size: 1.1em;
   }
 
   @media (max-width: 768px) {

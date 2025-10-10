@@ -2,6 +2,10 @@
   import { onMount } from 'svelte';
   import { link } from 'svelte-spa-router';
   import { getUserTracks, deleteTrack } from '../lib/tracks.js';
+  import Card from '@smui/card';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
+  import LayoutGrid, { Cell } from '@smui/layout-grid';
 
   let tracks = [];
   let loading = true;
@@ -48,191 +52,109 @@
   onMount(loadTracks);
 </script>
 
-<div class="tracks">
-  <div class="header">
+<div class="container container-lg">
+  <div class="page-header">
     <h1>My Tracks</h1>
-    <a href="/tracks/new" use:link class="add-btn">+ Add New Track</a>
+    <Button href="/tracks/new" tag="a" use={[link]} variant="raised" style="background-color: #007bff;">+ Add New Track</Button>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   {#if loading}
-    <div class="loading">Loading tracks...</div>
+    <div class="loading-state">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading tracks...</p>
+    </div>
   {:else if tracks.length === 0}
     <div class="empty-state">
       <h2>No tracks yet</h2>
       <p>Start tracking your racing locations by adding your first track.</p>
-      <a href="/tracks/new" use:link class="add-btn">Add Your First Track</a>
+      <Button href="/tracks/new" tag="a" use={[link]} variant="raised" style="background-color: #007bff;">Add Your First Track</Button>
     </div>
   {:else}
-    <div class="tracks-grid">
+    <LayoutGrid>
       {#each tracks as track (track.id)}
-        <div class="track-card">
-          <div class="track-header">
-            <h3>{track.name}</h3>
-            <div class="track-actions">
-              <a href="/tracks/{track.id}" use:link class="edit-btn">Edit</a>
-              <button on:click={() => handleDelete(track.id)} class="delete-btn">Delete</button>
+        <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
+          <Card class="card-hover track-card">
+            {#if track.latitude && track.longitude}
+              <img 
+                src="https://maps.googleapis.com/maps/api/staticmap?center={track.latitude},{track.longitude}&zoom=16&size=300x200&maptype=satellite&key=AIzaSyAls1lFlW5xpL4JGB9bss985id7nURl-c4"
+                alt="Satellite view of {track.name}"
+                class="track-map"
+              />
+            {:else}
+              <div class="no-location">No location data available</div>
+            {/if}
+            
+            <div class="card-overlay">
+              <div class="card-header">
+                <h3>{track.name}</h3>
+              </div>
+              
+              <div class="card-actions">
+                <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+                <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+              </div>
             </div>
-          </div>
-          <div class="track-location">
-            <div class="coordinate">
-              <span class="label">Latitude:</span>
-              <span class="value">{formatCoordinate(track.latitude, 'latitude')}</span>
-            </div>
-            <div class="coordinate">
-              <span class="label">Longitude:</span>
-              <span class="value">{formatCoordinate(track.longitude, 'longitude')}</span>
-            </div>
-          </div>
-          <div class="track-meta">
-            <small>Created: {formatDate(track.createdAt)}</small>
-          </div>
-        </div>
+          </Card>
+        </Cell>
       {/each}
-    </div>
+    </LayoutGrid>
   {/if}
 </div>
 
 <style>
-  .tracks {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .header h1 {
-    margin: 0;
-    color: #333;
-  }
-
-  .add-btn {
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-
-  .add-btn:hover {
-    background-color: #0056b3;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    border: 1px solid #f5c6cb;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 3rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-  }
-
-  .empty-state h2 {
-    color: #495057;
-    margin-bottom: 1rem;
-  }
-
-  .empty-state p {
-    color: #6c757d;
-    margin-bottom: 2rem;
-  }
-
-  .tracks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-
   .track-card {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
   }
 
-  .track-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  .track-map {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(1.4) contrast(2);
   }
 
-  .track-header {
+  .card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.7) 100%);
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
+    padding: 1rem;
   }
 
-  .track-header h3 {
+  .card-header h3 {
+    color: white;
     margin: 0;
-    color: #333;
-    font-size: 1.2rem;
-    flex: 1;
-    margin-right: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
   }
 
-  .track-actions {
+  .card-actions {
     display: flex;
     gap: 0.5rem;
+    justify-content: flex-end;
   }
 
-  .edit-btn {
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
-  }
-
-  .edit-btn:hover {
-    background-color: #218838;
-  }
-
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .delete-btn:hover {
-    background-color: #c82333;
-  }
-
-  .track-location {
-    margin-bottom: 1rem;
+  .no-location {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .coordinate {
@@ -263,25 +185,5 @@
     font-size: 0.875rem;
     padding-top: 1rem;
     border-top: 1px solid #dee2e6;
-  }
-
-  @media (max-width: 768px) {
-    .tracks {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .tracks-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .track-actions {
-      flex-direction: column;
-    }
   }
 </style>

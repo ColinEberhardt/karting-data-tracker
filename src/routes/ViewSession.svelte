@@ -5,6 +5,9 @@
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
+  import Paper from '@smui/paper';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
 
   export let params = {};
   
@@ -69,9 +72,9 @@
   <div class="header">
     <h1>Session Details</h1>
     <div class="header-actions">
-      <a href="/sessions" use:link class="back-btn">← Back to Sessions</a>
+      <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
       {#if session}
-        <a href="/sessions/edit/{session.id}" use:link class="edit-btn">Edit Session</a>
+        <Button href="/sessions/edit/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit Session</Button>
       {/if}
     </div>
   </div>
@@ -81,9 +84,12 @@
   {/if}
 
   {#if loading}
-    <div class="loading">Loading session details...</div>
+    <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading session details...</p>
+    </div>
   {:else if session}
-    <div class="session-content">
+    <Paper elevation={2} style="border-radius: 10px; overflow: hidden;">
       <!-- Session Information Section -->
       <div class="detail-section">
         <h3>Session Information</h3>
@@ -243,12 +249,12 @@
           </div>
         </div>
       {/if}
-    </div>
+    </Paper>
   {:else}
     <div class="empty-state">
       <h2>Session Not Found</h2>
       <p>The session you're looking for doesn't exist or you don't have access to it.</p>
-      <a href="/sessions" use:link class="back-btn">Back to Sessions</a>
+      <Button href="/sessions" tag="a" use={[link]} variant="outlined">Back to Sessions</Button>
     </div>
   {/if}
 </div>
@@ -277,31 +283,6 @@
     gap: 1rem;
   }
 
-  .back-btn {
-    color: #007bff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .back-btn:hover {
-    background-color: #f8f9fa;
-  }
-
-  .edit-btn {
-    background-color: #28a745;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .edit-btn:hover {
-    background-color: #218838;
-  }
-
   .error {
     background-color: #f8d7da;
     color: #721c24;
@@ -315,6 +296,10 @@
     text-align: center;
     padding: 2rem;
     color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .empty-state {
@@ -333,14 +318,6 @@
   .empty-state p {
     color: #888;
     margin-bottom: 2rem;
-  }
-
-  .session-content {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
-    overflow: hidden;
   }
 
   .detail-section {

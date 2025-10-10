@@ -3,6 +3,8 @@
   import { signOut } from 'firebase/auth';
   import { auth } from './firebase.js';
   import { user } from './stores.js';
+  import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
+  import Button from '@smui/button';
 
   const handleSignOut = async () => {
     try {
@@ -13,49 +15,26 @@
   };
 </script>
 
-<nav class="navbar">
-  <div class="nav-brand">
-    <a href="/" use:link>🏎️ Kart Manager</a>
-  </div>
-  
-  <div class="nav-links">
-    <a href="/tyres" use:link>Tyres</a>
-    <a href="/engines" use:link>Engines</a>
-    <a href="/sessions" use:link>Sessions</a>
-    <a href="/tracks" use:link>Tracks</a>
-    
-    <div class="user-info">
-      <span>👤 {$user?.email}</span>
-      <button on:click={handleSignOut} class="sign-out-btn">Sign Out</button>
-    </div>
-  </div>
-</nav>
+<TopAppBar variant="static" style="background-color: #f8f9fa; color: #495057; border-bottom: 1px solid #dee2e6;">
+  <Row>
+    <Section>
+      <Title><a href="/" use:link style="text-decoration: none; color: #007bff; font-weight: bold;">🏎️ Kart Manager</a></Title>
+    </Section>
+    <Section align="end" toolbar style="gap: 0.5rem;">
+      <a href="/tyres" use:link class="nav-link">Tyres</a>
+      <a href="/engines" use:link class="nav-link">Engines</a>
+      <a href="/sessions" use:link class="nav-link">Sessions</a>
+      <a href="/tracks" use:link class="nav-link">Tracks</a>
+      <div class="user-info">
+        <span>👤 {$user?.email}</span>
+        <Button onclick={handleSignOut} variant="raised" color="secondary" style="background-color: #dc3545;">Sign Out</Button>
+      </div>
+    </Section>
+  </Row>
+</TopAppBar>
 
 <style>
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-    margin-bottom: 2rem;
-  }
-
-  .nav-brand a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #007bff;
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .nav-links a {
+  .nav-link {
     text-decoration: none;
     color: #495057;
     padding: 0.5rem 1rem;
@@ -63,7 +42,7 @@
     transition: background-color 0.2s;
   }
 
-  .nav-links a:hover {
+  .nav-link:hover {
     background-color: #e9ecef;
   }
 
@@ -76,37 +55,12 @@
     border-left: 1px solid #dee2e6;
   }
 
-  .sign-out-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .sign-out-btn:hover {
-    background-color: #c82333;
-  }
-
   @media (max-width: 768px) {
-    .navbar {
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .nav-links {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
     .user-info {
       margin-left: 0;
       padding-left: 0;
       border-left: none;
-      border-top: 1px solid #dee2e6;
-      padding-top: 1rem;
+      font-size: 0.875rem;
     }
   }
 </style>

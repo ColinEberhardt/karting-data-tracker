@@ -1,6 +1,7 @@
 <script>
   import Router from 'svelte-spa-router';
   import { user, loading } from './lib/stores.js';
+  import CircularProgress from '@smui/circular-progress';
   import Login from './routes/Login.svelte';
   import Dashboard from './routes/Dashboard.svelte';
   import NewTyre from './routes/NewTyre.svelte';
@@ -18,7 +19,6 @@
   import Tyres from './routes/Tyres.svelte';
   import Navigation from './lib/Navigation.svelte';
 
-  // Define routes
   const routes = {
     '/': Dashboard,
     '/login': Login,
@@ -41,6 +41,7 @@
 <main>
   {#if $loading}
     <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
       <p>Loading...</p>
     </div>
   {:else if $user}

@@ -2,6 +2,10 @@
   import { onMount } from 'svelte';
   import { push, link } from 'svelte-spa-router';
   import { getUserEngines, updateEngine } from '../lib/engines.js';
+  import Card from '@smui/card';
+  import Textfield from '@smui/textfield';
+  import Button from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
 
   export let params = {};
   let engineId = params.id;
@@ -85,10 +89,10 @@
   });
 </script>
 
-<div class="edit-engine">
-  <div class="header">
+<div class="edit-page">
+  <div class="page-header">
     <h1>Edit Engine</h1>
-    <a href="/engines" use:link class="back-btn">← Back to Engines</a>
+    <Button href="/engines" tag="a" use={[link]} variant="outlined">← Back to Engines</Button>
   </div>
 
   {#if error}
@@ -96,301 +100,81 @@
   {/if}
 
   {#if initialLoading}
-    <div class="loading">Loading engine data...</div>
+    <div class="loading">
+      <CircularProgress style="height: 48px; width: 48px;" indeterminate />
+      <p>Loading engine data...</p>
+    </div>
   {:else}
-    <form on:submit|preventDefault={handleSubmit}>
-      <div class="form-section">
-        <h3>Engine Information</h3>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Name: *</label>
-            <input
-              type="text"
-              id="name"
-              bind:value={name}
-              placeholder="e.g., My Race Engine, Backup Motor"
-              required
-            />
+    <Card style="padding: 2rem;">
+      <form on:submit|preventDefault={handleSubmit}>
+        <div class="form-section">
+          <h3>Engine Information</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <Textfield variant="outlined" bind:value={name} label="Name *" required style="width: 100%;" />
+            </div>
           </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="make">Make: *</label>
-            <input
-              type="text"
-              id="make"
-              bind:value={make}
-              placeholder="e.g., Honda, Briggs & Stratton"
-              required
-            />
+          
+          <div class="form-row">
+            <div class="form-group">
+              <Textfield variant="outlined" bind:value={make} label="Make *" required style="width: 100%;" />
+            </div>
+
+            <div class="form-group">
+              <Textfield variant="outlined" bind:value={model} label="Model *" required style="width: 100%;" />
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="model">Model: *</label>
-            <input
-              type="text"
-              id="model"
-              bind:value={model}
-              placeholder="e.g., GX200, LO206"
-              required
-            />
-          </div>
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <Textfield variant="outlined" bind:value={serialNumber} label="Serial Number" style="width: 100%;" />
+            </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="serialNumber">Serial Number:</label>
-            <input
-              type="text"
-              id="serialNumber"
-              bind:value={serialNumber}
-              placeholder="Engine serial number"
-            />
+            <div class="form-group">
+              <Textfield variant="outlined" bind:value={sealNumber} label="Seal Number" style="width: 100%;" />
+            </div>
+          </div>
+
+          <div class="form-group date-field-container">
+            <Textfield variant="outlined" type="date" bind:value={purchaseDate} label="Purchase Date" style="width: 100%;" />
+            <Button type="button" onclick={setDefaultDate} class="date-button" variant="outlined">
+              Set to Today
+            </Button>
           </div>
 
           <div class="form-group">
-            <label for="sealNumber">Seal Number:</label>
-            <input
-              type="text"
-              id="sealNumber"
-              bind:value={sealNumber}
-              placeholder="Engine seal number"
-            />
+            <Textfield variant="outlined" bind:value={notes} label="Notes" textarea style="width: 100%;" input$rows={4} />
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="purchaseDate">Purchase Date:</label>
-          <input
-            type="date"
-            id="purchaseDate"
-            bind:value={purchaseDate}
-          />
-          <button type="button" on:click={setDefaultDate} class="today-btn">
-            Set to Today
-          </button>
+        <div class="form-actions">
+          <Button type="button" onclick={() => push('/engines')} variant="outlined">
+            Cancel
+          </Button>
+          <Button type="submit" disabled={loading} variant="raised" style="background-color: #007bff;">
+            {loading ? 'Updating...' : 'Update Engine'}
+          </Button>
         </div>
-
-        <div class="form-group">
-          <label for="notes">Notes:</label>
-          <textarea
-            id="notes"
-            bind:value={notes}
-            rows="4"
-            placeholder="Additional notes about the engine, modifications, maintenance history, etc."
-          ></textarea>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="button" on:click={() => push('/engines')} class="cancel-btn">
-          Cancel
-        </button>
-        <button type="submit" disabled={loading} class="submit-btn">
-          {loading ? 'Updating...' : 'Update Engine'}
-        </button>
-      </div>
-    </form>
+      </form>
+    </Card>
   {/if}
 </div>
 
 <style>
-  .edit-engine {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .header h1 {
-    margin: 0;
-    color: #333;
-  }
-
-  .back-btn {
-    color: #007bff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .back-btn:hover {
-    background-color: #f8f9fa;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 1rem;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-  }
-
-  form {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
-  }
-
-  .form-section {
-    margin-bottom: 2.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #e9ecef;
-  }
-
-  .form-section:last-of-type {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .form-section h3 {
-    margin: 0 0 1.5rem 0;
-    color: #495057;
-    font-size: 1.25rem;
-    font-weight: 600;
-    border-left: 4px solid #007bff;
-    padding-left: 1rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
+  .date-field-container {
     position: relative;
   }
 
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #333;
-  }
-
-  input, textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-  }
-
-  input:focus, textarea:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-
-  .today-btn {
+  :global(.date-button) {
     position: absolute;
-    right: 10px;
-    top: 35px;
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 3px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .today-btn:hover {
-    background: #5a6268;
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-  }
-
-  .cancel-btn {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-  }
-
-  .cancel-btn:hover {
-    background-color: #5a6268;
-  }
-
-  .submit-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-  }
-
-  .submit-btn:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-
-  .submit-btn:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-  }
-
-  @media (max-width: 768px) {
-    .edit-engine {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .form-row {
-      grid-template-columns: 1fr;
-    }
-
-    .form-actions {
-      flex-direction: column;
-    }
-
-    .form-section h3 {
-      font-size: 1.1rem;
-    }
+    top: 0px;
+    right: 0px;
+    z-index: 10;
+    font-size: 0.75rem;
+    min-width: auto;
+    padding: 4px 8px;
+    height: 28px;
   }
 </style>
+

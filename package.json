@@ -14,6 +14,19 @@
     "vite": "^7.0.4"
   },
   "dependencies": {
+    "@smui/button": "^8.0.3",
+    "@smui/card": "^8.0.3",
+    "@smui/checkbox": "^8.0.3",
+    "@smui/circular-progress": "^8.0.3",
+    "@smui/common": "^8.0.3",
+    "@smui/data-table": "^8.0.3",
+    "@smui/form-field": "^8.0.3",
+    "@smui/icon-button": "^8.0.3",
+    "@smui/layout-grid": "^8.0.3",
+    "@smui/paper": "^8.0.3",
+    "@smui/select": "^8.0.3",
+    "@smui/textfield": "^8.0.3",
+    "@smui/top-app-bar": "^8.0.3",
     "firebase": "^10.14.1",
     "firebaseui": "^6.1.0",
     "svelte-spa-router": "^4.0.1"

@@ -79,7 +79,7 @@
       {#each engines as engine (engine.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
           <Card class="engine-card" style={engine.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
-            <div class="engine-header" style={engine.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
+            <div class="card-header" style={engine.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
               <h3>{engine.name || `${engine.make} ${engine.model}`}</h3>
               {#if engine.retired}
                 <span class="retired-badge">Retired</span>
@@ -114,7 +114,7 @@
               {/if}
             </div>
 
-            <div class="engine-actions">
+            <div class="card-actions">
               <Button href="/engines/{engine.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
               {#if !engine.retired}
                 <Button onclick={() => handleRetire(engine.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
@@ -145,27 +145,6 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 
-  .engine-header {
-    color: white;
-    padding: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .engine-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-  }
-
-  .retired-badge {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-  }
-
   .engine-details {
     padding: 1.5rem;
   }
@@ -184,14 +163,5 @@
   .detail strong {
     color: #495057;
     min-width: 120px;
-  }
-
-  .engine-actions {
-    padding: 1rem 1.5rem;
-    background: #f8f9fa;
-    border-top: 1px solid #e9ecef;
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
   }
 </style>

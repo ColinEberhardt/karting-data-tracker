@@ -98,7 +98,7 @@
       {#each tyres as tyre (tyre.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 4, phone: 4 }}>
           <Card class="tyre-card" style={tyre.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
-            <div class="tyre-header" style={tyre.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
+            <div class="card-header" style={tyre.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
               <h3>{tyre.name}</h3>
               {#if tyre.retired}
                 <span class="retired-badge">Retired</span>
@@ -129,7 +129,7 @@
               </div>
             </div>
 
-            <div class="tyre-actions">
+            <div class="card-actions">
               <Button href="/tyres/{tyre.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
               {#if !tyre.retired}
                 <Button onclick={() => handleRetire(tyre.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
@@ -148,27 +148,6 @@
 </div>
 
 <style>
-  .tyre-header {
-    color: white;
-    padding: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .tyre-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-  }
-
-  .retired-badge {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-  }
-
   .tyre-details {
     padding: 1.5rem;
   }
@@ -187,19 +166,5 @@
   .detail strong {
     color: #495057;
     min-width: 120px;
-  }
-
-  .tyre-actions {
-    padding: 1rem 1.5rem;
-    background: #f8f9fa;
-    border-top: 1px solid #e9ecef;
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  @media (max-width: 768px) {
-    .tyre-actions {
-      flex-wrap: wrap;
-    }
   }
 </style>

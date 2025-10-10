@@ -77,26 +77,30 @@
     <LayoutGrid>
       {#each tracks as track (track.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
-          <Card style="padding: 1.5rem; width: 100%; height: 100%;">
-            <div class="track-header">
+          <Card style="width: 100%; height: 100%; overflow: hidden;">
+            <div class="card-header" style="background: linear-gradient(135deg, #007bff, #0056b3);">
               <h3>{track.name}</h3>
-              <div class="track-actions">
-                <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
-                <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+            </div>
+            
+            <div class="track-details">
+              <div class="track-location">
+                <div class="coordinate">
+                  <span class="label">Latitude:</span>
+                  <span class="value">{formatCoordinate(track.latitude, 'latitude')}</span>
+                </div>
+                <div class="coordinate">
+                  <span class="label">Longitude:</span>
+                  <span class="value">{formatCoordinate(track.longitude, 'longitude')}</span>
+                </div>
+              </div>
+              <div class="track-meta">
+                <small>Created: {formatDate(track.createdAt)}</small>
               </div>
             </div>
-            <div class="track-location">
-              <div class="coordinate">
-                <span class="label">Latitude:</span>
-                <span class="value">{formatCoordinate(track.latitude, 'latitude')}</span>
-              </div>
-              <div class="coordinate">
-                <span class="label">Longitude:</span>
-                <span class="value">{formatCoordinate(track.longitude, 'longitude')}</span>
-              </div>
-            </div>
-            <div class="track-meta">
-              <small>Created: {formatDate(track.createdAt)}</small>
+
+            <div class="card-actions">
+              <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+              <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
             </div>
           </Card>
         </Cell>
@@ -106,25 +110,8 @@
 </div>
 
 <style>
-  .track-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-  }
-
-  .track-header h3 {
-    margin: 0;
-    color: #333;
-    font-size: 1.2rem;
-    flex: 1;
-    margin-right: 1rem;
-  }
-
-  .track-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+  .track-details {
+    padding: 1.5rem;
   }
 
   .track-location {
@@ -159,11 +146,5 @@
     font-size: 0.875rem;
     padding-top: 1rem;
     border-top: 1px solid #dee2e6;
-  }
-
-  @media (max-width: 768px) {
-    .track-actions {
-      flex-direction: column;
-    }
   }
 </style>

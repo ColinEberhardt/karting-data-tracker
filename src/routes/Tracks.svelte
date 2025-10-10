@@ -5,6 +5,7 @@
   import Card from '@smui/card';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
+  import LayoutGrid, { Cell } from '@smui/layout-grid';
 
   let tracks = [];
   let loading = true;
@@ -73,43 +74,38 @@
       <Button href="/tracks/new" tag="a" use={[link]} variant="raised" style="background-color: #007bff;">Add Your First Track</Button>
     </div>
   {:else}
-    <div class="tracks-grid">
+    <LayoutGrid>
       {#each tracks as track (track.id)}
-        <Card style="padding: 1.5rem;">
-          <div class="track-header">
-            <h3>{track.name}</h3>
-            <div class="track-actions">
-              <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
-              <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+        <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
+          <Card style="padding: 1.5rem; width: 100%; height: 100%;">
+            <div class="track-header">
+              <h3>{track.name}</h3>
+              <div class="track-actions">
+                <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+                <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+              </div>
             </div>
-          </div>
-          <div class="track-location">
-            <div class="coordinate">
-              <span class="label">Latitude:</span>
-              <span class="value">{formatCoordinate(track.latitude, 'latitude')}</span>
+            <div class="track-location">
+              <div class="coordinate">
+                <span class="label">Latitude:</span>
+                <span class="value">{formatCoordinate(track.latitude, 'latitude')}</span>
+              </div>
+              <div class="coordinate">
+                <span class="label">Longitude:</span>
+                <span class="value">{formatCoordinate(track.longitude, 'longitude')}</span>
+              </div>
             </div>
-            <div class="coordinate">
-              <span class="label">Longitude:</span>
-              <span class="value">{formatCoordinate(track.longitude, 'longitude')}</span>
+            <div class="track-meta">
+              <small>Created: {formatDate(track.createdAt)}</small>
             </div>
-          </div>
-          <div class="track-meta">
-            <small>Created: {formatDate(track.createdAt)}</small>
-          </div>
-        </Card>
+          </Card>
+        </Cell>
       {/each}
-    </div>
+    </LayoutGrid>
   {/if}
 </div>
 
 <style>
-
-  .tracks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-
   .track-header {
     display: flex;
     justify-content: space-between;
@@ -128,6 +124,7 @@
   .track-actions {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .track-location {
@@ -165,10 +162,6 @@
   }
 
   @media (max-width: 768px) {
-    .tracks-grid {
-      grid-template-columns: 1fr;
-    }
-
     .track-actions {
       flex-direction: column;
     }

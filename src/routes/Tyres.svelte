@@ -5,6 +5,7 @@
   import Card from '@smui/card';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
+  import LayoutGrid, { Cell } from '@smui/layout-grid';
 
   let tyres = [];
   let loading = true;
@@ -93,75 +94,60 @@
       <Button href="/tyres/new" tag="a" use={[link]} variant="raised" color="primary">Add Tyre</Button>
     </div>
   {:else}
-    <div class="tyres-grid">
+    <LayoutGrid>
       {#each tyres as tyre (tyre.id)}
-        <Card class="tyre-card" style={tyre.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
-          <div class="tyre-header" style={tyre.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
-            <h3>{tyre.name}</h3>
-            {#if tyre.retired}
-              <span class="retired-badge">Retired</span>
-            {/if}
-          </div>
-          
-          <div class="tyre-details">
-            <div class="detail">
-              <strong>Make/Type:</strong> {tyre.make} - {tyre.type}
+        <Cell spanDevices={{ desktop: 4, tablet: 4, phone: 4 }}>
+          <Card class="tyre-card" style={tyre.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
+            <div class="tyre-header" style={tyre.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
+              <h3>{tyre.name}</h3>
+              {#if tyre.retired}
+                <span class="retired-badge">Retired</span>
+              {/if}
             </div>
-            {#if tyre.description}
+            
+            <div class="tyre-details">
               <div class="detail">
-                <strong>Description:</strong> {tyre.description}
+                <strong>Make/Type:</strong> {tyre.make} - {tyre.type}
               </div>
-            {/if}
-            {#if tyre.compound}
+              {#if tyre.description}
+                <div class="detail">
+                  <strong>Description:</strong> {tyre.description}
+                </div>
+              {/if}
+              {#if tyre.compound}
+                <div class="detail">
+                  <strong>Compound:</strong> {tyre.compound}
+                </div>
+              {/if}
+              {#if tyre.size}
+                <div class="detail">
+                  <strong>Size:</strong> {tyre.size}
+                </div>
+              {/if}
               <div class="detail">
-                <strong>Compound:</strong> {tyre.compound}
+                <strong>Created:</strong> {formatDate(tyre.createdAt)}
               </div>
-            {/if}
-            {#if tyre.size}
-              <div class="detail">
-                <strong>Size:</strong> {tyre.size}
-              </div>
-            {/if}
-            <div class="detail">
-              <strong>Created:</strong> {formatDate(tyre.createdAt)}
             </div>
-          </div>
 
-          <div class="tyre-actions">
-            <Button href="/tyres/{tyre.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
-            {#if !tyre.retired}
-              <Button onclick={() => handleRetire(tyre.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
-                Retire
+            <div class="tyre-actions">
+              <Button href="/tyres/{tyre.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+              {#if !tyre.retired}
+                <Button onclick={() => handleRetire(tyre.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
+                  Retire
+                </Button>
+              {/if}
+              <Button onclick={() => handleDelete(tyre.id)} variant="raised" style="background-color: #dc3545;">
+                Delete
               </Button>
-            {/if}
-            <Button onclick={() => handleDelete(tyre.id)} variant="raised" style="background-color: #dc3545;">
-              Delete
-            </Button>
-          </div>
-        </Card>
+            </div>
+          </Card>
+        </Cell>
       {/each}
-    </div>
+    </LayoutGrid>
   {/if}
 </div>
 
 <style>
-
-  .tyres-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-  }
-
-  :global(.tyre-card) {
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  :global(.tyre-card:hover) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  }
-
   .tyre-header {
     color: white;
     padding: 1.5rem;
@@ -212,10 +198,6 @@
   }
 
   @media (max-width: 768px) {
-    .tyres-grid {
-      grid-template-columns: 1fr;
-    }
-
     .tyre-actions {
       flex-wrap: wrap;
     }

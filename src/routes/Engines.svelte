@@ -5,6 +5,7 @@
   import Card from '@smui/card';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
+  import LayoutGrid, { Cell } from '@smui/layout-grid';
 
   let engines = [];
   let loading = true;
@@ -74,72 +75,69 @@
       <Button href="/engines/new" tag="a" use={[link]} variant="raised" color="primary">Add Engine</Button>
     </div>
   {:else}
-    <div class="engines-grid">
+    <LayoutGrid>
       {#each engines as engine (engine.id)}
-        <Card class="engine-card" style={engine.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
-          <div class="engine-header" style={engine.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
-            <h3>{engine.name || `${engine.make} ${engine.model}`}</h3>
-            {#if engine.retired}
-              <span class="retired-badge">Retired</span>
-            {/if}
-          </div>
-          
-          <div class="engine-details">
-            {#if engine.name}
-              <div class="detail">
-                <strong>Make/Model:</strong> {engine.make} {engine.model}
-              </div>
-            {/if}
-            {#if engine.serialNumber}
-              <div class="detail">
-                <strong>Serial Number:</strong> {engine.serialNumber}
-              </div>
-            {/if}
-            {#if engine.sealNumber}
-              <div class="detail">
-                <strong>Seal Number:</strong> {engine.sealNumber}
-              </div>
-            {/if}
-            {#if engine.purchaseDate}
-              <div class="detail">
-                <strong>Purchase Date:</strong> {new Date(engine.purchaseDate).toLocaleDateString()}
-              </div>
-            {/if}
-            {#if engine.notes}
-              <div class="detail">
-                <strong>Notes:</strong> {engine.notes}
-              </div>
-            {/if}
-          </div>
+        <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
+          <Card class="engine-card" style={engine.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
+            <div class="engine-header" style={engine.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
+              <h3>{engine.name || `${engine.make} ${engine.model}`}</h3>
+              {#if engine.retired}
+                <span class="retired-badge">Retired</span>
+              {/if}
+            </div>
+            
+            <div class="engine-details">
+              {#if engine.name}
+                <div class="detail">
+                  <strong>Make/Model:</strong> {engine.make} {engine.model}
+                </div>
+              {/if}
+              {#if engine.serialNumber}
+                <div class="detail">
+                  <strong>Serial Number:</strong> {engine.serialNumber}
+                </div>
+              {/if}
+              {#if engine.sealNumber}
+                <div class="detail">
+                  <strong>Seal Number:</strong> {engine.sealNumber}
+                </div>
+              {/if}
+              {#if engine.purchaseDate}
+                <div class="detail">
+                  <strong>Purchase Date:</strong> {new Date(engine.purchaseDate).toLocaleDateString()}
+                </div>
+              {/if}
+              {#if engine.notes}
+                <div class="detail">
+                  <strong>Notes:</strong> {engine.notes}
+                </div>
+              {/if}
+            </div>
 
-          <div class="engine-actions">
-            <Button href="/engines/{engine.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
-            {#if !engine.retired}
-              <Button onclick={() => handleRetire(engine.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
-                Retire
+            <div class="engine-actions">
+              <Button href="/engines/{engine.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+              {#if !engine.retired}
+                <Button onclick={() => handleRetire(engine.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
+                  Retire
+                </Button>
+              {/if}
+              <Button onclick={() => handleDelete(engine.id)} variant="raised" style="background-color: #dc3545;">
+                Delete
               </Button>
-            {/if}
-            <Button onclick={() => handleDelete(engine.id)} variant="raised" style="background-color: #dc3545;">
-              Delete
-            </Button>
-          </div>
-        </Card>
+            </div>
+          </Card>
+        </Cell>
       {/each}
-    </div>
+    </LayoutGrid>
   {/if}
 </div>
 
 <style>
-
-  .engines-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-  }
-
   :global(.engine-card) {
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    height: 100%;
   }
 
   :global(.engine-card:hover) {
@@ -194,15 +192,6 @@
     border-top: 1px solid #e9ecef;
     display: flex;
     gap: 0.75rem;
-  }
-
-  @media (max-width: 768px) {
-    .engines-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .engine-actions {
-      flex-wrap: wrap;
-    }
+    flex-wrap: wrap;
   }
 </style>

@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { push, link } from 'svelte-spa-router';
   import { getUserTyres, deleteTyre, retireTyre } from '../lib/tyres.js';
+  import { getUserSessions } from '../lib/sessions.js';
+  import { calculateItemStats, mergeItemsWithStats } from '../lib/sessionStats.js';
   import Card from '@smui/card';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
@@ -15,9 +17,16 @@
     try {
       loading = true;
       const rawTyres = await getUserTyres();
+      const sessions = await getUserSessions();
+      
+      // Calculate tyre statistics from sessions
+      const tyreStats = calculateItemStats(sessions, 'tyreId');
+      
+      // Merge tyre data with statistics
+      const tyresWithStats = mergeItemsWithStats(rawTyres, tyreStats);
       
       // Sort tyres: active tyres first (by createdAt desc), then retired tyres (by createdAt desc)
-      tyres = rawTyres.sort((a, b) => {
+      tyres = tyresWithStats.sort((a, b) => {
         // If one is retired and the other isn't, retired goes to bottom
         if (a.retired !== b.retired) {
           return a.retired ? 1 : -1;
@@ -109,24 +118,17 @@
               <div class="detail">
                 <strong>Make/Type:</strong> {tyre.make} - {tyre.type}
               </div>
+              <div class="detail">
+                <strong>Laps:</strong> {tyre.totalLaps}
+              </div>
+              <div class="detail">
+                <strong>Sessions:</strong> {tyre.sessions}
+              </div>
               {#if tyre.description}
                 <div class="detail">
                   <strong>Description:</strong> {tyre.description}
                 </div>
               {/if}
-              {#if tyre.compound}
-                <div class="detail">
-                  <strong>Compound:</strong> {tyre.compound}
-                </div>
-              {/if}
-              {#if tyre.size}
-                <div class="detail">
-                  <strong>Size:</strong> {tyre.size}
-                </div>
-              {/if}
-              <div class="detail">
-                <strong>Created:</strong> {formatDate(tyre.createdAt)}
-              </div>
             </div>
 
             <div class="card-actions">

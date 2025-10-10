@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { push, link } from 'svelte-spa-router';
   import { getUserEngines, deleteEngine, retireEngine } from '../lib/engines.js';
+  import { getUserSessions } from '../lib/sessions.js';
+  import { calculateItemStats, mergeItemsWithStats } from '../lib/sessionStats.js';
   import Card from '@smui/card';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
@@ -14,7 +16,14 @@
   const loadEngines = async () => {
     try {
       loading = true;
-      engines = await getUserEngines();
+      const rawEngines = await getUserEngines();
+      const sessions = await getUserSessions();
+      
+      // Calculate engine statistics from sessions
+      const engineStats = calculateItemStats(sessions, 'engineId');
+      
+      // Merge engine data with statistics
+      engines = mergeItemsWithStats(rawEngines, engineStats);
     } catch (err) {
       error = err.message;
     } finally {
@@ -92,6 +101,12 @@
                   <strong>Make/Model:</strong> {engine.make} {engine.model}
                 </div>
               {/if}
+              <div class="detail">
+                <strong>Laps:</strong> {engine.totalLaps}
+              </div>
+              <div class="detail">
+                <strong>Sessions:</strong> {engine.sessions}
+              </div>
               {#if engine.serialNumber}
                 <div class="detail">
                   <strong>Serial Number:</strong> {engine.serialNumber}
@@ -112,6 +127,25 @@
                   <strong>Notes:</strong> {engine.notes}
                 </div>
               {/if}
+            </div>
+
+            <div class="card-actions">
+              <Button href="/engines/{engine.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+              {#if !engine.retired}
+                <Button onclick={() => handleRetire(engine.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
+                  Retire
+                </Button>
+              {/if}
+              <Button onclick={() => handleDelete(engine.id)} variant="raised" style="background-color: #dc3545;">
+                Delete
+              </Button>
+            </div>
+          </Card>
+        </Cell>
+      {/each}
+    </LayoutGrid>
+  {/if}
+</div>
             </div>
 
             <div class="card-actions">

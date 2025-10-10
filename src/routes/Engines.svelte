@@ -78,15 +78,15 @@
     <LayoutGrid>
       {#each engines as engine (engine.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
-          <Card class="engine-card" style={engine.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
-            <div class="card-header" style={engine.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
+          <Card class="card-hover {engine.retired ? 'card-retired' : ''}">
+            <div class="card-header {engine.retired ? 'card-header-retired' : 'card-header-active'}">
               <h3>{engine.name || `${engine.make} ${engine.model}`}</h3>
               {#if engine.retired}
                 <span class="retired-badge">Retired</span>
               {/if}
             </div>
             
-            <div class="engine-details">
+            <div class="card-details">
               {#if engine.name}
                 <div class="detail">
                   <strong>Make/Model:</strong> {engine.make} {engine.model}
@@ -131,37 +131,3 @@
     </LayoutGrid>
   {/if}
 </div>
-
-<style>
-  :global(.engine-card) {
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: 100%;
-    height: 100%;
-  }
-
-  :global(.engine-card:hover) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  }
-
-  .engine-details {
-    padding: 1.5rem;
-  }
-
-  .detail {
-    margin-bottom: 0.75rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .detail:last-child {
-    margin-bottom: 0;
-  }
-
-  .detail strong {
-    color: #495057;
-    min-width: 120px;
-  }
-</style>

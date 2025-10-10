@@ -97,15 +97,15 @@
     <LayoutGrid>
       {#each tyres as tyre (tyre.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 4, phone: 4 }}>
-          <Card class="tyre-card" style={tyre.retired ? 'opacity: 0.7; border: 1px solid #dc3545;' : ''}>
-            <div class="card-header" style={tyre.retired ? 'background: linear-gradient(135deg, #dc3545, #c82333);' : 'background: linear-gradient(135deg, #007bff, #0056b3);'}>
+          <Card class="card-hover {tyre.retired ? 'card-retired' : ''}">
+            <div class="card-header {tyre.retired ? 'card-header-retired' : 'card-header-active'}">
               <h3>{tyre.name}</h3>
               {#if tyre.retired}
                 <span class="retired-badge">Retired</span>
               {/if}
             </div>
             
-            <div class="tyre-details">
+            <div class="card-details">
               <div class="detail">
                 <strong>Make/Type:</strong> {tyre.make} - {tyre.type}
               </div>
@@ -146,25 +146,3 @@
     </LayoutGrid>
   {/if}
 </div>
-
-<style>
-  .tyre-details {
-    padding: 1.5rem;
-  }
-
-  .detail {
-    margin-bottom: 0.75rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .detail:last-child {
-    margin-bottom: 0;
-  }
-
-  .detail strong {
-    color: #495057;
-    min-width: 120px;
-  }
-</style>

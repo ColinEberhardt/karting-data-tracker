@@ -77,12 +77,12 @@
     <LayoutGrid>
       {#each tracks as track (track.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
-          <Card style="width: 100%; height: 100%; overflow: hidden;">
-            <div class="card-header" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+          <Card class="card-hover">
+            <div class="card-header card-header-active">
               <h3>{track.name}</h3>
             </div>
             
-            <div class="track-details">
+            <div class="card-details">
               <div class="track-location">
                 <div class="coordinate">
                   <span class="label">Latitude:</span>
@@ -92,9 +92,6 @@
                   <span class="label">Longitude:</span>
                   <span class="value">{formatCoordinate(track.longitude, 'longitude')}</span>
                 </div>
-              </div>
-              <div class="track-meta">
-                <small>Created: {formatDate(track.createdAt)}</small>
               </div>
             </div>
 
@@ -110,10 +107,6 @@
 </div>
 
 <style>
-  .track-details {
-    padding: 1.5rem;
-  }
-
   .track-location {
     margin-bottom: 1rem;
   }

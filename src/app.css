@@ -24,6 +24,55 @@
   font-size: 1.25rem;
 }
 
+/* Card header background gradients */
+.card-header-active {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+}
+
+.card-header-retired {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+/* Card hover effects */
+.card-hover {
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  height: 100%;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Retired card styles */
+.card-retired {
+  opacity: 0.7;
+  border: 1px solid #dc3545;
+}
+
+/* Card details/content styles */
+.card-details {
+  padding: 1.5rem;
+}
+
+.detail {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.detail:last-child {
+  margin-bottom: 0;
+}
+
+.detail strong {
+  color: #495057;
+  min-width: 120px;
+}
+
 /* Card actions styles */
 .card-actions {
   padding: 1rem 1.5rem;

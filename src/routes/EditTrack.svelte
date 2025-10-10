@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { push } from 'svelte-spa-router';
+  import { push, link } from 'svelte-spa-router';
   import { getUserTracks, updateTrack, getCurrentLocation } from '../lib/tracks.js';
   import Card from '@smui/card';
   import Textfield from '@smui/textfield';
@@ -104,9 +104,10 @@
   onMount(loadTrack);
 </script>
 
-<div class="container container-sm">
+<div class="edit-page">
   <div class="page-header">
     <h1>Edit Track</h1>
+    <Button href="/tracks" tag="a" use={[link]} variant="outlined">← Back to Tracks</Button>
   </div>
 
   {#if error}
@@ -121,14 +122,18 @@
   {:else}
     <Card style="padding: 2rem;">
       <form on:submit|preventDefault={handleSubmit}>
-        <div class="form-group">
-          <Textfield variant="outlined" bind:value={name} label="Track Name *" required disabled={loading} style="width: 100%;" />
+        <div class="form-section">
+          <h3>Track Information</h3>
+          <div class="form-group">
+            <Textfield variant="outlined" bind:value={name} label="Track Name *" required disabled={loading} style="width: 100%;" />
+          </div>
         </div>
 
-        <div class="location-section">
+        <div class="form-section">
           <h3>Location Coordinates</h3>
-          <div class="location-header">
-            <p>Update the track's GPS coordinates or use your current location.</p>
+          <p style="margin-bottom: 1rem; color: var(--color-text-muted);">Update the track's GPS coordinates or use your current location.</p>
+          
+          <div style="margin-bottom: 1.5rem;">
             <Button
               type="button"
               onclick={handleUseCurrentLocation}
@@ -144,7 +149,7 @@
             </Button>
           </div>
 
-          <div class="coordinates-grid">
+          <div class="form-row">
             <div class="form-group">
               <Textfield 
                 variant="outlined" 
@@ -205,61 +210,3 @@
     </Card>
   {/if}
 </div>
-
-<style>
-  .page-header h1 {
-    margin: 0 0 2rem 0;
-  }
-
-  .location-section {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-radius: 6px;
-    border: 1px solid #dee2e6;
-  }
-
-  .location-section h3 {
-    margin: 0 0 1rem 0;
-    color: #495057;
-  }
-
-  .location-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .location-header p {
-    margin: 0;
-    color: #6c757d;
-    flex: 1;
-  }
-
-  .coordinates-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .hint {
-    display: block;
-    margin-top: 0.25rem;
-    color: #6c757d;
-    font-size: 0.875rem;
-  }
-
-  @media (max-width: 768px) {
-    .coordinates-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .location-header {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  }
-</style>

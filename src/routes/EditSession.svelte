@@ -197,18 +197,18 @@
   });
 </script>
 
-<div class="new-session">
-  <div class="header">
+<div class="edit-page">
+  <div class="page-header">
     <h1>Edit Karting Session</h1>
     <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
   </div>
 
   {#if error}
-    <div class="error">{error}</div>
+    <div class="error-message">{error}</div>
   {/if}
 
   {#if initialLoading}
-    <div class="loading">
+    <div class="loading-state">
       <CircularProgress style="height: 48px; width: 48px;" indeterminate />
       <p>Loading session data...</p>
     </div>
@@ -413,80 +413,14 @@
 </div>
 
 <style>
-  .new-session {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .header h1 {
-    margin: 0;
-    color: #333;
-  }
-
-  .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 1rem;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .form-section {
-    margin-bottom: 2.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #e9ecef;
-  }
-
-  .form-section:last-of-type {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .form-section h3 {
-    margin: 0 0 1.5rem 0;
-    color: #495057;
-    font-size: 1.25rem;
-    font-weight: 600;
-    border-left: 4px solid #007bff;
-    padding-left: 1rem;
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    min-height: 100px;
-  }
-
   .no-items {
     margin-top: 0.5rem;
-    color: #dc3545;
+    color: var(--color-danger);
     font-size: 0.9rem;
   }
 
   .no-items a {
-    color: #007bff;
+    color: var(--color-primary);
     text-decoration: none;
   }
 
@@ -498,42 +432,4 @@
     margin-bottom: 1rem;
   }
 
-  .race-fields {
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    border: 1px solid #dee2e6;
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-  }
-
-  @media (max-width: 768px) {
-    .new-session {
-      padding: 1rem;
-    }
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .form-row {
-      grid-template-columns: 1fr;
-    }
-
-    .form-actions {
-      flex-direction: column;
-    }
-
-    .form-section h3 {
-      font-size: 1.1rem;
-    }
-  }
 </style>

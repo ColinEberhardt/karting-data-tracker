@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { push } from 'svelte-spa-router';
+  import { push, link } from 'svelte-spa-router';
   import { doc, getDoc } from 'firebase/firestore';
   import { db } from '../lib/firebase.js';
   import { updateTyre } from '../lib/tyres.js';
@@ -78,9 +78,10 @@
   onMount(loadTyre);
 </script>
 
-<div class="container container-sm">
+<div class="edit-page">
   <div class="page-header">
     <h1>Edit Tyre</h1>
+    <Button href="/tyres" tag="a" use={[link]} variant="outlined">← Back to Tyres</Button>
   </div>
 
   {#if error}
@@ -95,53 +96,59 @@
   {:else}
     <Card style="padding: 2rem;">
       <form on:submit|preventDefault={handleSubmit}>
-        <div class="form-group">
-          <Textfield
-            variant="outlined"
-            bind:value={name}
-            label="Name *"
-            required
-            disabled={loading}
-            style="width: 100%;"
-          />
-        </div>
+        <div class="form-section">
+          <h3>Tyre Information</h3>
+          
+          <div class="form-group">
+            <Textfield
+              variant="outlined"
+              bind:value={name}
+              label="Name *"
+              required
+              disabled={loading}
+              style="width: 100%;"
+            />
+          </div>
 
-        <div class="form-group">
-          <Textfield
-            variant="outlined"
-            bind:value={make}
-            label="Make *"
-            required
-            disabled={loading}
-            style="width: 100%;"
-          />
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <Textfield
+                variant="outlined"
+                bind:value={make}
+                label="Make *"
+                required
+                disabled={loading}
+                style="width: 100%;"
+              />
+            </div>
 
-        <div class="form-group">
-          <Select variant="outlined" bind:value={type} label="Type *" required disabled={loading} style="width: 100%;">
-            <Option value="">Select type</Option>
-            <Option value="Dry">Dry</Option>
-            <Option value="Wet">Wet</Option>
-          </Select>
-        </div>
+            <div class="form-group">
+              <Select variant="outlined" bind:value={type} label="Type *" required disabled={loading} style="width: 100%;">
+                <Option value="">Select type</Option>
+                <Option value="Dry">Dry</Option>
+                <Option value="Slick">Slick</Option>
+              </Select>
+            </div>
+          </div>
 
-        <div class="form-group">
-          <Textfield
-            variant="outlined"
-            bind:value={description}
-            label="Description"
-            textarea
-            disabled={loading}
-            style="width: 100%;"
-            input$rows={4}
-          />
-        </div>
+          <div class="form-group">
+            <Textfield
+              variant="outlined"
+              bind:value={description}
+              label="Description"
+              textarea
+              disabled={loading}
+              style="width: 100%;"
+              input$rows={4}
+            />
+          </div>
 
-        <div class="form-group">
-          <FormField>
-            <Checkbox bind:checked={retired} disabled={loading} />
-            <span slot="label">Retired</span>
-          </FormField>
+          <div class="form-group">
+            <FormField>
+              <Checkbox bind:checked={retired} disabled={loading} />
+              Retired
+            </FormField>
+          </div>
         </div>
 
         <div class="form-actions">
@@ -156,7 +163,3 @@
     </Card>
   {/if}
 </div>
-
-<style>
-  /* Component-specific styles only - utilities handled by global.css */
-</style>

@@ -1,3 +1,35 @@
+/* CSS Custom Properties for Theme Consistency */
+:root {
+  /* Colors - matching existing theme */
+  --color-primary: #007bff;
+  --color-primary-dark: #0056b3;
+  --color-danger: #dc3545;
+  --color-danger-dark: #c82333;
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-secondary: #6c757d;
+  --color-text: #333;
+  --color-text-muted: #6c757d;
+  --color-bg: #f8f9fa;
+  --color-border: #dee2e6;
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+}
+
+body {
+  color: var(--color-text);
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -13,7 +45,7 @@
 /* Card header styles */
 .card-header {
   color: white;
-  padding: 1.5rem;
+  padding: var(--spacing-md);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,11 +58,11 @@
 
 /* Card header background gradients */
 .card-header-active {
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
 }
 
 .card-header-retired {
-  background: linear-gradient(135deg, #dc3545, #c82333);
+  background: linear-gradient(135deg, var(--color-danger), var(--color-danger-dark));
 }
 
 /* Card hover effects */
@@ -43,25 +75,25 @@
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px var(--color-border);
 }
 
 /* Retired card styles */
 .card-retired {
   opacity: 0.7;
-  border: 1px solid #dc3545;
+  border: 1px solid var(--color-danger);
 }
 
 /* Card details/content styles */
 .card-details {
-  padding: 1.5rem;
+  padding: var(--spacing-md);
 }
 
 .detail {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--spacing-sm);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .detail:last-child {
@@ -69,25 +101,110 @@
 }
 
 .detail strong {
-  color: #495057;
+  color: var(--color-text-muted);
   min-width: 120px;
 }
 
 /* Card actions styles */
 .card-actions {
-  padding: 1rem 1.5rem;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
   display: flex;
-  gap: 0.75rem;
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
 }
 
 /* Retired badge styles */
 .retired-badge {
   background: rgba(255, 255, 255, 0.2);
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  padding: 0.25rem var(--spacing-sm);
+  border-radius: var(--radius-lg);
   font-size: 0.8rem;
   font-weight: 500;
+}
+
+/* Error Message */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-sm);
+  border: 1px solid #f5c6cb;
+}
+
+/* Form Utilities */
+.form-group {
+  margin-bottom: var(--spacing-md);
+  position: relative;
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
+}
+
+/* Edit Page Layouts */
+.edit-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.form-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #495057;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-left: 4px solid #007bff;
+  padding-left: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Loading and status states */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.loading-state p {
+  margin-top: var(--spacing-sm);
+  color: var(--color-text-muted);
+}
+
+/* Form hints and help text */
+.hint {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
 }

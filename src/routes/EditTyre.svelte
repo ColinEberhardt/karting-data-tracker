@@ -125,7 +125,7 @@
             <div class="form-group">
               <Select variant="outlined" bind:value={type} label="Type *" required disabled={loading} style="width: 100%;">
                 <Option value="">Select type</Option>
-                <Option value="Dry">Dry</Option>
+                <Option value="Wet">Wet</Option>
                 <Option value="Slick">Slick</Option>
               </Select>
             </div>

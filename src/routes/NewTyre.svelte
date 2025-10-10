@@ -40,7 +40,7 @@
   };
 </script>
 
-<div class="container container-sm">
+<div class="form-page">
   <div class="page-header">
     <h1>Add New Tyre</h1>
   </div>

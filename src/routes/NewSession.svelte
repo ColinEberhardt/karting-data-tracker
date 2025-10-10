@@ -158,7 +158,7 @@
   });
 </script>
 
-<div class="new-session">
+<div class="form-page">
   <div class="header">
     <h1>Add New Karting Session</h1>
     <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
@@ -367,12 +367,6 @@
 </div>
 
 <style>
-  .new-session {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
   .header {
     display: flex;
     justify-content: space-between;
@@ -448,10 +442,6 @@
   }
 
   @media (max-width: 768px) {
-    .new-session {
-      padding: 1rem;
-    }
-
     .header {
       flex-direction: column;
       gap: 1rem;

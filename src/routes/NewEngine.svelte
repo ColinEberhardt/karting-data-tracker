@@ -54,7 +54,7 @@
   };
 </script>
 
-<div class="container container-md">
+<div class="form-page">
   <div class="page-header">
     <h1>Add New Engine</h1>
     <Button href="/engines" tag="a" use={[link]} variant="outlined">← Back to Engines</Button>

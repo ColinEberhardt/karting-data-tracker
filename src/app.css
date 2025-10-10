@@ -148,11 +148,19 @@ body {
   margin-top: var(--spacing-lg);
 }
 
-/* Edit Page Layouts */
-.edit-page {
+/* Form Page Layouts */
+.edit-page,
+.form-page {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .edit-page,
+  .form-page {
+    padding: 1rem;
+  }
 }
 
 .form-section {

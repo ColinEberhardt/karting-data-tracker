@@ -68,7 +68,7 @@
   onMount(loadData);
 </script>
 
-<div class="view-session">
+<div class="form-page">
   <div class="header">
     <h1>Session Details</h1>
     <div class="header-actions">
@@ -260,12 +260,6 @@
 </div>
 
 <style>
-  .view-session {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
   .header {
     display: flex;
     justify-content: space-between;
@@ -362,10 +356,6 @@
   }
 
   @media (max-width: 768px) {
-    .view-session {
-      padding: 1rem;
-    }
-
     .header {
       flex-direction: column;
       gap: 1rem;

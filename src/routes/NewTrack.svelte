@@ -1,5 +1,5 @@
 <script>
-  import { push } from 'svelte-spa-router';
+  import { push, link } from 'svelte-spa-router';
   import { addTrack, getCurrentLocation } from '../lib/tracks.js';
   import Card from '@smui/card';
   import Textfield from '@smui/textfield';
@@ -74,9 +74,10 @@
   };
 </script>
 
-<div class="container container-sm">
+<div class="form-page">
   <div class="page-header">
     <h1>Add New Track</h1>
+    <Button href="/tracks" tag="a" use={[link]} variant="outlined">← Back to Tracks</Button>
   </div>
 
   {#if error}
@@ -85,8 +86,12 @@
 
   <Card style="padding: 2rem;">
     <form on:submit|preventDefault={handleSubmit}>
-      <div class="form-group">
-        <Textfield variant="outlined" bind:value={name} label="Track Name *" required disabled={loading} style="width: 100%;" />
+      <div class="form-section">
+        <h3>Track Information</h3>
+        
+        <div class="form-group">
+          <Textfield variant="outlined" bind:value={name} label="Track Name *" required disabled={loading} style="width: 100%;" />
+        </div>
       </div>
 
       <div class="location-section">
@@ -170,6 +175,27 @@
 </div>
 
 <style>
+  .form-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .form-section h3 {
+    margin: 0 0 1.5rem 0;
+    color: #495057;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+  }
+
   .page-header h1 {
     margin: 0 0 2rem 0;
   }

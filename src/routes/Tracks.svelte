@@ -140,12 +140,6 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
   }
 
-  .card-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-  }
-
   .no-location {
     padding: 2rem;
     background-color: #f8f9fa;
@@ -155,35 +149,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .coordinate {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-  }
-
-  .coordinate:last-child {
-    margin-bottom: 0;
-  }
-
-  .label {
-    font-weight: 500;
-    color: #495057;
-  }
-
-  .value {
-    color: #007bff;
-    font-family: monospace;
-  }
-
-  .track-meta {
-    color: #6c757d;
-    font-size: 0.875rem;
-    padding-top: 1rem;
-    border-top: 1px solid #dee2e6;
   }
 </style>

@@ -136,9 +136,9 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group date-field-container">
             <Textfield variant="outlined" type="date" bind:value={purchaseDate} label="Purchase Date" style="width: 100%;" />
-            <Button type="button" onclick={setDefaultDate} variant="outlined" style="position: absolute; right: 10px; top: 35px; min-width: auto; padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+            <Button type="button" onclick={setDefaultDate} class="date-button" variant="outlined">
               Set to Today
             </Button>
           </div>
@@ -160,4 +160,21 @@
     </Card>
   {/if}
 </div>
+
+<style>
+  .date-field-container {
+    position: relative;
+  }
+
+  :global(.date-button) {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 10;
+    font-size: 0.75rem;
+    min-width: auto;
+    padding: 4px 8px;
+    height: 28px;
+  }
+</style>
 

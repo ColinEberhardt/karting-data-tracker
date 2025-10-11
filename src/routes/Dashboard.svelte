@@ -41,7 +41,7 @@
 </script>
 
 <div class="container container-lg">
-  <div class="header">
+  <div class="page-header">
     <h1>🏎️ Kart Manager Dashboard</h1>
   </div>
 
@@ -57,49 +57,61 @@
   {:else}
     <LayoutGrid>
       <Cell span={3}>
-        <Card style="padding: 2rem; text-align: center;">
-          <div class="stat-icon">🏁</div>
-          <h3>Sessions</h3>
-          <div class="stat-number">{sessions.length}</div>
-          <div class="stat-actions">
+        <Card class="card-hover">
+          <div class="card-header card-header-active">
+            <div class="stat-icon">🏁</div>
+            <h3>Sessions</h3>
+          </div>
+          <div class="card-details">
+            <div class="stat-number">{sessions.length}</div>
+          </div>
+          <div class="card-actions">
             <Button href="/sessions" tag="a" use={[link]} variant="outlined">View All</Button>
-            <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">Add Session</Button>
           </div>
         </Card>
       </Cell>
 
       <Cell span={3}>
-        <Card style="padding: 2rem; text-align: center;">
-          <div class="stat-icon">🛞</div>
-          <h3>Tyres</h3>
-          <div class="stat-number">{tyres.length}</div>
-          <div class="stat-actions">
+        <Card class="card-hover">
+          <div class="card-header card-header-active">
+            <div class="stat-icon">🛞</div>
+            <h3>Tyres</h3>
+          </div>
+          <div class="card-details">
+            <div class="stat-number">{tyres.length}</div>
+          </div>
+          <div class="card-actions">
             <Button href="/tyres" tag="a" use={[link]} variant="outlined">View All</Button>
-            <Button href="/tyres/new" tag="a" use={[link]} variant="raised" color="primary">Add Tyre</Button>
           </div>
         </Card>
       </Cell>
 
       <Cell span={3}>
-        <Card style="padding: 2rem; text-align: center;">
-          <div class="stat-icon">⚙️</div>
-          <h3>Engines</h3>
-          <div class="stat-number">{engines.length}</div>
-          <div class="stat-actions">
+        <Card class="card-hover">
+          <div class="card-header card-header-active">
+            <div class="stat-icon">⚙️</div>
+            <h3>Engines</h3>
+          </div>
+          <div class="card-details">
+            <div class="stat-number">{engines.length}</div>
+          </div>
+          <div class="card-actions">
             <Button href="/engines" tag="a" use={[link]} variant="outlined">View All</Button>
-            <Button href="/engines/new" tag="a" use={[link]} variant="raised" color="primary">Add Engine</Button>
           </div>
         </Card>
       </Cell>
 
       <Cell span={3}>
-        <Card style="padding: 2rem; text-align: center;">
-          <div class="stat-icon">🏁</div>
-          <h3>Tracks</h3>
-          <div class="stat-number">{tracks.length}</div>
-          <div class="stat-actions">
+        <Card class="card-hover">
+          <div class="card-header card-header-active">
+            <div class="stat-icon">🏁</div>
+            <h3>Tracks</h3>
+          </div>
+          <div class="card-details">
+            <div class="stat-number">{tracks.length}</div>
+          </div>
+          <div class="card-actions">
             <Button href="/tracks" tag="a" use={[link]} variant="outlined">View All</Button>
-            <Button href="/tracks/new" tag="a" use={[link]} variant="raised" color="primary">Add Track</Button>
           </div>
         </Card>
       </Cell>
@@ -110,18 +122,29 @@
         <h2>Recent Sessions</h2>
         <div class="recent-sessions">
           {#each sessions.slice(0, 3) as session}
-            <Card style="padding: 1.5rem;">
-              <div class="session-date">
-                {new Date(session.date).toLocaleDateString()}
+            <Card class="card-hover">
+              <div class="card-header card-header-active">
+                <h3>Session</h3>
               </div>
-              <div class="session-details">
-                <div><strong>Session:</strong> {session.session}</div>
-                <div><strong>Laps:</strong> {session.laps}</div>
+              <div class="card-details">
+                <div class="detail">
+                  <strong>Date:</strong> {new Date(session.date).toLocaleDateString()}
+                </div>
+                <div class="detail">
+                  <strong>Session:</strong> {session.session}
+                </div>
+                <div class="detail">
+                  <strong>Laps:</strong> {session.laps}
+                </div>
                 {#if session.fastest}
-                  <div><strong>Best Lap:</strong> {session.fastest}s</div>
+                  <div class="detail">
+                    <strong>Best Lap:</strong> {session.fastest}s
+                  </div>
                 {/if}
               </div>
-              <Button href="/sessions/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745; margin-top: 1rem;">View</Button>
+              <div class="card-actions">
+                <Button href="/sessions/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">View</Button>
+              </div>
             </Card>
           {/each}
         </div>
@@ -134,27 +157,8 @@
 </div>
 
 <style>
-  .header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .header h1 {
-    color: #333;
-    margin: 0;
-    font-size: 2.5rem;
-    font-weight: 600;
-  }
-
   .stat-icon {
     font-size: 3rem;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    margin: 0 0 1rem 0;
-    color: #495057;
-    font-size: 1.25rem;
   }
 
   .stat-number {
@@ -162,13 +166,6 @@
     font-weight: bold;
     color: #007bff;
     margin-bottom: 1.5rem;
-  }
-
-  .stat-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
   }
 
   .recent-section {
@@ -188,21 +185,6 @@
     margin-bottom: 1.5rem;
   }
 
-  .session-date {
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin-bottom: 1rem;
-  }
-
-  .session-details {
-    margin-bottom: 1rem;
-  }
-
-  .session-details div {
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  }
-
   .view-all-sessions {
     text-align: center;
   }
@@ -218,10 +200,6 @@
   }
 
   @media (max-width: 768px) {
-    .header h1 {
-      font-size: 2rem;
-    }
-
     .recent-sessions {
       grid-template-columns: 1fr;
     }

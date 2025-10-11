@@ -106,12 +106,6 @@
 </div>
 
 <style>
-  .track-card {
-    position: relative;
-    overflow: hidden;
-    min-height: 200px;
-  }
-
   .track-map {
     width: 100%;
     height: 100%;

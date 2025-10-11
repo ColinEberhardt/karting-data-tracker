@@ -53,7 +53,7 @@
 
   const formatFastestLap = (time) => {
     if (!time) return '-';
-    return `${time.toFixed(3)}s`;
+    return `${time.toFixed(2)}`;
   };
 
   const formatTime = (time) => {
@@ -133,6 +133,17 @@
   $: groupedSessions = sessions.length > 0 ? groupSessionsByDay(sessions) : [];
 
   onMount(loadData);
+
+  const getWeatherDescription = (session) => {
+    const t = session.temp;
+    const c = session.condition;
+    const hasTemp = t !== undefined && t !== null && t !== '';
+    const hasCond = !!c;
+    if (hasTemp && hasCond) return `${t}°C, ${c}`;
+    if (hasTemp) return `${t}°C`;
+    if (hasCond) return c;
+    return '-';
+  };
 </script>
 
 <div class="sessions-dashboard">
@@ -169,18 +180,21 @@
             <DataTable style="width: 100%;">
               <Head>
                 <Row>
-                  <Cell>Time</Cell>
-                  <Cell>Session</Cell>
-                  <Cell>Laps</Cell>
-                  <Cell>Fastest Lap</Cell>
+                  <Cell class="col-time">Time</Cell>
+                  <Cell class="col-weather">Weather</Cell>
+                  <Cell class="col-session">Session</Cell>
+                  <Cell class="col-tyre">Tyre</Cell>
+                  <Cell class="col-laps">Laps</Cell>
+                  <Cell class="col-fastest">Fastest</Cell>
                 </Row>
               </Head>
               <Body>
                 {#each group.sessions as session (session.id)}
-                  <Row class="session-row">
+                  <Row class={"session-row" + (session.fastest === group.fastestLap ? " fastest-row" : "")}>
                     <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
-                      <Cell>{formatTime(session.date)}</Cell>
-                      <Cell>
+                      <Cell class="col-time">{formatTime(session.date)}</Cell>
+                      <Cell class="col-weather">{getWeatherDescription(session)}</Cell>
+                      <Cell class="col-session">
                         <div class="session-name">
                           {#if session.isRace}
                             <span class="race-icon">🏁</span>
@@ -188,11 +202,10 @@
                           {session.session}
                         </div>
                       </Cell>
-                      <Cell>{session.laps}</Cell>
-                      <Cell>
-                        <span class:fastest-lap={session.fastest === group.fastestLap}>
-                          {formatFastestLap(session.fastest)}
-                        </span>
+                      <Cell class="col-tyre">{session.tyreId ? getTyreName(session.tyreId) : '-'}</Cell>
+                      <Cell class="col-laps">{session.laps}</Cell>
+                      <Cell class="col-fastest">
+                        {formatFastestLap(session.fastest)}
                       </Cell>
                     </div>
                   </Row>
@@ -284,8 +297,28 @@
     transition: background-color 0.2s;
   }
 
-  :global(.session-row:hover) {
+  /* Remove or comment out the generic hover rule to avoid conflicts */
+  /* :global(.session-row:hover) {
     background-color: #f8f9fa;
+  } */
+
+  /* Alternating row backgrounds */
+  :global(.mdc-data-table__row.session-row:nth-of-type(even)) {
+    background-color: #f5f6f7;
+  }
+
+  /* Fastest row subtle green highlight */
+  :global(.mdc-data-table__row.session-row.fastest-row) {
+    background-color: #eef9f1;
+    font-weight: bold;
+  }
+
+  /* Hover states (ensure specificity after base hover rule if any) */
+  :global(.mdc-data-table__row.session-row:not(.fastest-row):hover) {
+    background-color: #eceeef;
+  }
+  :global(.mdc-data-table__row.session-row.fastest-row:hover) {
+    background-color: #e4f4e8;
   }
 
   .clickable-row {
@@ -312,13 +345,43 @@
     font-size: 1.1em;
   }
 
-  .actions-cell {
-    cursor: default;
+  /* Consistent column widths across all session tables */
+  :global(.sessions-groups .mdc-data-table__table) {
+    table-layout: fixed;
+    width: 100%;
   }
 
-  .fastest-lap {
-    font-weight: bold;
-    color: #007bff;
+  :global(.col-time) { width: 10%; }
+  :global(.col-weather) { width: 15%; }
+  :global(.col-session) { width: 33%; } /* was 35% */
+  :global(.col-tyre) { width: 20%; }
+  :global(.col-laps) { width: 10%; }
+  :global(.col-fastest) { width: 12%; } /* was 10% */
+
+  /* Prevent layout shift with long text */
+  :global(.col-session),
+  :global(.col-weather),
+  :global(.col-tyre) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Responsive column handling:
+     Breakpoint 1: hide tyre
+     Breakpoint 2: additionally hide weather and laps */
+  @media (max-width: 900px) {
+    :global(.col-tyre) {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    :global(.col-tyre),
+    :global(.col-weather),
+    :global(.col-laps) {
+      display: none !important;
+    }
   }
 
   @media (max-width: 768px) {
@@ -335,5 +398,12 @@
     .table-container {
       margin-top: 1rem;
     }
+  }
+
+  /* Larger table font */
+  :global(.sessions-groups .mdc-data-table__header-cell),
+  :global(.sessions-groups .mdc-data-table__cell) {
+    font-size: 0.95rem;
+    line-height: 1.35;
   }
 </style>

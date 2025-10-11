@@ -116,43 +116,6 @@
         </Card>
       </Cell>
     </LayoutGrid>
-
-    {#if sessions.length > 0}
-      <div class="recent-section">
-        <h2>Recent Sessions</h2>
-        <div class="recent-sessions">
-          {#each sessions.slice(0, 3) as session}
-            <Card class="card-hover">
-              <div class="card-header card-header-active">
-                <h3>Session</h3>
-              </div>
-              <div class="card-details">
-                <div class="detail">
-                  <strong>Date:</strong> {new Date(session.date).toLocaleDateString()}
-                </div>
-                <div class="detail">
-                  <strong>Session:</strong> {session.session}
-                </div>
-                <div class="detail">
-                  <strong>Laps:</strong> {session.laps}
-                </div>
-                {#if session.fastest}
-                  <div class="detail">
-                    <strong>Best Lap:</strong> {session.fastest}s
-                  </div>
-                {/if}
-              </div>
-              <div class="card-actions">
-                <Button href="/sessions/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">View</Button>
-              </div>
-            </Card>
-          {/each}
-        </div>
-        <div class="view-all-sessions">
-          <a href="/sessions" use:link>View All Sessions →</a>
-        </div>
-      </div>
-    {/if}
   {/if}
 </div>
 
@@ -166,42 +129,5 @@
     font-weight: bold;
     color: #007bff;
     margin-bottom: 1.5rem;
-  }
-
-  .recent-section {
-    margin-top: 3rem;
-  }
-
-  .recent-section h2 {
-    color: #333;
-    margin-bottom: 1.5rem;
-    font-size: 1.75rem;
-  }
-
-  .recent-sessions {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .view-all-sessions {
-    text-align: center;
-  }
-
-  .view-all-sessions a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .view-all-sessions a:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 768px) {
-    .recent-sessions {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

@@ -126,7 +126,7 @@
               </div>
               {#if tyre.description}
                 <div class="detail">
-                  <strong>Description:</strong> {tyre.description}
+                  {tyre.description}
                 </div>
               {/if}
             </div>

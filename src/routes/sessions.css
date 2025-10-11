@@ -58,27 +58,27 @@
   background: white;
 }
 
-:global(.session-row) {
+.session-row {
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 /* Alternating row backgrounds */
-:global(.mdc-data-table__row.session-row:nth-of-type(even)) {
+.mdc-data-table__row.session-row:nth-of-type(even) {
   background-color: #f5f6f7;
 }
 
 /* Fastest row subtle green highlight */
-:global(.mdc-data-table__row.session-row.fastest-row) {
+.mdc-data-table__row.session-row.fastest-row {
   background-color: #eef9f1;
   font-weight: bold;
 }
 
 /* Hover states (ensure specificity after base hover rule if any) */
-:global(.mdc-data-table__row.session-row:not(.fastest-row):hover) {
+.mdc-data-table__row.session-row:not(.fastest-row):hover {
   background-color: #eceeef;
 }
-:global(.mdc-data-table__row.session-row.fastest-row:hover) {
+.mdc-data-table__row.session-row.fastest-row:hover {
   background-color: #e4f4e8;
 }
 
@@ -92,7 +92,7 @@
   outline-offset: -2px;
 }
 
-:global(.session-row .mdc-data-table__cell) {
+.session-row .mdc-data-table__cell {
   vertical-align: middle;
 }
 
@@ -107,22 +107,22 @@
 }
 
 /* Consistent column widths across all session tables */
-:global(.sessions-groups .mdc-data-table__table) {
+.sessions-groups .mdc-data-table__table {
   table-layout: fixed;
   width: 100%;
 }
 
-:global(.col-time) { width: 13%; }
-:global(.col-weather) { width: 15%; }
-:global(.col-session) { width: 30%; } /* was 35% */
-:global(.col-tyre) { width: 20%; }
-:global(.col-laps) { width: 10%; }
-:global(.col-fastest) { width: 12%; } /* was 10% */
+.col-time { width: 13%; }
+.col-weather { width: 15%; }
+.col-session { width: 30%; } 
+.col-tyre { width: 20%; }
+.col-laps { width: 10%; }
+.col-fastest { width: 12%; } 
 
 /* Prevent layout shift with long text */
-:global(.col-session),
-:global(.col-weather),
-:global(.col-tyre) {
+.col-session,
+.col-weather,
+.col-tyre {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -132,15 +132,15 @@
    Breakpoint 1: hide tyre
    Breakpoint 2: additionally hide weather and laps */
 @media (max-width: 900px) {
-  :global(.col-tyre) {
+  .col-tyre {
     display: none !important;
   }
 }
 
 @media (max-width: 640px) {
-  :global(.col-tyre),
-  :global(.col-weather),
-  :global(.col-laps) {
+  .col-tyre,
+  .col-weather,
+  .col-laps {
     display: none !important;
   }
 }
@@ -162,8 +162,8 @@
 }
 
 /* Larger table font */
-:global(.sessions-groups .mdc-data-table__header-cell),
-:global(.sessions-groups .mdc-data-table__cell) {
+.sessions-groups .mdc-data-table__header-cell,
+.sessions-groups .mdc-data-table__cell {
   font-size: 0.95rem;
   line-height: 1.35;
 }

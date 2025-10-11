@@ -56,6 +56,16 @@
     return `${time.toFixed(3)}s`;
   };
 
+  const formatTime = (time) => {
+    if (!time) return '-';
+    const date = time.toDate ? time.toDate() : new Date(time);
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    });
+  };
+
   const getTrackName = (trackId) => {
     const track = tracks.find(t => t.id === trackId);
     return track ? track.name : 'Unknown Track';
@@ -74,6 +84,53 @@
   const handleRowClick = (sessionId) => {
     push(`/sessions/view/${sessionId}`);
   };
+
+  const groupSessionsByDay = (sessions) => {
+    const groups = {};
+    
+    sessions.forEach(session => {
+      const date = session.date.toDate ? session.date.toDate() : new Date(session.date);
+      const dateKey = date.toDateString();
+      const circuitName = getTrackName(session.circuitId);
+      const groupKey = `${dateKey}|${circuitName}`;
+      
+      if (!groups[groupKey]) {
+        groups[groupKey] = {
+          date: date,
+          circuit: circuitName,
+          sessions: []
+        };
+      }
+      
+      groups[groupKey].sessions.push(session);
+    });
+
+    // Sort groups by date (newest first) and sort sessions within each group by time if available
+    return Object.values(groups)
+      .sort((a, b) => b.date - a.date)
+      .map(group => {
+        // Find the fastest lap in this group
+        const fastestLap = group.sessions
+          .filter(s => s.fastest)
+          .reduce((fastest, session) => {
+            return !fastest || session.fastest < fastest ? session.fastest : fastest;
+          }, null);
+
+        return {
+          ...group,
+          fastestLap,
+          sessions: group.sessions.sort((a, b) => {
+            // If sessions have time data, sort by that, otherwise maintain original order
+            if (a.time && b.time) {
+              return a.time - b.time;
+            }
+            return 0;
+          })
+        };
+      });
+  };
+
+  $: groupedSessions = sessions.length > 0 ? groupSessionsByDay(sessions) : [];
 
   onMount(loadData);
 </script>
@@ -100,38 +157,51 @@
       <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">Add Your First Session</Button>
     </div>
   {:else}
-    <div class="table-container">
-      <DataTable style="width: 100%;">
-        <Head>
-          <Row>
-            <Cell>Date</Cell>
-            <Cell>Session</Cell>
-            <Cell>Circuit</Cell>
-            <Cell>Laps</Cell>
-            <Cell>Fastest Lap</Cell>
-          </Row>
-        </Head>
-        <Body>
-          {#each sessions as session (session.id)}
-            <Row class="session-row">
-              <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
-                <Cell>{formatDate(session.date)}</Cell>
-                <Cell>
-                  <div class="session-name">
-                    {#if session.isRace}
-                      <span class="race-icon">🏁</span>
-                    {/if}
-                    {session.session}
-                  </div>
-                </Cell>
-                <Cell>{getTrackName(session.circuitId)}</Cell>
-                <Cell>{session.laps}</Cell>
-                <Cell>{formatFastestLap(session.fastest)}</Cell>
-              </div>
-            </Row>
-          {/each}
-        </Body>
-      </DataTable>
+    <div class="sessions-groups">
+      {#each groupedSessions as group (group.date.getTime() + group.circuit)}
+        <div class="session-group">
+          <div class="group-header">
+            <h3>{group.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+            <h4>{group.circuit}</h4>
+          </div>
+          
+          <div class="table-container">
+            <DataTable style="width: 100%;">
+              <Head>
+                <Row>
+                  <Cell>Time</Cell>
+                  <Cell>Session</Cell>
+                  <Cell>Laps</Cell>
+                  <Cell>Fastest Lap</Cell>
+                </Row>
+              </Head>
+              <Body>
+                {#each group.sessions as session (session.id)}
+                  <Row class="session-row">
+                    <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
+                      <Cell>{formatTime(session.date)}</Cell>
+                      <Cell>
+                        <div class="session-name">
+                          {#if session.isRace}
+                            <span class="race-icon">🏁</span>
+                          {/if}
+                          {session.session}
+                        </div>
+                      </Cell>
+                      <Cell>{session.laps}</Cell>
+                      <Cell>
+                        <span class:fastest-lap={session.fastest === group.fastestLap}>
+                          {formatFastestLap(session.fastest)}
+                        </span>
+                      </Cell>
+                    </div>
+                  </Row>
+                {/each}
+              </Body>
+            </DataTable>
+          </div>
+        </div>
+      {/each}
     </div>
   {/if}
 </div>
@@ -173,8 +243,36 @@
     margin-bottom: 2rem;
   }
 
-  .table-container {
+  .sessions-groups {
     margin-top: 2rem;
+  }
+
+  .session-group {
+    margin-bottom: 3rem;
+  }
+
+  .group-header {
+    margin-bottom: 1rem;
+    padding: 1rem 0;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .group-header h3 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .group-header h4 {
+    margin: 0;
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .table-container {
+    margin-top: 1rem;
     overflow-x: auto;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -216,6 +314,11 @@
 
   .actions-cell {
     cursor: default;
+  }
+
+  .fastest-lap {
+    font-weight: bold;
+    color: #007bff;
   }
 
   @media (max-width: 768px) {

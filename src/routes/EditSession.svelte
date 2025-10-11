@@ -239,7 +239,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C) *" required input$min="0" input$max="50" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C) *" required input$min="0" input$max="50" input$step="0.01" style="width: 100%;" />
           </div>
 
           <div class="form-group">

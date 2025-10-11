@@ -351,9 +351,9 @@
     width: 100%;
   }
 
-  :global(.col-time) { width: 10%; }
+  :global(.col-time) { width: 13%; }
   :global(.col-weather) { width: 15%; }
-  :global(.col-session) { width: 33%; } /* was 35% */
+  :global(.col-session) { width: 30%; } /* was 35% */
   :global(.col-tyre) { width: 20%; }
   :global(.col-laps) { width: 10%; }
   :global(.col-fastest) { width: 12%; } /* was 10% */

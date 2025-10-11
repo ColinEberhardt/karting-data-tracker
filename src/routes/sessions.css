@@ -1,0 +1,169 @@
+.sessions-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+.empty-state h2 {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  color: #888;
+  margin-bottom: 2rem;
+}
+
+.sessions-groups {
+  margin-top: 2rem;
+}
+
+.session-group {
+  margin-bottom: 3rem;
+}
+
+.group-header {
+  margin-bottom: 1rem;
+  padding: 1rem 0;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.group-header h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.group-header h4 {
+  margin: 0;
+  color: #666;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.table-container {
+  margin-top: 1rem;
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+:global(.session-row) {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Alternating row backgrounds */
+:global(.mdc-data-table__row.session-row:nth-of-type(even)) {
+  background-color: #f5f6f7;
+}
+
+/* Fastest row subtle green highlight */
+:global(.mdc-data-table__row.session-row.fastest-row) {
+  background-color: #eef9f1;
+  font-weight: bold;
+}
+
+/* Hover states (ensure specificity after base hover rule if any) */
+:global(.mdc-data-table__row.session-row:not(.fastest-row):hover) {
+  background-color: #eceeef;
+}
+:global(.mdc-data-table__row.session-row.fastest-row:hover) {
+  background-color: #e4f4e8;
+}
+
+.clickable-row {
+  display: contents;
+  cursor: pointer;
+}
+
+.clickable-row:focus {
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+:global(.session-row .mdc-data-table__cell) {
+  vertical-align: middle;
+}
+
+.session-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.race-icon {
+  font-size: 1.1em;
+}
+
+/* Consistent column widths across all session tables */
+:global(.sessions-groups .mdc-data-table__table) {
+  table-layout: fixed;
+  width: 100%;
+}
+
+:global(.col-time) { width: 13%; }
+:global(.col-weather) { width: 15%; }
+:global(.col-session) { width: 30%; } /* was 35% */
+:global(.col-tyre) { width: 20%; }
+:global(.col-laps) { width: 10%; }
+:global(.col-fastest) { width: 12%; } /* was 10% */
+
+/* Prevent layout shift with long text */
+:global(.col-session),
+:global(.col-weather),
+:global(.col-tyre) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive column handling:
+   Breakpoint 1: hide tyre
+   Breakpoint 2: additionally hide weather and laps */
+@media (max-width: 900px) {
+  :global(.col-tyre) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  :global(.col-tyre),
+  :global(.col-weather),
+  :global(.col-laps) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sessions-dashboard {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .table-container {
+    margin-top: 1rem;
+  }
+}
+
+/* Larger table font */
+:global(.sessions-groups .mdc-data-table__header-cell),
+:global(.sessions-groups .mdc-data-table__cell) {
+  font-size: 0.95rem;
+  line-height: 1.35;
+}

@@ -94,8 +94,12 @@
               </div>
               
               <div class="card-actions">
-                <Button href="/tracks/{track.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
-                <Button onclick={() => handleDelete(track.id)} variant="raised" style="background-color: #dc3545;">Delete</Button>
+                <a href="/tracks/{track.id}" use:link class="icon-button" title="Edit">
+                  ✎
+                </a>
+                <a href="#" on:click|preventDefault={() => handleDelete(track.id)} class="icon-button delete-button" title="Delete">
+                  ✕
+                </a>
               </div>
             </div>
           </Card>
@@ -144,4 +148,4 @@
     align-items: center;
     justify-content: center;
   }
-</style>
+  </style>

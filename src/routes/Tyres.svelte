@@ -132,15 +132,17 @@
             </div>
 
             <div class="card-actions">
-              <Button href="/tyres/{tyre.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+              <a href="/tyres/{tyre.id}" use:link class="icon-button" title="Edit">
+                ✎
+              </a>
               {#if !tyre.retired}
-                <Button onclick={() => handleRetire(tyre.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
-                  Retire
-                </Button>
+                <a href="#" on:click|preventDefault={() => handleRetire(tyre.id)} class="icon-button retire-button" title="Retire">
+                  □
+                </a>
               {/if}
-              <Button onclick={() => handleDelete(tyre.id)} variant="raised" style="background-color: #dc3545;">
-                Delete
-              </Button>
+              <a href="#" on:click|preventDefault={() => handleDelete(tyre.id)} class="icon-button delete-button" title="Delete">
+                ✕
+              </a>
             </div>
           </Card>
         </Cell>
@@ -148,3 +150,13 @@
     </LayoutGrid>
   {/if}
 </div>
+
+<style>
+  .card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid #e0e0e0;
+  }
+</style>

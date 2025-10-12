@@ -130,15 +130,17 @@
             </div>
 
             <div class="card-actions">
-              <Button href="/engines/{engine.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit</Button>
+              <a href="/engines/{engine.id}" use:link class="icon-button" title="Edit">
+                ✎
+              </a>
               {#if !engine.retired}
-                <Button onclick={() => handleRetire(engine.id)} variant="raised" style="background-color: #ffc107; color: #212529;">
-                  Retire
-                </Button>
+                <a href="#" on:click|preventDefault={() => handleRetire(engine.id)} class="icon-button retire-button" title="Retire">
+                  □
+                </a>
               {/if}
-              <Button onclick={() => handleDelete(engine.id)} variant="raised" style="background-color: #dc3545;">
-                Delete
-              </Button>
+              <a href="#" on:click|preventDefault={() => handleDelete(engine.id)} class="icon-button delete-button" title="Delete">
+                ✕
+              </a>
             </div>
           </Card>
         </Cell>

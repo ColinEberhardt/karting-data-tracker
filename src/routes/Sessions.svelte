@@ -92,6 +92,48 @@
     return '-';
   };
 
+  // Helper to format tyre pressures using correct property names
+  function formatTyrePressures(session) {
+    const { frontOuter, frontInner, rearOuter, rearInner } = session;
+    // If any are missing, return '-'
+    if (
+      frontOuter == null ||
+      frontInner == null ||
+      rearOuter == null ||
+      rearInner == null
+    ) {
+      return '-';
+    }
+    // All the same
+    if (
+      frontOuter === frontInner &&
+      frontInner === rearOuter &&
+      rearOuter === rearInner
+    ) {
+      return `${frontOuter} psi`;
+    }
+    // Fronts same, rears same, but fronts != rears
+    if (
+      frontOuter === frontInner &&
+      rearOuter === rearInner &&
+      frontOuter !== rearOuter
+    ) {
+      return `f ${frontOuter} / r ${rearOuter} psi`;
+    }
+    // All different or some pairs
+    return `fo ${frontOuter} / fi ${frontInner} / ro ${rearOuter} / ri ${rearInner} psi`;
+  }
+
+  // Helper to format gearing as "front/rear (ratio)"
+  function formatGearing(session) {
+    const { frontSprocket, rearSprocket } = session;
+    const f = Number(frontSprocket);
+    const r = Number(rearSprocket);
+    if (!f || !r) return '-';
+    const ratio = (r / f).toFixed(2).replace(/\.00$/, '');
+    return `${f}/${r} (${ratio})`;
+  }
+
   // Columns and directions for sorting
   const sortOptions = [
     { value: 'date-desc', label: 'Date & Time ▼' },
@@ -104,6 +146,13 @@
     { value: 'fastest-asc', label: 'Fastest ▲' }
   ];
   let selectedSort = 'date-desc';
+
+  // Add view options
+  const viewOptions = [
+    { value: 'compact', label: 'Compact' },
+    { value: 'detailed', label: 'Detailed' }
+  ];
+  let selectedView = 'compact';
 
   function getSortValue(session, key) {
     if (key === 'date') {
@@ -162,11 +211,18 @@
       <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">Add Your First Session</Button>
     </div>
   {:else}
-    <div class="table-container">
+    <div class="table-container {selectedView === 'detailed' ? 'detailed-view' : ''}">
       <div class="table-toolbar">
         <label for="sort-select">Sort by:</label>
         <select id="sort-select" bind:value={selectedSort}>
           {#each sortOptions as opt}
+            <option value={opt.value}>{opt.label}</option>
+          {/each}
+        </select>
+        <!-- Add view select -->
+        <label for="view-select" style="margin-left: 1.5em;">View:</label>
+        <select id="view-select" bind:value={selectedView}>
+          {#each viewOptions as opt}
             <option value={opt.value}>{opt.label}</option>
           {/each}
         </select>
@@ -186,7 +242,14 @@
           {#each sortedSessions as session (session.id)}
             <Row class="session-row">
               <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
-                <Cell class="col-datetime">{formatDateTime(session.date)}</Cell>
+                <Cell class="col-datetime">
+                  {formatDateTime(session.date)}
+                  {#if selectedView === 'detailed'}
+                    <div class="session-details-placeholder">
+                      {formatGearing(session)}
+                    </div>
+                  {/if}
+                </Cell>
                 <Cell class="col-session">
                   <div class="session-name">
                     {#if session.isRace}
@@ -194,6 +257,11 @@
                     {/if}
                     {session.session}
                   </div>
+                  {#if selectedView === 'detailed'}
+                    <div class="session-details-placeholder">
+                      {formatTyrePressures(session)}
+                    </div>
+                  {/if}
                 </Cell>
                 <Cell class="col-circuit">{getTrackName(session.circuitId)}</Cell>
                 <Cell class="col-weather">{getWeatherDescription(session)}</Cell>

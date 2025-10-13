@@ -55,6 +55,10 @@
   background-color: #e4f4e8;
 }
 
+.mdc-data-table__header-row {
+  height: 40px;
+}
+
 .clickable-row {
   display: contents;
   cursor: pointer;
@@ -65,10 +69,21 @@
   outline-offset: -2px;
 }
 
-.mdc-data-table__header-cell ,col-session,
 .session-row .mdc-data-table__cell {
   vertical-align: middle;
   font-size: 16px;
+  font-weight: 500;
+}
+
+/* Make session row taller in detailed view */
+.table-container.detailed-view .session-row .mdc-data-table__cell {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.mdc-data-table__header-cell {
+  text-transform: uppercase;
+  line-height: 1rem;
 }
 
 .race-icon {
@@ -188,4 +203,10 @@
 
 .sort-dir-btn:focus {
   outline: 2px solid #fff;
+}
+
+.session-details-placeholder {
+  font-size: 0.95em;
+  color: #888;
+  margin-top: 0.25em;
 }

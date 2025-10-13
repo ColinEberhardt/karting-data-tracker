@@ -22,33 +22,6 @@
   margin-bottom: 2rem;
 }
 
-.sessions-groups {
-  margin-top: 2rem;
-}
-
-.session-group {
-  margin-bottom: 3rem;
-}
-
-.group-header {
-  margin-bottom: 1rem;
-  padding: 1rem 0;
-  border-bottom: 2px solid #e9ecef;
-}
-
-.group-header h3 {
-  margin: 0 0 0.5rem 0;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.group-header h4 {
-  margin: 0;
-  color: #666;
-  font-size: 1.1rem;
-  font-weight: 500;
-}
 
 .table-container {
   margin-top: 1rem;
@@ -92,14 +65,10 @@
   outline-offset: -2px;
 }
 
+.mdc-data-table__header-cell ,col-session,
 .session-row .mdc-data-table__cell {
   vertical-align: middle;
-}
-
-.session-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  font-size: 16px;
 }
 
 .race-icon {
@@ -166,4 +135,8 @@
 .sessions-groups .mdc-data-table__cell {
   font-size: 0.95rem;
   line-height: 1.35;
+}
+
+.page-header h1 {
+  font-size: 32px;
 }

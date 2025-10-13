@@ -91,6 +91,53 @@
     if (hasCond) return c;
     return '-';
   };
+
+  // Columns and directions for sorting
+  const sortOptions = [
+    { value: 'date-desc', label: 'Date & Time ▼' },
+    { value: 'date-asc', label: 'Date & Time ▲' },
+    { value: 'weather-desc', label: 'Weather ▼' },
+    { value: 'weather-asc', label: 'Weather ▲' },
+    { value: 'laps-desc', label: 'Laps ▼' },
+    { value: 'laps-asc', label: 'Laps ▲' },
+    { value: 'fastest-desc', label: 'Fastest ▼' },
+    { value: 'fastest-asc', label: 'Fastest ▲' }
+  ];
+  let selectedSort = 'date-desc';
+
+  function getSortValue(session, key) {
+    if (key === 'date') {
+      const d = session.date?.toDate ? session.date.toDate() : new Date(session.date);
+      return d?.getTime?.() ?? 0;
+    }
+    if (key === 'weather') {
+      return session.temp ?? Number.NEGATIVE_INFINITY;
+    }
+    if (key === 'laps') {
+      return session.laps ?? 0;
+    }
+    if (key === 'fastest') {
+      return session.fastest ?? Number.POSITIVE_INFINITY;
+    }
+    return '';
+  }
+
+  $: [sortKey, sortDir] = selectedSort.split('-');
+  $: sortedSessions = sessions.length > 0
+    ? [...sessions].sort((a, b) => {
+        const aVal = getSortValue(a, sortKey);
+        const bVal = getSortValue(b, sortKey);
+        if (aVal === undefined || aVal === null) return 1;
+        if (bVal === undefined || bVal === null) return -1;
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
+        }
+        // string comparison
+        if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+      })
+    : [];
 </script>
 
 <div class="sessions-dashboard">
@@ -116,6 +163,14 @@
     </div>
   {:else}
     <div class="table-container">
+      <div class="table-toolbar">
+        <label for="sort-select">Sort by:</label>
+        <select id="sort-select" bind:value={selectedSort}>
+          {#each sortOptions as opt}
+            <option value={opt.value}>{opt.label}</option>
+          {/each}
+        </select>
+      </div>
       <DataTable style="width: 100%;">
         <Head>
           <Row>

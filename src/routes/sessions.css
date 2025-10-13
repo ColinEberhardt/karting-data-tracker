@@ -22,32 +22,35 @@
   margin-bottom: 2rem;
 }
 
-.sessions-groups {
-  margin-top: 2rem;
+.controls {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0 1rem 0;
+  flex-wrap: wrap;
 }
 
-.session-group {
-  margin-bottom: 3rem;
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.group-header {
-  margin-bottom: 1rem;
-  padding: 1rem 0;
-  border-bottom: 2px solid #e9ecef;
-}
-
-.group-header h3 {
-  margin: 0 0 0.5rem 0;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.group-header h4 {
-  margin: 0;
-  color: #666;
-  font-size: 1.1rem;
+.control-group label {
   font-weight: 500;
+  color: #666;
+}
+
+.control-group select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.control-group select:hover {
+  border-color: #999;
 }
 
 .table-container {
@@ -56,6 +59,25 @@
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background: white;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+}
+
+.table-container :global(.mdc-data-table__header-row) {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  background-color: #f5f5f5;
 }
 
 .session-row {
@@ -63,23 +85,12 @@
   transition: background-color 0.2s;
 }
 
-/* Alternating row backgrounds */
 .mdc-data-table__row.session-row:nth-of-type(even) {
   background-color: #f5f6f7;
 }
 
-/* Fastest row subtle green highlight */
-.mdc-data-table__row.session-row.fastest-row {
-  background-color: #eef9f1;
-  font-weight: bold;
-}
-
-/* Hover states (ensure specificity after base hover rule if any) */
-.mdc-data-table__row.session-row:not(.fastest-row):hover {
+.mdc-data-table__row.session-row:hover {
   background-color: #eceeef;
-}
-.mdc-data-table__row.session-row.fastest-row:hover {
-  background-color: #e4f4e8;
 }
 
 .clickable-row {
@@ -96,6 +107,33 @@
   vertical-align: middle;
 }
 
+.detailed-row .mdc-data-table__cell {
+  vertical-align: top;
+  padding: 1rem 0.5rem;
+}
+
+.session-details,
+.tyre-details,
+.pressure-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.session-line-1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.session-line-2,
+.pressure-line,
+.ratio-line {
+  font-size: 0.85rem;
+  color: #666;
+}
+
 .session-name {
   display: flex;
   align-items: center;
@@ -106,42 +144,45 @@
   font-size: 1.1em;
 }
 
-/* Consistent column widths across all session tables */
-.sessions-groups .mdc-data-table__table {
-  table-layout: fixed;
-  width: 100%;
-}
+.col-date { width: 10%; }
+.col-track { width: 12%; }
+.col-session { width: 18%; } 
+.col-weather { width: 12%; }
+.col-tyre { width: 13%; }
+.col-laps { width: 7%; }
+.col-fastest { width: 8%; }
+.col-pressure { width: 10%; }
+.col-ratio { width: 10%; }
 
-.col-time { width: 13%; }
-.col-weather { width: 15%; }
-.col-session { width: 30%; } 
-.col-tyre { width: 20%; }
-.col-laps { width: 10%; }
-.col-fastest { width: 12%; } 
-
-/* Prevent layout shift with long text */
 .col-session,
-.col-weather,
+.col-track,
 .col-tyre {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Responsive column handling:
-   Breakpoint 1: hide tyre
-   Breakpoint 2: additionally hide weather and laps */
+@media (max-width: 1100px) {
+  .col-pressure {
+    display: none !important;
+  }
+}
+
 @media (max-width: 900px) {
-  .col-tyre {
+  .col-tyre,
+  .col-ratio {
     display: none !important;
   }
 }
 
 @media (max-width: 640px) {
-  .col-tyre,
   .col-weather,
   .col-laps {
     display: none !important;
+  }
+  
+  .detailed-row .session-line-2 {
+    display: block;
   }
 }
 
@@ -161,9 +202,8 @@
   }
 }
 
-/* Larger table font */
-.sessions-groups .mdc-data-table__header-cell,
-.sessions-groups .mdc-data-table__cell {
+.sessions-table :global(.mdc-data-table__header-cell),
+.sessions-table :global(.mdc-data-table__cell) {
   font-size: 0.95rem;
   line-height: 1.35;
 }

@@ -16,6 +16,9 @@
   let engines = [];
   let loading = true;
   let error = '';
+  let sortBy = 'date';
+  let sortDirection = 'desc';
+  let viewMode = 'compact';
 
   const loadData = async () => {
     try {
@@ -73,52 +76,73 @@
     push(`/sessions/view/${sessionId}`);
   };
 
-  const groupSessionsByDay = (sessions) => {
-    const groups = {};
-    
-    sessions.forEach(session => {
-      const date = session.date.toDate ? session.date.toDate() : new Date(session.date);
-      const dateKey = date.toDateString();
-      const circuitName = getTrackName(session.circuitId);
-      const groupKey = `${dateKey}|${circuitName}`;
-      
-      if (!groups[groupKey]) {
-        groups[groupKey] = {
-          date: date,
-          circuit: circuitName,
-          sessions: []
-        };
-      }
-      
-      groups[groupKey].sessions.push(session);
-    });
-
-    // Sort groups by date (newest first) and sort sessions within each group by time if available
-    return Object.values(groups)
-      .sort((a, b) => b.date - a.date)
-      .map(group => {
-        // Find the fastest lap in this group
-        const fastestLap = group.sessions
-          .filter(s => s.fastest)
-          .reduce((fastest, session) => {
-            return !fastest || session.fastest < fastest ? session.fastest : fastest;
-          }, null);
-
-        return {
-          ...group,
-          fastestLap,
-          sessions: group.sessions.sort((a, b) => {
-            // If sessions have time data, sort by that, otherwise maintain original order
-            if (a.time && b.time) {
-              return a.time - b.time;
-            }
-            return 0;
-          })
-        };
-      });
+  const getAvgTyrePressure = (session) => {
+    const pressures = [session.frontInner, session.frontOuter, session.rearInner, session.rearOuter].filter(p => p != null && !isNaN(p));
+    if (pressures.length === 0) return null;
+    return pressures.reduce((a, b) => a + b, 0) / pressures.length;
   };
 
-  $: groupedSessions = sessions.length > 0 ? groupSessionsByDay(sessions) : [];
+  const getGearRatio = (session) => {
+    if (!session.frontSprocket || !session.rearSprocket) return null;
+    return session.rearSprocket / session.frontSprocket;
+  };
+
+  const formatTyrePressure = (session) => {
+    const fi = session.frontInner;
+    const fo = session.frontOuter;
+    const ri = session.rearInner;
+    const ro = session.rearOuter;
+    
+    if ([fi, fo, ri, ro].some(p => p == null || isNaN(p))) return '-';
+    
+    if (fi === fo && fo === ri && ri === ro) {
+      return `${fi.toFixed(1)} PSI`;
+    }
+    
+    if (fi === fo && ri === ro && fi !== ri) {
+      return `F: ${fi.toFixed(1)} / R: ${ri.toFixed(1)}`;
+    }
+    
+    return `FI: ${fi.toFixed(1)} / FO: ${fo.toFixed(1)} / RI: ${ri.toFixed(1)} / RO: ${ro.toFixed(1)}`;
+  };
+
+  const formatGearRatio = (session) => {
+    const ratio = getGearRatio(session);
+    if (!ratio) return '-';
+    return `${session.frontSprocket}/${session.rearSprocket} (${ratio.toFixed(2)})`;
+  };
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortBy = column;
+      sortDirection = 'desc';
+    }
+  };
+
+  const sortSessions = (sessions) => {
+    const sorted = [...sessions].sort((a, b) => {
+      let aVal, bVal;
+      
+      if (sortBy === 'date') {
+        aVal = a.date.toDate ? a.date.toDate().getTime() : new Date(a.date).getTime();
+        bVal = b.date.toDate ? b.date.toDate().getTime() : new Date(b.date).getTime();
+      } else if (sortBy === 'tyrePressure') {
+        aVal = getAvgTyrePressure(a) || 0;
+        bVal = getAvgTyrePressure(b) || 0;
+      } else if (sortBy === 'gearRatio') {
+        aVal = getGearRatio(a) || 0;
+        bVal = getGearRatio(b) || 0;
+      }
+      
+      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+    });
+    
+    return sorted;
+  };
+
+  $: sortedSessions = sessions.length > 0 ? sortSessions(sessions) : [];
 
   onMount(loadData);
 
@@ -156,53 +180,107 @@
       <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">Add Your First Session</Button>
     </div>
   {:else}
-    <div class="sessions-groups">
-      {#each groupedSessions as group (group.date.getTime() + group.circuit)}
-        <div class="session-group">
-          <div class="group-header">
-            <h3>{group.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
-            <h4>{group.circuit}</h4>
-          </div>
-          
-          <div class="table-container">
-            <DataTable style="width: 100%;">
-              <Head>
-                <Row>
-                  <Cell class="col-time">Time</Cell>
-                  <Cell class="col-weather">Weather</Cell>
-                  <Cell class="col-session">Session</Cell>
-                  <Cell class="col-tyre">Tyre</Cell>
-                  <Cell class="col-laps">Laps</Cell>
-                  <Cell class="col-fastest">Fastest</Cell>
-                </Row>
-              </Head>
-              <Body>
-                {#each group.sessions as session (session.id)}
-                  <Row class={"session-row" + (session.fastest === group.fastestLap ? " fastest-row" : "")}>
-                    <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
-                      <Cell class="col-time">{formatTime(session.date)}</Cell>
-                      <Cell class="col-weather">{getWeatherDescription(session)}</Cell>
-                      <Cell class="col-session">
-                        <div class="session-name">
-                          {#if session.isRace}
-                            <span class="race-icon">🏁</span>
-                          {/if}
-                          {session.session}
-                        </div>
-                      </Cell>
-                      <Cell class="col-tyre">{session.tyreId ? getTyreName(session.tyreId) : '-'}</Cell>
-                      <Cell class="col-laps">{session.laps}</Cell>
-                      <Cell class="col-fastest">
-                        {formatFastestLap(session.fastest)}
-                      </Cell>
+    <div class="controls">
+      <div class="control-group">
+        <label for="sort-by">Sort by:</label>
+        <select id="sort-by" bind:value={sortBy} on:change={() => sortDirection = 'desc'}>
+          <option value="date">Date</option>
+          <option value="tyrePressure">Tyre Pressure (Avg)</option>
+          <option value="gearRatio">Gear Ratio</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="view-mode">View:</label>
+        <select id="view-mode" bind:value={viewMode}>
+          <option value="compact">Compact</option>
+          <option value="detailed">Detailed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <DataTable class="sessions-table" style="width: 100%;">
+        <Head>
+          <Row>
+            <Cell class="col-date sortable" on:click={() => handleSort('date')}>
+              Date {sortBy === 'date' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+            </Cell>
+            <Cell class="col-track">Track</Cell>
+            <Cell class="col-session">Session</Cell>
+            <Cell class="col-weather">Weather</Cell>
+            <Cell class="col-tyre">Tyre</Cell>
+            <Cell class="col-laps">Laps</Cell>
+            <Cell class="col-fastest">Fastest</Cell>
+            <Cell class="col-pressure sortable" on:click={() => handleSort('tyrePressure')}>
+              Avg Pressure {sortBy === 'tyrePressure' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+            </Cell>
+            <Cell class="col-ratio sortable" on:click={() => handleSort('gearRatio')}>
+              Gear Ratio {sortBy === 'gearRatio' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+            </Cell>
+          </Row>
+        </Head>
+        <Body>
+          {#each sortedSessions as session (session.id)}
+            <Row class={"session-row" + (viewMode === 'detailed' ? " detailed-row" : "")}>
+              {#if viewMode === 'compact'}
+                <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
+                  <Cell class="col-date">{formatDate(session.date)}</Cell>
+                  <Cell class="col-track">{getTrackName(session.circuitId)}</Cell>
+                  <Cell class="col-session">
+                    <div class="session-name">
+                      {#if session.isRace}<span class="race-icon">🏁</span>{/if}
+                      {session.session}
                     </div>
-                  </Row>
-                {/each}
-              </Body>
-            </DataTable>
-          </div>
-        </div>
-      {/each}
+                  </Cell>
+                  <Cell class="col-weather">{getWeatherDescription(session)}</Cell>
+                  <Cell class="col-tyre">{session.tyreId ? getTyreName(session.tyreId) : '-'}</Cell>
+                  <Cell class="col-laps">{session.laps}</Cell>
+                  <Cell class="col-fastest">{formatFastestLap(session.fastest)}</Cell>
+                  <Cell class="col-pressure">{getAvgTyrePressure(session)?.toFixed(1) || '-'}</Cell>
+                  <Cell class="col-ratio">{getGearRatio(session)?.toFixed(2) || '-'}</Cell>
+                </div>
+              {:else}
+                <div class="clickable-row detailed" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
+                  <Cell class="col-date">{formatDate(session.date)}</Cell>
+                  <Cell class="col-track">{getTrackName(session.circuitId)}</Cell>
+                  <Cell class="col-session">
+                    <div class="session-details">
+                      <div class="session-line-1">
+                        {#if session.isRace}<span class="race-icon">🏁</span>{/if}
+                        {session.session}
+                      </div>
+                      <div class="session-line-2">
+                        Tyre: {session.tyreId ? getTyreName(session.tyreId) : '-'} | 
+                        Engine: {session.engineId ? getEngineName(session.engineId) : '-'}
+                      </div>
+                    </div>
+                  </Cell>
+                  <Cell class="col-weather">{getWeatherDescription(session)}</Cell>
+                  <Cell class="col-tyre">
+                    <div class="tyre-details">
+                      <div>{session.tyreId ? getTyreName(session.tyreId) : '-'}</div>
+                      <div class="pressure-line">{formatTyrePressure(session)}</div>
+                    </div>
+                  </Cell>
+                  <Cell class="col-laps">{session.laps}</Cell>
+                  <Cell class="col-fastest">{formatFastestLap(session.fastest)}</Cell>
+                  <Cell class="col-pressure">
+                    <div class="pressure-details">
+                      <div>{getAvgTyrePressure(session)?.toFixed(1) || '-'}</div>
+                      <div class="pressure-line">{formatTyrePressure(session)}</div>
+                    </div>
+                  </Cell>
+                  <Cell class="col-ratio">
+                    <div>{getGearRatio(session)?.toFixed(2) || '-'}</div>
+                    <div class="ratio-line">{formatGearRatio(session)}</div>
+                  </Cell>
+                </div>
+              {/if}
+            </Row>
+          {/each}
+        </Body>
+      </DataTable>
     </div>
   {/if}
 </div>

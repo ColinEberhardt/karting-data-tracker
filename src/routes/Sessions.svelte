@@ -9,6 +9,13 @@
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
   import './sessions.css';
+  import {
+    formatDateTime,
+    formatFastestLap,
+    formatTyrePressures,
+    formatGearing,
+    formatWeather
+  } from '../lib/sessionFormat.js';
 
   let sessions = [];
   let tyres = [];
@@ -31,24 +38,6 @@
     } finally {
       loading = false;
     }
-  };
-
-  const formatDateTime = (date) => {
-    if (!date) return '';
-    const d = date.toDate ? date.toDate() : new Date(date);
-    return d.toLocaleString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
-  };
-
-  const formatFastestLap = (time) => {
-    if (!time) return '-';
-    return `${time.toFixed(2)}`;
   };
 
   const getTrackName = (trackId) => {
@@ -80,59 +69,6 @@
     : [];
 
   onMount(loadData);
-
-  const getWeatherDescription = (session) => {
-    const t = session.temp;
-    const c = session.condition;
-    const hasTemp = t !== undefined && t !== null && t !== '';
-    const hasCond = !!c;
-    if (hasTemp && hasCond) return `${t}°C, ${c}`;
-    if (hasTemp) return `${t}°C`;
-    if (hasCond) return c;
-    return '-';
-  };
-
-  // Helper to format tyre pressures using correct property names
-  function formatTyrePressures(session) {
-    const { frontOuter, frontInner, rearOuter, rearInner } = session;
-    // If any are missing, return '-'
-    if (
-      frontOuter == null ||
-      frontInner == null ||
-      rearOuter == null ||
-      rearInner == null
-    ) {
-      return '-';
-    }
-    // All the same
-    if (
-      frontOuter === frontInner &&
-      frontInner === rearOuter &&
-      rearOuter === rearInner
-    ) {
-      return `${frontOuter} psi`;
-    }
-    // Fronts same, rears same, but fronts != rears
-    if (
-      frontOuter === frontInner &&
-      rearOuter === rearInner &&
-      frontOuter !== rearOuter
-    ) {
-      return `f ${frontOuter} / r ${rearOuter} psi`;
-    }
-    // All different or some pairs
-    return `fo ${frontOuter} / fi ${frontInner} / ro ${rearOuter} / ri ${rearInner} psi`;
-  }
-
-  // Helper to format gearing as "front/rear (ratio)"
-  function formatGearing(session) {
-    const { frontSprocket, rearSprocket } = session;
-    const f = Number(frontSprocket);
-    const r = Number(rearSprocket);
-    if (!f || !r) return '-';
-    const ratio = (r / f).toFixed(2).replace(/\.00$/, '');
-    return `${f}/${r} (${ratio})`;
-  }
 
   // Columns and directions for sorting
   const sortOptions = [
@@ -264,7 +200,7 @@
                   {/if}
                 </Cell>
                 <Cell class="col-circuit">{getTrackName(session.circuitId)}</Cell>
-                <Cell class="col-weather">{getWeatherDescription(session)}</Cell>
+                <Cell class="col-weather">{formatWeather(session)}</Cell>
                 <Cell class="col-laps">{session.laps}</Cell>
                 <Cell class="col-fastest">
                   {formatFastestLap(session.fastest)}

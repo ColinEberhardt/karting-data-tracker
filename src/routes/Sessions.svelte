@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { link, push } from 'svelte-spa-router';
+  import { link, push, location, querystring } from 'svelte-spa-router';
   import { getUserSessions, deleteSession } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
@@ -69,8 +69,6 @@
       })
     : [];
 
-  onMount(loadData);
-
   // Columns and directions for sorting
   const sortOptions = [
     { value: 'date-desc', label: 'Date & Time ▼' },
@@ -127,6 +125,63 @@
 
   // Multi-property filter state
   let selectedFilters = []; // Array of { type: 'session'|'tyre'|'track'|'engine'|'weather', id: string, label: string }
+  let isInitialized = false; // Track if we've loaded data and initialized filters
+  let lastUrlFilters = ''; // Track the last URL state to prevent unnecessary updates
+  let filteredSessions = []; // Filtered list of sessions
+
+  // Parse filters from URL query string
+  function parseFiltersFromURL() {
+    const params = new URLSearchParams($querystring);
+    const filterParam = params.get('filters');
+    if (!filterParam) return [];
+    
+    try {
+      return JSON.parse(decodeURIComponent(filterParam));
+    } catch (e) {
+      console.error('Failed to parse filters from URL:', e);
+      return [];
+    }
+  }
+
+  // Update URL with current filters
+  function updateURL() {
+    if (!isInitialized) return; // Don't update URL during initialization
+    
+    const currentFilterString = JSON.stringify(selectedFilters);
+    if (currentFilterString === lastUrlFilters) return; // No change, skip update
+    
+    lastUrlFilters = currentFilterString;
+    
+    const params = new URLSearchParams($querystring);
+    
+    if (selectedFilters.length > 0) {
+      params.set('filters', encodeURIComponent(currentFilterString));
+    } else {
+      params.delete('filters');
+    }
+    
+    const queryString = params.toString();
+    const newPath = queryString ? `/sessions?${queryString}` : '/sessions';
+    push(newPath);
+  }
+
+  // Watch for filter changes and update URL
+  $: if (isInitialized) {
+    selectedFilters; // Trigger reactivity
+    updateURL();
+  }
+
+  // Initialize filters from URL on mount
+  onMount(async () => {
+    await loadData();
+    const urlFilters = parseFiltersFromURL();
+    lastUrlFilters = JSON.stringify(urlFilters); // Set initial state
+    selectedFilters = urlFilters;
+    // Small delay to ensure reactive statements have processed
+    setTimeout(() => {
+      isInitialized = true;
+    }, 0);
+  });
 
   // Define pill colors for different filter types
   const pillColors = {

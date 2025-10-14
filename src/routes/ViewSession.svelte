@@ -1,13 +1,14 @@
 <script>
   import { onMount } from 'svelte';
-  import { link } from 'svelte-spa-router';
-  import { getSession } from '../lib/sessions.js';
+  import { link, push } from 'svelte-spa-router';
+  import { getSession, deleteSession } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
   import Paper from '@smui/paper';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
+  import './action-buttons.css';
 
   export let params = {};
   
@@ -65,6 +66,19 @@
     return engine ? (engine.name || `${engine.make} ${engine.model}`) : 'Unknown Engine';
   };
 
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this session? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await deleteSession(params.id);
+      push('/sessions');
+    } catch (err) {
+      error = err.message;
+    }
+  };
+
   onMount(loadData);
 </script>
 
@@ -73,9 +87,6 @@
     <h1>Session Details</h1>
     <div class="header-actions">
       <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
-      {#if session}
-        <Button href="/sessions/edit/{session.id}" tag="a" use={[link]} variant="raised" style="background-color: #28a745;">Edit Session</Button>
-      {/if}
     </div>
   </div>
 
@@ -254,6 +265,18 @@
           </div>
         </div>
       {/if}
+
+      <!-- Action Buttons Section -->
+      <div class="detail-section action-section">
+        <div class="action-buttons">
+          <a href="/sessions/{session.id}" use:link class="text-button">
+            Edit
+          </a>
+          <button on:click={handleDelete} class="text-button delete-button">
+            Delete
+          </button>
+        </div>
+      </div>
     </Paper>
   {:else}
     <div class="empty-state">
@@ -365,6 +388,18 @@
     font-size: 1.1em;
   }
 
+  .action-section {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5rem 2rem;
+  }
+
+  .action-section .action-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+
   @media (max-width: 768px) {
     .header {
       flex-direction: column;
@@ -386,6 +421,10 @@
 
     .detail-section h3 {
       font-size: 1.1rem;
+    }
+
+    .action-section {
+      justify-content: center;
     }
   }
 </style>

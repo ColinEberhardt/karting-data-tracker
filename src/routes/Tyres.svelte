@@ -4,10 +4,9 @@
   import { getUserTyres, deleteTyre, retireTyre } from '../lib/tyres.js';
   import { getUserSessions } from '../lib/sessions.js';
   import { calculateItemStats, mergeItemsWithStats } from '../lib/sessionStats.js';
-  import Card from '@smui/card';
+  import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
-  import LayoutGrid, { Cell } from '@smui/layout-grid';
 
   let tyres = [];
   let loading = true;
@@ -76,6 +75,13 @@
     return d.toLocaleDateString();
   };
 
+  const handleRowClick = (tyre) => {
+    if (tyre.sessions > 0) {
+      const filters = encodeURIComponent(JSON.stringify([{ type: 'tyre', id: tyre.id, label: tyre.name }]));
+      push(`/sessions?filters=${filters}`);
+    }
+  };
+
   onMount(() => {
     loadTyres();
   });
@@ -103,60 +109,157 @@
       <Button href="/tyres/new" tag="a" use={[link]} variant="raised" color="primary">Add Tyre</Button>
     </div>
   {:else}
-    <LayoutGrid>
-      {#each tyres as tyre (tyre.id)}
-        <Cell spanDevices={{ desktop: 4, tablet: 4, phone: 4 }}>
-          <Card class="card-hover {tyre.retired ? 'card-retired' : ''}">
-            <div class="card-header {tyre.retired ? 'card-header-retired' : 'card-header-active'}">
-              <h3>{tyre.name}</h3>
-              {#if tyre.retired}
-                <span class="retired-badge">Retired</span>
-              {/if}
-            </div>
-            
-            <div class="card-details">
-              <div class="detail">
-                <strong>Make/Type:</strong> {tyre.make} - {tyre.type}
+    <div class="table-container">
+      <DataTable style="width: 100%;">
+        <Head>
+          <Row>
+            <Cell>Name</Cell>
+            <Cell>Make</Cell>
+            <Cell>Type</Cell>
+            <Cell>Laps</Cell>
+            <Cell>Sessions</Cell>
+            <Cell>Status</Cell>
+            <Cell class="actions-header">Actions</Cell>
+          </Row>
+        </Head>
+        <Body>
+          {#each tyres as tyre (tyre.id)}
+            <Row class="tyre-row {tyre.retired ? 'retired-row' : ''}">
+              <div 
+                class="clickable-row {tyre.sessions > 0 ? 'has-sessions' : ''}" 
+                on:click={() => handleRowClick(tyre)} 
+                on:keydown={(e) => e.key === 'Enter' && handleRowClick(tyre)} 
+                tabindex="0" 
+                role="button"
+              >
+                <Cell>{tyre.name}</Cell>
+                <Cell>{tyre.make}</Cell>
+                <Cell>{tyre.type}</Cell>
+                <Cell>{tyre.totalLaps}</Cell>
+                <Cell>{tyre.sessions}</Cell>
+                <Cell>
+                  {#if tyre.retired}
+                    <span class="retired-badge">Retired</span>
+                  {:else}
+                    <span class="active-badge">Active</span>
+                  {/if}
+                </Cell>
+                <Cell>
+                  <div class="action-buttons">
+                    <a href="/tyres/{tyre.id}" use:link class="text-button" on:click|stopPropagation>
+                      Edit
+                    </a>
+                    {#if !tyre.retired}
+                      <button on:click|stopPropagation|preventDefault={() => handleRetire(tyre.id)} class="text-button retire-button">
+                        Retire
+                      </button>
+                    {/if}
+                    <button on:click|stopPropagation|preventDefault={() => handleDelete(tyre.id)} class="text-button delete-button">
+                      Delete
+                    </button>
+                  </div>
+                </Cell>
               </div>
-              <div class="detail">
-                <strong>Laps:</strong> {tyre.totalLaps}
-              </div>
-              <div class="detail">
-                <strong>Sessions:</strong> {tyre.sessions}
-              </div>
-              {#if tyre.description}
-                <div class="detail">
-                  {tyre.description}
-                </div>
-              {/if}
-            </div>
-
-            <div class="card-actions">
-              <a href="/tyres/{tyre.id}" use:link class="icon-button" title="Edit">
-                ✎
-              </a>
-              {#if !tyre.retired}
-                <a href="#" on:click|preventDefault={() => handleRetire(tyre.id)} class="icon-button retire-button" title="Retire">
-                  □
-                </a>
-              {/if}
-              <a href="#" on:click|preventDefault={() => handleDelete(tyre.id)} class="icon-button delete-button" title="Delete">
-                ✕
-              </a>
-            </div>
-          </Card>
-        </Cell>
-      {/each}
-    </LayoutGrid>
+            </Row>
+          {/each}
+        </Body>
+      </DataTable>
+    </div>
   {/if}
 </div>
 
 <style>
-  .card-actions {
+  .table-container {
+    margin-top: 24px;
+  }
+
+  :global(.tyre-row) {
+    position: relative;
+  }
+
+  :global(.tyre-row td) {
+    vertical-align: middle;
+    font-size: 16px;
+  }
+
+  .clickable-row {
+    display: contents;
+    cursor: default;
+  }
+
+  .clickable-row.has-sessions {
+    cursor: pointer;
+  }
+
+  .clickable-row.has-sessions:hover :global(td) {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  :global(.retired-row td) {
+    opacity: 0.6;
+  }
+
+  :global(.actions-header) {
+    text-align: right;
+  }
+
+  .retired-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #9e9e9e;
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .active-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .action-buttons {
     display: flex;
-    justify-content: flex-end;
     gap: 8px;
-    padding: 12px 16px;
-    border-top: 1px solid #e0e0e0;
+    justify-content: flex-end;
+  }
+
+  .text-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 6px 12px;
+    color: #1976d2;
+    text-decoration: none;
+    transition: all 0.2s;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .text-button:hover {
+    background-color: rgba(25, 118, 210, 0.08);
+    text-decoration: underline;
+  }
+
+  .retire-button {
+    color: #ff9800;
+  }
+
+  .retire-button:hover {
+    background-color: rgba(255, 152, 0, 0.08);
+  }
+
+  .delete-button {
+    color: #f44336;
+  }
+
+  .delete-button:hover {
+    background-color: rgba(244, 67, 54, 0.08);
   }
 </style>

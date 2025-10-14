@@ -7,6 +7,7 @@
   import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
+  import './table.css';
 
   let tyres = [];
   let loading = true;
@@ -169,10 +170,7 @@
 </div>
 
 <style>
-  .table-container {
-    margin-top: 24px;
-  }
-
+  /* Tyre-specific table styles */
   :global(.tyre-row) {
     position: relative;
   }
@@ -203,6 +201,7 @@
     text-align: right;
   }
 
+  /* Tyre status badges */
   .retired-badge {
     display: inline-block;
     padding: 2px 8px;

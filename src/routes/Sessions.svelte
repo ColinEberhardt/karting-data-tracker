@@ -9,6 +9,7 @@
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
   import FilterPills from '../components/FilterPills.svelte';
+  import './table.css';
   import './sessions.css';
   import {
     formatDateTime,

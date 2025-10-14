@@ -4,75 +4,6 @@
   padding: 2rem;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  margin-top: 2rem;
-}
-
-.empty-state h2 {
-  color: #666;
-  margin-bottom: 1rem;
-}
-
-.empty-state p {
-  color: #888;
-  margin-bottom: 2rem;
-}
-
-
-.table-container {
-  margin-top: 1rem;
-  overflow-x: auto;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  background: white;
-}
-
-.session-row {
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-/* Alternating row backgrounds */
-.mdc-data-table__row.session-row:nth-of-type(even) {
-  background-color: #f5f6f7;
-}
-
-/* Fastest row subtle green highlight */
-.mdc-data-table__row.session-row.fastest-row {
-  background-color: #eef9f1;
-  font-weight: bold;
-}
-
-/* Hover states (ensure specificity after base hover rule if any) */
-.mdc-data-table__row.session-row:not(.fastest-row):hover {
-  background-color: #eceeef;
-}
-.mdc-data-table__row.session-row.fastest-row:hover {
-  background-color: #e4f4e8;
-}
-
-.mdc-data-table__header-row {
-  height: 40px;
-}
-
-.clickable-row {
-  display: contents;
-  cursor: pointer;
-}
-
-.clickable-row:focus {
-  outline: 2px solid #007bff;
-  outline-offset: -2px;
-}
-
-.session-row .mdc-data-table__cell {
-  vertical-align: middle;
-  font-size: 16px;
-}
 
 /* Make session row taller in detailed view */
 .table-container.detailed-view .session-row .mdc-data-table__cell {
@@ -80,35 +11,8 @@
   padding-bottom: 0.5em;
 }
 
-.mdc-data-table__header-cell {
-  text-transform: uppercase;
-  line-height: 1rem;
-}
-
 .race-icon {
   font-size: 1.1em;
-}
-
-/* Consistent column widths across all session tables */
-.sessions-groups .mdc-data-table__table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-.col-time { width: 13%; }
-.col-weather { width: 15%; }
-.col-session { width: 30%; } 
-.col-tyre { width: 20%; }
-.col-laps { width: 10%; }
-.col-fastest { width: 12%; } 
-
-/* Prevent layout shift with long text */
-.col-session,
-.col-weather,
-.col-tyre {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Responsive column handling:
@@ -128,32 +32,13 @@
   }
 }
 
+/* Sessions-specific responsive overrides */
 @media (max-width: 768px) {
   .sessions-dashboard {
     padding: 1rem;
   }
-
-  .page-header {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-
-  .table-container {
-    margin-top: 1rem;
-  }
 }
 
-/* Larger table font */
-.sessions-groups .mdc-data-table__header-cell,
-.sessions-groups .mdc-data-table__cell {
-  font-size: 0.95rem;
-  line-height: 1.35;
-}
-
-.page-header h1 {
-  font-size: 32px;
-}
 
 .table-toolbar {
   display: flex;

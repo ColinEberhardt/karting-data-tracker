@@ -1,0 +1,52 @@
+/* Common table styles shared across data tables */
+.table-container {
+  margin-top: 1rem;
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+/* Data table row styles */
+.clickable-row {
+  display: contents;
+  cursor: pointer;
+}
+
+.clickable-row:focus {
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+/* Alternating row backgrounds */
+.mdc-data-table__row:nth-of-type(even) {
+  background-color: #f5f6f7;
+}
+
+/* Hover state for rows */
+.mdc-data-table__row:hover {
+  background-color: #eceeef;
+}
+
+/* Table cell typography */
+.mdc-data-table__cell {
+  vertical-align: middle;
+  font-size: 16px;
+}
+
+.mdc-data-table__header-cell {
+  text-transform: uppercase;
+  line-height: 1rem;
+  font-weight: 600;
+}
+
+.mdc-data-table__header-row {
+  height: 40px;
+}
+
+/* Responsive table handling - only table-specific overrides */
+@media (max-width: 768px) {
+  .table-container {
+    margin-top: 1rem;
+  }
+}

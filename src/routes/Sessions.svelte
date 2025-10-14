@@ -8,6 +8,7 @@
   import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
+  import FilterPills from '../components/FilterPills.svelte';
   import './sessions.css';
   import {
     formatDateTime,
@@ -124,11 +125,17 @@
       })
     : [];
 
-  // Multi-property filter state with pills
-  let filterInput = '';
-  let filterDropdownOpen = false;
-  let filterDropdownActiveIdx = -1;
+  // Multi-property filter state
   let selectedFilters = []; // Array of { type: 'session'|'tyre'|'track'|'engine'|'weather', id: string, label: string }
+
+  // Define pill colors for different filter types
+  const pillColors = {
+    session: 'session',
+    tyre: 'tyre',
+    track: 'track',
+    engine: 'engine',
+    weather: 'weather'
+  };
 
   // Get sessions that match currently selected filters (for progressive filtering)
   $: sessionsMatchingCurrentFilters = selectedFilters.length === 0
@@ -187,19 +194,14 @@
   // Combine filter options with type suffixes
   $: filterDropdownOptions = [
     ...sessionNames
-      .filter(name => !filterInput || name.toLowerCase().includes(filterInput.toLowerCase()))
       .map(name => ({ type: 'session', id: name, label: `${name} (session)` })),
     ...tyreNames
-      .filter(tyre => !filterInput || tyre.label.toLowerCase().includes(filterInput.toLowerCase()))
       .map(tyre => ({ type: 'tyre', id: tyre.id, label: `${tyre.label} (tyre)` })),
     ...trackNames
-      .filter(track => !filterInput || track.label.toLowerCase().includes(filterInput.toLowerCase()))
       .map(track => ({ type: 'track', id: track.id, label: `${track.label} (track)` })),
     ...engineNames
-      .filter(engine => !filterInput || engine.label.toLowerCase().includes(filterInput.toLowerCase()))
       .map(engine => ({ type: 'engine', id: engine.id, label: `${engine.label} (engine)` })),
     ...weatherConditions
-      .filter(weather => !filterInput || weather.toLowerCase().includes(filterInput.toLowerCase()))
       .map(weather => ({ type: 'weather', id: weather, label: `${weather} (weather)` }))
   ];
 
@@ -223,71 +225,31 @@
         });
       });
 
-  function selectFilter(option) {
-    // Don't add duplicate filters
-    const exists = selectedFilters.some(f => f.type === option.type && f.id === option.id);
-    if (!exists) {
-      // Remove the type suffix from the label for display
-      const cleanLabel = option.label
-        .replace(' (session)', '')
-        .replace(' (tyre)', '')
-        .replace(' (track)', '')
-        .replace(' (engine)', '')
-        .replace(' (weather)', '');
-      
-      selectedFilters = [...selectedFilters, {
-        type: option.type,
-        id: option.id,
-        label: cleanLabel
-      }];
-    }
-    filterInput = '';
-    filterDropdownOpen = false;
-    filterDropdownActiveIdx = -1;
+  // Event handlers for FilterPills component
+  function handleAddFilter(event) {
+    const option = event.detail;
+    // Remove the type suffix from the label for display
+    const cleanLabel = option.label
+      .replace(' (session)', '')
+      .replace(' (tyre)', '')
+      .replace(' (track)', '')
+      .replace(' (engine)', '')
+      .replace(' (weather)', '');
+    
+    selectedFilters = [...selectedFilters, {
+      type: option.type,
+      id: option.id,
+      label: cleanLabel
+    }];
   }
 
-  function removeFilter(index) {
+  function handleRemoveFilter(event) {
+    const index = event.detail;
     selectedFilters = selectedFilters.filter((_, i) => i !== index);
   }
 
-  function handleFilterInput(e) {
-    filterInput = e.target.value;
-    filterDropdownOpen = true;
-    filterDropdownActiveIdx = 0;
-  }
-
-  function handleFilterBlur() {
-    setTimeout(() => {
-      filterDropdownOpen = false;
-      filterDropdownActiveIdx = -1;
-    }, 100);
-  }
-
-  function handleFilterKeydown(e) {
-    // Handle backspace to remove last pill when input is empty
-    if (e.key === 'Backspace' && filterInput === '' && selectedFilters.length > 0) {
-      e.preventDefault();
-      selectedFilters = selectedFilters.slice(0, -1);
-      return;
-    }
-
-    if (!filterDropdownOpen || filterDropdownOptions.length === 0) return;
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      filterDropdownActiveIdx = (filterDropdownActiveIdx + 1) % filterDropdownOptions.length;
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      filterDropdownActiveIdx = (filterDropdownActiveIdx - 1 + filterDropdownOptions.length) % filterDropdownOptions.length;
-    } else if (e.key === 'Enter') {
-      if (filterDropdownActiveIdx >= 0 && filterDropdownActiveIdx < filterDropdownOptions.length) {
-        e.preventDefault();
-        selectFilter(filterDropdownOptions[filterDropdownActiveIdx]);
-      }
-    } else if (e.key === 'Escape') {
-      filterDropdownOpen = false;
-      filterDropdownActiveIdx = -1;
-    }
+  function handleRemoveLastFilter() {
+    selectedFilters = selectedFilters.slice(0, -1);
   }
 </script>
 
@@ -317,60 +279,15 @@
       <div class="table-toolbar">
         <div class="session-filter-group">
           <label for="session-filter">Filter:</label>
-          <div class="session-filter-autocomplete">
-            <div class="filter-pills-container">
-              {#each selectedFilters as filter, idx}
-                <span 
-                  class="filter-pill" 
-                  class:session-pill={filter.type === 'session'} 
-                  class:tyre-pill={filter.type === 'tyre'}
-                  class:track-pill={filter.type === 'track'}
-                  class:engine-pill={filter.type === 'engine'}
-                  class:weather-pill={filter.type === 'weather'}
-                >
-                  {filter.label}
-                  <button
-                    class="pill-remove"
-                    on:click={() => removeFilter(idx)}
-                    aria-label="Remove {filter.label} filter"
-                    type="button"
-                  >×</button>
-                </span>
-              {/each}
-              <input
-                id="session-filter"
-                class="session-filter-input"
-                type="text"
-                placeholder={selectedFilters.length === 0 ? "Filter by session, track, tyre, engine, weather..." : ""}
-                bind:value={filterInput}
-                on:input={handleFilterInput}
-                on:focus={() => { filterDropdownOpen = true; filterDropdownActiveIdx = 0; }}
-                on:blur={handleFilterBlur}
-                on:keydown={handleFilterKeydown}
-                autocomplete="off"
-                aria-autocomplete="list"
-                aria-controls="session-filter-list"
-                aria-activedescendant={filterDropdownActiveIdx >= 0 ? `session-filter-item-${filterDropdownActiveIdx}` : undefined}
-              />
-            </div>
-            {#if filterDropdownOpen && filterDropdownOptions.length > 0}
-              <ul
-                class="session-filter-dropdown"
-                id="session-filter-list"
-                role="listbox"
-              >
-                {#each filterDropdownOptions as option, idx}
-                  <li
-                    id={"session-filter-item-" + idx}
-                    class:selected={idx === filterDropdownActiveIdx}
-                    on:mousedown={() => selectFilter(option)}
-                    role="option"
-                    aria-selected={idx === filterDropdownActiveIdx}
-                  >{option.label}</li>
-                {/each}
-              </ul>
-            {/if}
-          </div>
+          <FilterPills
+            {selectedFilters}
+            filterOptions={filterDropdownOptions}
+            placeholder={selectedFilters.length === 0 ? "Filter by session, track ..." : ""}
+            {pillColors}
+            on:add={handleAddFilter}
+            on:remove={handleRemoveFilter}
+            on:removeLast={handleRemoveLastFilter}
+          />
         </div>
         <label for="sort-select">Sort by:</label>
         <select id="sort-select" bind:value={selectedSort}>

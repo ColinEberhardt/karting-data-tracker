@@ -8,6 +8,7 @@
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
   import LayoutGrid, { Cell } from '@smui/layout-grid';
+  import './action-buttons.css';
 
   let engines = [];
   let loading = true;
@@ -130,17 +131,17 @@
             </div>
 
             <div class="card-actions">
-              <a href="/engines/{engine.id}" use:link class="icon-button" title="Edit">
-                ✎
+              <a href="/engines/{engine.id}" use:link class="text-button">
+                Edit
               </a>
               {#if !engine.retired}
-                <a href="#" on:click|preventDefault={() => handleRetire(engine.id)} class="icon-button retire-button" title="Retire">
-                  □
-                </a>
+                <button on:click|preventDefault={() => handleRetire(engine.id)} class="text-button retire-button">
+                  Retire
+                </button>
               {/if}
-              <a href="#" on:click|preventDefault={() => handleDelete(engine.id)} class="icon-button delete-button" title="Delete">
-                ✕
-              </a>
+              <button on:click|preventDefault={() => handleDelete(engine.id)} class="text-button delete-button">
+                Delete
+              </button>
             </div>
           </Card>
         </Cell>

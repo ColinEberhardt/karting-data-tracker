@@ -1,0 +1,40 @@
+/* Shared action button styles */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.text-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 12px;
+  color: #1976d2;
+  text-decoration: none;
+  transition: all 0.2s;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.text-button:hover {
+  background-color: rgba(25, 118, 210, 0.08);
+  text-decoration: underline;
+}
+
+.retire-button {
+  color: #ff9800;
+}
+
+.retire-button:hover {
+  background-color: rgba(255, 152, 0, 0.08);
+}
+
+.delete-button {
+  color: #f44336;
+}
+
+.delete-button:hover {
+  background-color: rgba(244, 67, 54, 0.08);
+}

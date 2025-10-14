@@ -6,6 +6,7 @@
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
   import LayoutGrid, { Cell } from '@smui/layout-grid';
+  import './action-buttons.css';
 
   let tracks = [];
   let loading = true;
@@ -94,12 +95,12 @@
               </div>
               
               <div class="card-actions">
-                <a href="/tracks/{track.id}" use:link class="icon-button" title="Edit">
-                  ✎
+                <a href="/tracks/{track.id}" use:link class="text-button" title="Edit">
+                  Edit
                 </a>
-                <a href="#" on:click|preventDefault={() => handleDelete(track.id)} class="icon-button delete-button" title="Delete">
-                  ✕
-                </a>
+                <button on:click|preventDefault={() => handleDelete(track.id)} class="text-button delete-button" title="Delete">
+                  Delete
+                </button>
               </div>
             </div>
           </Card>
@@ -147,5 +148,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* Override button colors for dark overlay */
+  .card-overlay :global(.text-button) {
+    color: white;
+  }
+
+  .card-overlay :global(.text-button:hover) {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .card-overlay :global(.delete-button) {
+    color: #ff8a80;
+  }
+
+  .card-overlay :global(.delete-button:hover) {
+    background-color: rgba(255, 138, 128, 0.2);
   }
   </style>

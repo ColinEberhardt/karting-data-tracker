@@ -124,42 +124,6 @@ body {
   justify-content: flex-end;
 }
 
-/* Icon button styles */
-.icon-button {
-  background: none;
-  border: none;
-  padding: 8px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s ease;
-  text-decoration: none;
-  color: inherit;
-  width: 32px;
-  height: 32px;
-}
-
-.icon-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.delete-button {
-  color: #d32f2f;
-}
-
-.delete-button:hover {
-  background-color: rgba(211, 47, 47, 0.1);
-}
-
-.retire-button {
-  line-height: 0.8;
-  align-items: normal;
-  font-size: 28px;
-}
-
 /* Error Message Styles */
 .error-message,
 .error {

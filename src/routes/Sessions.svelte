@@ -124,32 +124,134 @@
       })
     : [];
 
-  // Session name filter state
-  let sessionFilter = '';
+  // Multi-property filter state with pills
+  let filterInput = '';
   let filterDropdownOpen = false;
   let filterDropdownActiveIdx = -1;
+  let selectedFilters = []; // Array of { type: 'session'|'tyre'|'track'|'engine'|'weather', id: string, label: string }
 
-  // Compute unique session names for dropdown
-  $: sessionNames = Array.from(new Set(sessions.map(s => s.session).filter(Boolean))).sort();
+  // Get sessions that match currently selected filters (for progressive filtering)
+  $: sessionsMatchingCurrentFilters = selectedFilters.length === 0
+    ? sessions
+    : sessions.filter(session => {
+        return selectedFilters.every(filter => {
+          if (filter.type === 'session') {
+            return session.session && session.session.toLowerCase().includes(filter.id.toLowerCase());
+          } else if (filter.type === 'tyre') {
+            return session.tyreId === filter.id;
+          } else if (filter.type === 'track') {
+            return session.circuitId === filter.id;
+          } else if (filter.type === 'engine') {
+            return session.engineId === filter.id;
+          } else if (filter.type === 'weather') {
+            return session.condition && session.condition.trim() === filter.id;
+          }
+          return true;
+        });
+      });
 
-  // Filtered sessions based on sessionFilter
-  $: filteredSessions = sessionFilter
-    ? sortedSessions.filter(s => s.session && s.session.toLowerCase().includes(sessionFilter.toLowerCase()))
-    : sortedSessions;
+  // Compute unique session names and tyres for dropdown (from filtered sessions)
+  $: sessionNames = Array.from(new Set(sessionsMatchingCurrentFilters.map(s => s.session).filter(Boolean))).sort();
+  $: tyreNamesFromSessions = Array.from(new Set(sessionsMatchingCurrentFilters.map(s => s.tyreId).filter(Boolean)));
+  $: tyreNames = tyres
+    .filter(t => tyreNamesFromSessions.includes(t.id))
+    .map(t => ({
+      id: t.id,
+      label: t.name || `${t.make} ${t.type}`
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  $: trackNamesFromSessions = Array.from(new Set(sessionsMatchingCurrentFilters.map(s => s.circuitId).filter(Boolean)));
+  $: trackNames = tracks
+    .filter(t => trackNamesFromSessions.includes(t.id))
+    .map(t => ({
+      id: t.id,
+      label: t.name
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  $: engineNamesFromSessions = Array.from(new Set(sessionsMatchingCurrentFilters.map(s => s.engineId).filter(Boolean)));
+  $: engineNames = engines
+    .filter(e => engineNamesFromSessions.includes(e.id))
+    .map(e => ({
+      id: e.id,
+      label: e.name || `${e.make} ${e.model}`
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  
+  // Extract unique weather conditions from filtered sessions
+  $: weatherConditions = Array.from(new Set(
+    sessionsMatchingCurrentFilters
+      .filter(s => s.condition && s.condition.trim() !== '')
+      .map(s => s.condition.trim())
+  )).sort();
 
-  // For dropdown: show names matching current input, or all if input is empty
-  $: filterDropdownOptions = sessionNames.filter(name =>
-    !sessionFilter || name.toLowerCase().includes(sessionFilter.toLowerCase())
-  );
+  // Combine filter options with type suffixes
+  $: filterDropdownOptions = [
+    ...sessionNames
+      .filter(name => !filterInput || name.toLowerCase().includes(filterInput.toLowerCase()))
+      .map(name => ({ type: 'session', id: name, label: `${name} (session)` })),
+    ...tyreNames
+      .filter(tyre => !filterInput || tyre.label.toLowerCase().includes(filterInput.toLowerCase()))
+      .map(tyre => ({ type: 'tyre', id: tyre.id, label: `${tyre.label} (tyre)` })),
+    ...trackNames
+      .filter(track => !filterInput || track.label.toLowerCase().includes(filterInput.toLowerCase()))
+      .map(track => ({ type: 'track', id: track.id, label: `${track.label} (track)` })),
+    ...engineNames
+      .filter(engine => !filterInput || engine.label.toLowerCase().includes(filterInput.toLowerCase()))
+      .map(engine => ({ type: 'engine', id: engine.id, label: `${engine.label} (engine)` })),
+    ...weatherConditions
+      .filter(weather => !filterInput || weather.toLowerCase().includes(filterInput.toLowerCase()))
+      .map(weather => ({ type: 'weather', id: weather, label: `${weather} (weather)` }))
+  ];
 
-  function selectSessionFilter(name) {
-    sessionFilter = name;
+  // Filtered sessions based on selected filter pills
+  $: filteredSessions = selectedFilters.length === 0
+    ? sortedSessions
+    : sortedSessions.filter(session => {
+        return selectedFilters.every(filter => {
+          if (filter.type === 'session') {
+            return session.session && session.session.toLowerCase().includes(filter.id.toLowerCase());
+          } else if (filter.type === 'tyre') {
+            return session.tyreId === filter.id;
+          } else if (filter.type === 'track') {
+            return session.circuitId === filter.id;
+          } else if (filter.type === 'engine') {
+            return session.engineId === filter.id;
+          } else if (filter.type === 'weather') {
+            return session.condition && session.condition.trim() === filter.id;
+          }
+          return true;
+        });
+      });
+
+  function selectFilter(option) {
+    // Don't add duplicate filters
+    const exists = selectedFilters.some(f => f.type === option.type && f.id === option.id);
+    if (!exists) {
+      // Remove the type suffix from the label for display
+      const cleanLabel = option.label
+        .replace(' (session)', '')
+        .replace(' (tyre)', '')
+        .replace(' (track)', '')
+        .replace(' (engine)', '')
+        .replace(' (weather)', '');
+      
+      selectedFilters = [...selectedFilters, {
+        type: option.type,
+        id: option.id,
+        label: cleanLabel
+      }];
+    }
+    filterInput = '';
     filterDropdownOpen = false;
     filterDropdownActiveIdx = -1;
   }
 
+  function removeFilter(index) {
+    selectedFilters = selectedFilters.filter((_, i) => i !== index);
+  }
+
   function handleFilterInput(e) {
-    sessionFilter = e.target.value;
+    filterInput = e.target.value;
     filterDropdownOpen = true;
     filterDropdownActiveIdx = 0;
   }
@@ -162,6 +264,13 @@
   }
 
   function handleFilterKeydown(e) {
+    // Handle backspace to remove last pill when input is empty
+    if (e.key === 'Backspace' && filterInput === '' && selectedFilters.length > 0) {
+      e.preventDefault();
+      selectedFilters = selectedFilters.slice(0, -1);
+      return;
+    }
+
     if (!filterDropdownOpen || filterDropdownOptions.length === 0) return;
 
     if (e.key === 'ArrowDown') {
@@ -172,7 +281,8 @@
       filterDropdownActiveIdx = (filterDropdownActiveIdx - 1 + filterDropdownOptions.length) % filterDropdownOptions.length;
     } else if (e.key === 'Enter') {
       if (filterDropdownActiveIdx >= 0 && filterDropdownActiveIdx < filterDropdownOptions.length) {
-        selectSessionFilter(filterDropdownOptions[filterDropdownActiveIdx]);
+        e.preventDefault();
+        selectFilter(filterDropdownOptions[filterDropdownActiveIdx]);
       }
     } else if (e.key === 'Escape') {
       filterDropdownOpen = false;
@@ -208,35 +318,55 @@
         <div class="session-filter-group">
           <label for="session-filter">Filter:</label>
           <div class="session-filter-autocomplete">
-            <input
-              id="session-filter"
-              class="session-filter-input"
-              type="text"
-              placeholder="Session name..."
-              bind:value={sessionFilter}
-              on:input={handleFilterInput}
-              on:focus={() => { filterDropdownOpen = true; filterDropdownActiveIdx = 0; }}
-              on:blur={handleFilterBlur}
-              on:keydown={handleFilterKeydown}
-              autocomplete="off"
-              aria-autocomplete="list"
-              aria-controls="session-filter-list"
-              aria-activedescendant={filterDropdownActiveIdx >= 0 ? `session-filter-item-${filterDropdownActiveIdx}` : undefined}
-            />
+            <div class="filter-pills-container">
+              {#each selectedFilters as filter, idx}
+                <span 
+                  class="filter-pill" 
+                  class:session-pill={filter.type === 'session'} 
+                  class:tyre-pill={filter.type === 'tyre'}
+                  class:track-pill={filter.type === 'track'}
+                  class:engine-pill={filter.type === 'engine'}
+                  class:weather-pill={filter.type === 'weather'}
+                >
+                  {filter.label}
+                  <button
+                    class="pill-remove"
+                    on:click={() => removeFilter(idx)}
+                    aria-label="Remove {filter.label} filter"
+                    type="button"
+                  >×</button>
+                </span>
+              {/each}
+              <input
+                id="session-filter"
+                class="session-filter-input"
+                type="text"
+                placeholder={selectedFilters.length === 0 ? "Filter by session, track, tyre, engine, weather..." : ""}
+                bind:value={filterInput}
+                on:input={handleFilterInput}
+                on:focus={() => { filterDropdownOpen = true; filterDropdownActiveIdx = 0; }}
+                on:blur={handleFilterBlur}
+                on:keydown={handleFilterKeydown}
+                autocomplete="off"
+                aria-autocomplete="list"
+                aria-controls="session-filter-list"
+                aria-activedescendant={filterDropdownActiveIdx >= 0 ? `session-filter-item-${filterDropdownActiveIdx}` : undefined}
+              />
+            </div>
             {#if filterDropdownOpen && filterDropdownOptions.length > 0}
               <ul
                 class="session-filter-dropdown"
                 id="session-filter-list"
                 role="listbox"
               >
-                {#each filterDropdownOptions as name, idx}
+                {#each filterDropdownOptions as option, idx}
                   <li
                     id={"session-filter-item-" + idx}
                     class:selected={idx === filterDropdownActiveIdx}
-                    on:mousedown={() => selectSessionFilter(name)}
+                    on:mousedown={() => selectFilter(option)}
                     role="option"
                     aria-selected={idx === filterDropdownActiveIdx}
-                  >{name}</li>
+                  >{option.label}</li>
                 {/each}
               </ul>
             {/if}

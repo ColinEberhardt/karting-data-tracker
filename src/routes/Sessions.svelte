@@ -123,6 +123,62 @@
         return 0;
       })
     : [];
+
+  // Session name filter state
+  let sessionFilter = '';
+  let filterDropdownOpen = false;
+  let filterDropdownActiveIdx = -1;
+
+  // Compute unique session names for dropdown
+  $: sessionNames = Array.from(new Set(sessions.map(s => s.session).filter(Boolean))).sort();
+
+  // Filtered sessions based on sessionFilter
+  $: filteredSessions = sessionFilter
+    ? sortedSessions.filter(s => s.session && s.session.toLowerCase().includes(sessionFilter.toLowerCase()))
+    : sortedSessions;
+
+  // For dropdown: show names matching current input, or all if input is empty
+  $: filterDropdownOptions = sessionNames.filter(name =>
+    !sessionFilter || name.toLowerCase().includes(sessionFilter.toLowerCase())
+  );
+
+  function selectSessionFilter(name) {
+    sessionFilter = name;
+    filterDropdownOpen = false;
+    filterDropdownActiveIdx = -1;
+  }
+
+  function handleFilterInput(e) {
+    sessionFilter = e.target.value;
+    filterDropdownOpen = true;
+    filterDropdownActiveIdx = 0;
+  }
+
+  function handleFilterBlur() {
+    setTimeout(() => {
+      filterDropdownOpen = false;
+      filterDropdownActiveIdx = -1;
+    }, 100);
+  }
+
+  function handleFilterKeydown(e) {
+    if (!filterDropdownOpen || filterDropdownOptions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      filterDropdownActiveIdx = (filterDropdownActiveIdx + 1) % filterDropdownOptions.length;
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      filterDropdownActiveIdx = (filterDropdownActiveIdx - 1 + filterDropdownOptions.length) % filterDropdownOptions.length;
+    } else if (e.key === 'Enter') {
+      if (filterDropdownActiveIdx >= 0 && filterDropdownActiveIdx < filterDropdownOptions.length) {
+        selectSessionFilter(filterDropdownOptions[filterDropdownActiveIdx]);
+      }
+    } else if (e.key === 'Escape') {
+      filterDropdownOpen = false;
+      filterDropdownActiveIdx = -1;
+    }
+  }
 </script>
 
 <div class="sessions-dashboard">
@@ -149,13 +205,49 @@
   {:else}
     <div class="table-container {selectedView === 'detailed' ? 'detailed-view' : ''}">
       <div class="table-toolbar">
+        <div class="session-filter-group">
+          <label for="session-filter">Filter:</label>
+          <div class="session-filter-autocomplete">
+            <input
+              id="session-filter"
+              class="session-filter-input"
+              type="text"
+              placeholder="Session name..."
+              bind:value={sessionFilter}
+              on:input={handleFilterInput}
+              on:focus={() => { filterDropdownOpen = true; filterDropdownActiveIdx = 0; }}
+              on:blur={handleFilterBlur}
+              on:keydown={handleFilterKeydown}
+              autocomplete="off"
+              aria-autocomplete="list"
+              aria-controls="session-filter-list"
+              aria-activedescendant={filterDropdownActiveIdx >= 0 ? `session-filter-item-${filterDropdownActiveIdx}` : undefined}
+            />
+            {#if filterDropdownOpen && filterDropdownOptions.length > 0}
+              <ul
+                class="session-filter-dropdown"
+                id="session-filter-list"
+                role="listbox"
+              >
+                {#each filterDropdownOptions as name, idx}
+                  <li
+                    id={"session-filter-item-" + idx}
+                    class:selected={idx === filterDropdownActiveIdx}
+                    on:mousedown={() => selectSessionFilter(name)}
+                    role="option"
+                    aria-selected={idx === filterDropdownActiveIdx}
+                  >{name}</li>
+                {/each}
+              </ul>
+            {/if}
+          </div>
+        </div>
         <label for="sort-select">Sort by:</label>
         <select id="sort-select" bind:value={selectedSort}>
           {#each sortOptions as opt}
             <option value={opt.value}>{opt.label}</option>
           {/each}
         </select>
-        <!-- Add view select -->
         <label for="view-select" style="margin-left: 1.5em;">View:</label>
         <select id="view-select" bind:value={selectedView}>
           {#each viewOptions as opt}
@@ -175,7 +267,7 @@
           </Row>
         </Head>
         <Body>
-          {#each sortedSessions as session (session.id)}
+          {#each filteredSessions as session (session.id)}
             <Row class="session-row">
               <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
                 <Cell class="col-datetime">

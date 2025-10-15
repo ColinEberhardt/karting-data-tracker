@@ -48,5 +48,8 @@
 @media (max-width: 768px) {
   .table-container {
     margin-top: 1rem;
+    border-radius: 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
   }
 }

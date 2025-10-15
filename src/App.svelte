@@ -71,6 +71,12 @@
     padding: 2rem;
   }
 
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  }
+
   main {
     font-family: Arial, sans-serif;
   }

@@ -116,12 +116,11 @@
         <Head>
           <Row>
             <Cell>Name</Cell>
-            <Cell>Make</Cell>
-            <Cell>Type</Cell>
+            <Cell>Make </Cell>
             <Cell>Laps</Cell>
-            <Cell>Sessions</Cell>
-            <Cell>Status</Cell>
-            <Cell class="actions-header">Actions</Cell>
+            <Cell class="col-sessions">Sessions</Cell>
+            <Cell class="col-status">Status</Cell>
+            <Cell class="actions-header col-actions">Actions</Cell>
           </Row>
         </Head>
         <Body>
@@ -135,18 +134,17 @@
                 role="button"
               >
                 <Cell>{tyre.name}</Cell>
-                <Cell>{tyre.make}</Cell>
-                <Cell>{tyre.type}</Cell>
+                <Cell>{tyre.make} / {tyre.type}</Cell>
                 <Cell>{tyre.totalLaps}</Cell>
-                <Cell>{tyre.sessions}</Cell>
-                <Cell>
+                <Cell class="col-sessions">{tyre.sessions}</Cell>
+                <Cell class="col-status">
                   {#if tyre.retired}
                     <span class="retired-badge">Retired</span>
                   {:else}
                     <span class="active-badge">Active</span>
                   {/if}
                 </Cell>
-                <Cell>
+                <Cell class="col-actions">
                   <div class="action-buttons">
                     <a href="/tyres/{tyre.id}" use:link class="text-button" on:click|stopPropagation>
                       Edit
@@ -221,5 +219,24 @@
     border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
+  }
+
+  /* Responsive column hiding */
+  @media (max-width: 768px) {
+    :global(.col-sessions) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    :global(.col-status) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    :global(.col-actions) {
+      display: none;
+    }
   }
 </style>

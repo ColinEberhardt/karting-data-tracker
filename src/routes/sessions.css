@@ -1,7 +1,6 @@
 .sessions-dashboard {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 
@@ -16,17 +15,23 @@
 }
 
 /* Responsive column handling:
-   Breakpoint 1: hide tyre
-   Breakpoint 2: additionally hide weather and laps */
-@media (max-width: 900px) {
-  .col-tyre {
+   Progressive hiding: weather → circuit → laps */
+@media (max-width: 768px) {
+  .col-weather {
     display: none !important;
   }
 }
 
 @media (max-width: 640px) {
-  .col-tyre,
   .col-weather,
+  .col-circuit {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .col-weather,
+  .col-circuit,
   .col-laps {
     display: none !important;
   }
@@ -34,8 +39,11 @@
 
 /* Sessions-specific responsive overrides */
 @media (max-width: 768px) {
-  .sessions-dashboard {
-    padding: 1rem;
+
+  .table-toolbar {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
   }
 }
 

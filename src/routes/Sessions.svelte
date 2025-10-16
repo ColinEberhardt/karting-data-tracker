@@ -334,7 +334,6 @@
     <div class="table-container {selectedView === 'detailed' ? 'detailed-view' : ''}">
       <div class="table-toolbar">
         <div class="session-filter-group">
-          <label for="session-filter">Filter:</label>
           <FilterPills
             {selectedFilters}
             filterOptions={filterDropdownOptions}
@@ -345,13 +344,11 @@
             on:removeLast={handleRemoveLastFilter}
           />
         </div>
-        <label for="sort-select">Sort by:</label>
         <select id="sort-select" bind:value={selectedSort}>
           {#each sortOptions as opt}
             <option value={opt.value}>{opt.label}</option>
           {/each}
         </select>
-        <label for="view-select" style="margin-left: 1.5em;">View:</label>
         <select id="view-select" bind:value={selectedView}>
           {#each viewOptions as opt}
             <option value={opt.value}>{opt.label}</option>
@@ -361,7 +358,7 @@
       <DataTable style="width: 100%;">
         <Head>
           <Row>
-            <Cell class="col-datetime">Date & Time</Cell>
+            <Cell class="col-datetime">Date</Cell>
             <Cell class="col-session">Session</Cell>
             <Cell class="col-circuit">Circuit</Cell>
             <Cell class="col-weather">Weather</Cell>

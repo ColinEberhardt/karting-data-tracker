@@ -2,7 +2,6 @@ export function formatDateTime(date) {
   if (!date) return '';
   const d = date.toDate ? date.toDate() : new Date(date);
   return d.toLocaleString('en-US', {
-    weekday: 'short',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',

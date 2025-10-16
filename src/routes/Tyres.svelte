@@ -6,6 +6,9 @@
   import { calculateItemStats, mergeItemsWithStats } from '../lib/sessionStats.js';
   import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
   import Button from '@smui/button';
+  import IconButton from '@smui/icon-button';
+  import Menu from '@smui/menu';
+  import List, { Item, Text } from '@smui/list';
   import CircularProgress from '@smui/circular-progress';
   import './table.css';
   import './action-buttons.css';
@@ -13,6 +16,7 @@
   let tyres = [];
   let loading = true;
   let error = '';
+  let menuMap = {}; // Store menu instances for each row
 
   const loadTyres = async () => {
     try {
@@ -84,6 +88,21 @@
     }
   };
 
+  const handleMenuItemClick = (action, tyreId) => {
+    // Close the menu
+    if (menuMap[tyreId]) {
+      menuMap[tyreId].setOpen(false);
+    }
+    
+    if (action === 'edit') {
+      push(`/tyres/${tyreId}`);
+    } else if (action === 'retire') {
+      handleRetire(tyreId);
+    } else if (action === 'delete') {
+      handleDelete(tyreId);
+    }
+  };
+
   onMount(() => {
     loadTyres();
   });
@@ -145,7 +164,7 @@
                   {/if}
                 </Cell>
                 <Cell class="col-actions">
-                  <div class="action-buttons">
+                  <div class="action-buttons desktop-actions">
                     <a href="/tyres/{tyre.id}" use:link class="text-button" on:click|stopPropagation>
                       Edit
                     </a>
@@ -157,6 +176,56 @@
                     <button on:click|stopPropagation|preventDefault={() => handleDelete(tyre.id)} class="text-button delete-button">
                       Delete
                     </button>
+                  </div>
+                  <div class="kebab-menu-container" on:click|stopPropagation on:keydown|stopPropagation role="none">
+                    <div class="menu-surface-anchor">
+                      <button 
+                        class="kebab-button-simple" 
+                        on:click={() => menuMap[tyre.id]?.setOpen(true)}
+                        aria-label="More actions"
+                      >
+                        ⋮
+                      </button>
+                      <Menu bind:this={menuMap[tyre.id]}>
+                        <List>
+                          <Item>
+                            <div 
+                              on:click={() => handleMenuItemClick('edit', tyre.id)} 
+                              on:keydown={(e) => e.key === 'Enter' && handleMenuItemClick('edit', tyre.id)}
+                              role="button" 
+                              tabindex="0" 
+                              class="menu-item-wrapper"
+                            >
+                              <Text>Edit</Text>
+                            </div>
+                          </Item>
+                          {#if !tyre.retired}
+                            <Item>
+                              <div 
+                                on:click={() => handleMenuItemClick('retire', tyre.id)} 
+                                on:keydown={(e) => e.key === 'Enter' && handleMenuItemClick('retire', tyre.id)}
+                                role="button" 
+                                tabindex="0" 
+                                class="menu-item-wrapper"
+                              >
+                                <Text>Retire</Text>
+                              </div>
+                            </Item>
+                          {/if}
+                          <Item>
+                            <div 
+                              on:click={() => handleMenuItemClick('delete', tyre.id)} 
+                              on:keydown={(e) => e.key === 'Enter' && handleMenuItemClick('delete', tyre.id)}
+                              role="button" 
+                              tabindex="0" 
+                              class="menu-item-wrapper"
+                            >
+                              <Text class="delete-text">Delete</Text>
+                            </div>
+                          </Item>
+                        </List>
+                      </Menu>
+                    </div>
                   </div>
                 </Cell>
               </div>
@@ -177,6 +246,12 @@
   :global(.tyre-row td) {
     vertical-align: middle;
     font-size: 16px;
+    overflow: visible;
+  }
+
+  :global(.tyre-row td.col-actions) {
+    position: relative;
+    overflow: visible;
   }
 
   .clickable-row {
@@ -221,6 +296,51 @@
     font-weight: 500;
   }
 
+  /* Kebab menu */
+  .kebab-menu-container {
+    display: none;
+    position: relative;
+  }
+
+  .menu-surface-anchor {
+    position: relative;
+    display: inline-block;
+  }
+
+  .kebab-button-simple {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #495057;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kebab-button-simple:hover {
+    background-color: #e9ecef;
+    border-radius: 4px;
+  }
+
+  .desktop-actions {
+    display: flex;
+  }
+
+  :global(.kebab-icon-button) {
+    color: #495057;
+  }
+
+  :global(.delete-menu-item) {
+    color: #dc3545;
+  }
+
+  :global(.delete-text) {
+    color: #dc3545;
+  }
+
   /* Responsive column hiding */
   @media (max-width: 768px) {
     :global(.col-sessions) {
@@ -235,8 +355,16 @@
   }
 
   @media (max-width: 480px) {
-    :global(.col-actions) {
+    .desktop-actions {
       display: none;
+    }
+
+    .kebab-menu-container {
+      display: block;
+    }
+
+    :global(.actions-header) {
+      width: 48px;
     }
   }
 </style>

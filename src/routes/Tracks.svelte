@@ -55,7 +55,7 @@
 
 <div class="container container-lg">
   <div class="page-header">
-    <h1>My Tracks</h1>
+    <h1>Tracks</h1>
     <Button href="/tracks/new" tag="a" use={[link]} variant="raised" style="background-color: #007bff;">+ Add New Track</Button>
   </div>
 
@@ -130,7 +130,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 1rem;
   }
 
   .card-header h3 {
@@ -150,20 +149,4 @@
     justify-content: center;
   }
 
-  /* Override button colors for dark overlay */
-  .card-overlay :global(.text-button) {
-    color: white;
-  }
-
-  .card-overlay :global(.text-button:hover) {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .card-overlay :global(.delete-button) {
-    color: #ff8a80;
-  }
-
-  .card-overlay :global(.delete-button:hover) {
-    background-color: rgba(255, 138, 128, 0.2);
-  }
   </style>

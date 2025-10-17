@@ -24,7 +24,20 @@
       const engineStats = calculateItemStats(sessions, 'engineId');
       
       // Merge engine data with statistics
-      engines = mergeItemsWithStats(rawEngines, engineStats);
+      const enginesWithStats = mergeItemsWithStats(rawEngines, engineStats);
+      
+      // Sort engines: active engines first (by createdAt desc), then retired engines (by createdAt desc)
+      engines = enginesWithStats.sort((a, b) => {
+        // If one is retired and the other isn't, retired goes to bottom
+        if (a.retired !== b.retired) {
+          return a.retired ? 1 : -1;
+        }
+        
+        // Both have same retirement status, sort by createdAt (most recent first)
+        const aDate = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+        const bDate = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        return bDate - aDate;
+      });
     } catch (err) {
       error = err.message;
     } finally {
@@ -55,6 +68,17 @@
       await loadEngines(); // Reload the list
     } catch (err) {
       error = err.message;
+    }
+  };
+
+  const handleSessionsClick = (engine) => {
+    if (engine.sessions > 0) {
+      const filters = encodeURIComponent(JSON.stringify([{ 
+        type: 'engine', 
+        id: engine.id, 
+        label: engine.name || `${engine.make} ${engine.model}`
+      }]));
+      push(`/sessions?filters=${filters}`);
     }
   };
 
@@ -106,7 +130,18 @@
                 <strong>Laps:</strong> {engine.totalLaps}
               </div>
               <div class="detail">
-                <strong>Sessions:</strong> {engine.sessions}
+                <strong>Sessions:</strong> 
+                {#if engine.sessions > 0}
+                  <a 
+                    href="/sessions?filters={encodeURIComponent(JSON.stringify([{ type: 'engine', id: engine.id, label: engine.name || `${engine.make} ${engine.model}` }]))}" 
+                    class="sessions-link"
+                    on:click|preventDefault={() => handleSessionsClick(engine)}
+                  >
+                    {engine.sessions}
+                  </a>
+                {:else}
+                  {engine.sessions}
+                {/if}
               </div>
               {#if engine.serialNumber}
                 <div class="detail">
@@ -125,7 +160,7 @@
               {/if}
               {#if engine.notes}
                 <div class="detail">
-                  <strong>Notes:</strong> {engine.notes}
+                  {engine.notes}
                 </div>
               {/if}
             </div>
@@ -149,3 +184,18 @@
     </LayoutGrid>
   {/if}
 </div>
+
+<style>
+  .sessions-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .sessions-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+</style>

@@ -79,5 +79,7 @@
 
   main {
     font-family: Arial, sans-serif;
+    background-color: #f5f6f7;
+    min-height: 100vh;
   }
 </style>

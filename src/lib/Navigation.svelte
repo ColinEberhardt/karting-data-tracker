@@ -5,8 +5,12 @@
   import { user } from './stores.js';
   import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
   import Button from '@smui/button';
+  import Menu from '@smui/menu';
+  import List, { Item, Text } from '@smui/list';
+  import IconButton from '@smui/icon-button';
 
   let mobileMenuOpen = false;
+  let userMenu;
 
   const handleSignOut = async () => {
     try {
@@ -24,12 +28,18 @@
   const closeMobileMenu = () => {
     mobileMenuOpen = false;
   };
+
+  const openUserMenu = () => {
+    if (userMenu) {
+      userMenu.setOpen(true);
+    }
+  };
 </script>
 
-<TopAppBar variant="static" style="background-color: #f8f9fa; color: #495057; border-bottom: 1px solid #dee2e6;">
+<TopAppBar variant="static" style="background-color: #ffffff; border-bottom: 1px solid #dee2e6;">
   <Row>
     <Section>
-      <Title><a href="/" use:link style="text-decoration: none; color: #007bff; font-weight: bold;">🏎️ Kart Manager</a></Title>
+      <Title><a href="/" use:link style="text-decoration: none; color: #007bff; font-weight: bold;">Karting Log</a></Title>
     </Section>
     <Section align="end" toolbar class="desktop-nav">
       <a href="/tyres" use:link class="nav-link">Tyres</a>
@@ -37,8 +47,21 @@
       <a href="/sessions" use:link class="nav-link">Sessions</a>
       <a href="/tracks" use:link class="nav-link">Tracks</a>
       <div class="user-info">
-        <span class="user-email">👤 {$user?.email}</span>
-        <Button onclick={handleSignOut} variant="raised" color="secondary" style="background-color: #dc3545;">Sign Out</Button>
+        <div class="menu-surface-anchor">
+          <button class="user-icon-button" on:click={openUserMenu} aria-label="User menu">
+            👤
+          </button>
+          <Menu bind:this={userMenu} anchorCorner="BOTTOM_LEFT">
+            <List>
+              <Item disabled>
+                <Text class="user-email-menu">{$user?.email}</Text>
+              </Item>
+              <Item on:SMUI:action={handleSignOut}>
+                <Text class="sign-out-text">Sign Out</Text>
+              </Item>
+            </List>
+          </Menu>
+        </div>
       </div>
     </Section>
     <Section align="end" toolbar class="mobile-nav">
@@ -112,6 +135,39 @@
     margin-left: 1rem;
     padding-left: 1rem;
     border-left: 1px solid #dee2e6;
+    position: relative;
+  }
+
+  .menu-surface-anchor {
+    position: relative;
+    display: inline-block;
+  }
+
+  .user-icon-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+  }
+
+  .user-icon-button:hover {
+    background-color: #e9ecef;
+  }
+
+  :global(.user-email-menu) {
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+
+  :global(.sign-out-text) {
+    color: #dc3545;
+    font-weight: 500;
   }
 
   .user-email {
@@ -123,7 +179,7 @@
 
   .mobile-menu {
     flex-direction: column;
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     border-bottom: 1px solid #dee2e6;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-height: 0;

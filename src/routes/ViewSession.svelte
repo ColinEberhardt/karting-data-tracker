@@ -5,7 +5,6 @@
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
-  import Paper from '@smui/paper';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
   import './action-buttons.css';
@@ -100,7 +99,7 @@
       <p>Loading session details...</p>
     </div>
   {:else if session}
-    <Paper elevation={2} style="border-radius: 10px; overflow: hidden;">
+    <div>
       <!-- Session Information Section -->
       <div class="detail-section">
         <h3>Session Information</h3>
@@ -277,7 +276,7 @@
           </button>
         </div>
       </div>
-    </Paper>
+    </div>
   {:else}
     <div class="empty-state">
       <h2>Session Not Found</h2>

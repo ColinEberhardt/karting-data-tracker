@@ -42,7 +42,7 @@
 
 <div class="container container-lg">
   <div class="page-header">
-    <h1>🏎️ Kart Manager Dashboard</h1>
+    <h1>Dashboard</h1>
   </div>
 
   {#if error}
@@ -56,7 +56,7 @@
     </div>
   {:else}
     <LayoutGrid>
-      <Cell span={3}>
+      <Cell spanDevices={{ desktop: 3, tablet: 4, phone: 4 }}>
         <Card class="card-hover">
           <div class="card-header card-header-active">
             <div class="stat-icon">🏁</div>
@@ -71,7 +71,7 @@
         </Card>
       </Cell>
 
-      <Cell span={3}>
+      <Cell spanDevices={{ desktop: 3, tablet: 4, phone: 4 }}>
         <Card class="card-hover">
           <div class="card-header card-header-active">
             <div class="stat-icon">🛞</div>
@@ -86,7 +86,7 @@
         </Card>
       </Cell>
 
-      <Cell span={3}>
+      <Cell spanDevices={{ desktop: 3, tablet: 4, phone: 4 }}>
         <Card class="card-hover">
           <div class="card-header card-header-active">
             <div class="stat-icon">⚙️</div>
@@ -101,7 +101,7 @@
         </Card>
       </Cell>
 
-      <Cell span={3}>
+      <Cell spanDevices={{ desktop: 3, tablet: 4, phone: 4 }}>
         <Card class="card-hover">
           <div class="card-header card-header-active">
             <div class="stat-icon">🏁</div>

@@ -53,11 +53,7 @@ export function formatGearing(session) {
 
 export function formatWeather(session) {
   const t = session.temp;
-  const c = session.condition;
   const hasTemp = t !== undefined && t !== null && t !== '';
-  const hasCond = !!c;
-  if (hasTemp && hasCond) return `${t}°C, ${c}`;
-  if (hasTemp) return `${t}°C`;
-  if (hasCond) return c;
+  if (hasTemp) return `${t}`;
   return '-';
 }

@@ -182,10 +182,10 @@
     border: 1px solid #81c784;
   }
 
-  .filter-pill:global(.weather-pill) {
-    background: #e0f2f1;
-    color: #00796b;
-    border: 1px solid #80cbc4;
+  .filter-pill:global(.race-pill) {
+    background: #fce4ec;
+    color: #c2185b;
+    border: 1px solid #f48fb1;
   }
 
   .pill-remove {

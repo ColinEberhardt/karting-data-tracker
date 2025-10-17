@@ -164,7 +164,7 @@ body {
 @media (max-width: 768px) {
   .edit-page,
   .form-page {
-    padding: 1rem;
+    padding: 0rem;
   }
 }
 

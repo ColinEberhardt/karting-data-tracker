@@ -72,14 +72,14 @@
 
   // Columns and directions for sorting
   const sortOptions = [
-    { value: 'date-desc', label: 'Date & Time ▼' },
     { value: 'date-asc', label: 'Date & Time ▲' },
-    { value: 'weather-desc', label: 'Weather ▼' },
-    { value: 'weather-asc', label: 'Weather ▲' },
-    { value: 'laps-desc', label: 'Laps ▼' },
+    { value: 'date-desc', label: 'Date & Time ▼' },
+    { value: 'weather-asc', label: 'Temperature ▲' },
+    { value: 'weather-desc', label: 'Temperature ▼' },
     { value: 'laps-asc', label: 'Laps ▲' },
-    { value: 'fastest-desc', label: 'Fastest ▼' },
-    { value: 'fastest-asc', label: 'Fastest ▲' }
+    { value: 'laps-desc', label: 'Laps ▼' },
+    { value: 'fastest-asc', label: 'Fastest ▲' },
+    { value: 'fastest-desc', label: 'Fastest ▼' }
   ];
   let selectedSort = 'date-desc';
 
@@ -190,7 +190,7 @@
     tyre: 'tyre',
     track: 'track',
     engine: 'engine',
-    weather: 'weather'
+    race: 'race'
   };
 
   // Get sessions that match currently selected filters (for progressive filtering)
@@ -206,8 +206,8 @@
             return session.circuitId === filter.id;
           } else if (filter.type === 'engine') {
             return session.engineId === filter.id;
-          } else if (filter.type === 'weather') {
-            return session.condition && session.condition.trim() === filter.id;
+          } else if (filter.type === 'race') {
+            return filter.id === 'race' ? session.isRace === true : session.isRace !== true;
           }
           return true;
         });
@@ -240,12 +240,9 @@
     }))
     .sort((a, b) => a.label.localeCompare(b.label));
   
-  // Extract unique weather conditions from filtered sessions
-  $: weatherConditions = Array.from(new Set(
-    sessionsMatchingCurrentFilters
-      .filter(s => s.condition && s.condition.trim() !== '')
-      .map(s => s.condition.trim())
-  )).sort();
+  // Determine if we have race and practice sessions in filtered results
+  $: hasRaceSessions = sessionsMatchingCurrentFilters.some(s => s.isRace === true);
+  $: hasPracticeSessions = sessionsMatchingCurrentFilters.some(s => s.isRace !== true);
 
   // Combine filter options with type suffixes
   $: filterDropdownOptions = [
@@ -257,8 +254,8 @@
       .map(track => ({ type: 'track', id: track.id, label: `${track.label} (track)` })),
     ...engineNames
       .map(engine => ({ type: 'engine', id: engine.id, label: `${engine.label} (engine)` })),
-    ...weatherConditions
-      .map(weather => ({ type: 'weather', id: weather, label: `${weather} (weather)` }))
+    ...(hasRaceSessions ? [{ type: 'race', id: 'race', label: 'Race (type)' }] : []),
+    ...(hasPracticeSessions ? [{ type: 'race', id: 'practice', label: 'Practice (type)' }] : [])
   ];
 
   // Filtered sessions based on selected filter pills
@@ -274,8 +271,8 @@
             return session.circuitId === filter.id;
           } else if (filter.type === 'engine') {
             return session.engineId === filter.id;
-          } else if (filter.type === 'weather') {
-            return session.condition && session.condition.trim() === filter.id;
+          } else if (filter.type === 'race') {
+            return filter.id === 'race' ? session.isRace === true : session.isRace !== true;
           }
           return true;
         });
@@ -290,7 +287,7 @@
       .replace(' (tyre)', '')
       .replace(' (track)', '')
       .replace(' (engine)', '')
-      .replace(' (weather)', '');
+      .replace(' (type)', '');
     
     selectedFilters = [...selectedFilters, {
       type: option.type,
@@ -361,7 +358,7 @@
             <Cell class="col-datetime">Date</Cell>
             <Cell class="col-session">Session</Cell>
             <Cell class="col-circuit">Circuit</Cell>
-            <Cell class="col-weather">Weather</Cell>
+            <Cell class="col-weather">Temp (C)</Cell>
             <Cell class="col-laps">Laps</Cell>
             <Cell class="col-fastest">Fastest</Cell>
           </Row>
@@ -393,7 +390,26 @@
                 </Cell>
                 <Cell class="col-circuit">{getTrackName(session.circuitId)}</Cell>
                 <Cell class="col-weather">{formatWeather(session)}</Cell>
-                <Cell class="col-laps">{session.laps}</Cell>
+                <Cell class="col-laps">
+                  {session.laps}
+                  {#if selectedView === 'detailed' && session.isRace && session.startPos && session.endPos}
+                    {#key session.id}
+                      {@const delta = session.startPos - session.endPos}
+                      {@const deltaSign = delta > 0 ? '+' : ''}
+                      <div class="session-details-placeholder">
+                        <span class="race-result">
+                          {session.endPos}/{session.entries} 
+                          <span class="delta {delta > 0 ? 'positive' : delta < 0 ? 'negative' : 'neutral'}">
+                            ({deltaSign}{delta})
+                          </span>
+                          {#if session.penalties}
+                            <span class="penalty-marker">*</span>
+                          {/if}
+                        </span>
+                      </div>
+                    {/key}
+                  {/if}
+                </Cell>
                 <Cell class="col-fastest">
                   {formatFastestLap(session.fastest)}
                 </Cell>

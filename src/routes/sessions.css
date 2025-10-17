@@ -14,23 +14,53 @@
   font-size: 1.1em;
 }
 
+.race-result {
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.delta {
+  font-weight: 600;
+}
+
+.delta.positive {
+  color: #28a745;
+}
+
+.delta.negative {
+  color: #dc3545;
+}
+
+.delta.neutral {
+  color: #6c757d;
+}
+
+.penalty-marker {
+  color: #ffc107;
+  font-size: 1.1em;
+  margin-left: 0.2em;
+}
+
 .session-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 250px;
 }
 
 /* Responsive column handling:
    Progressive hiding: weather → circuit → laps */
 @media (max-width: 768px) {
-  .col-weather {
+  .col-weather,
+  .col-circuit {
     display: none !important;
   }
 }
 
 @media (max-width: 640px) {
   .col-weather,
-  .col-circuit {
+  .col-circuit,
+  .col-laps {
     display: none !important;
   }
 }

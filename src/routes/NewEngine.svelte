@@ -56,7 +56,7 @@
 
 <div class="form-page">
   <div class="page-header">
-    <h1>Add New Engine</h1>
+    <h1>Add Engine</h1>
     <Button href="/engines" tag="a" use={[link]} variant="outlined">← Back to Engines</Button>
   </div>
 
@@ -71,17 +71,17 @@
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={name} label="Name *" required style="width: 100%;" />
+            <Textfield variant="outlined" bind:value={name} label="Name" required style="width: 100%;" />
           </div>
         </div>
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={make} label="Make *" required style="width: 100%;" />
+            <Textfield variant="outlined" bind:value={make} label="Make" required style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={model} label="Model *" required style="width: 100%;" />
+            <Textfield variant="outlined" bind:value={model} label="Model" required style="width: 100%;" />
           </div>
         </div>
 

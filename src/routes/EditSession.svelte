@@ -59,7 +59,6 @@
 
   const conditionOptions = ['Dry', 'Wet', 'Damp', 'Mixed'];
   const casterOptions = ['None', 'Quarter', 'Half', 'Three Quarter', 'Full'];
-  const rideHeightOptions = ['Low', 'Middle', 'High'];
 
   const loadData = async () => {
     try {
@@ -220,11 +219,11 @@
         <h3>Session Information</h3>
         
         <div class="form-group">
-          <Textfield variant="outlined" type="date" bind:value={date} label="Date *" required style="width: 100%;" />
+          <Textfield variant="outlined" type="date" bind:value={date} label="Date" required style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Select variant="outlined" bind:value={circuitId} label="Circuit *" required style="width: 100%;">
+          <Select variant="outlined" bind:value={circuitId} label="Circuit" required style="width: 100%;">
             <Option value="">Select a track...</Option>
             {#each tracks as track (track.id)}
               <Option value={track.id}>{track.name}</Option>
@@ -239,11 +238,11 @@
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C) *" required input$min="0" input$max="50" input$step="0.01" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C)" required input$min="0" input$max="50" input$step="0.01" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Select variant="outlined" bind:value={condition} label="Track Condition *" required style="width: 100%;">
+            <Select variant="outlined" bind:value={condition} label="Track Condition" required style="width: 100%;">
               {#each conditionOptions as conditionOption}
                 <Option value={conditionOption}>{conditionOption}</Option>
               {/each}
@@ -252,7 +251,7 @@
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" bind:value={session} label="Session Type *" required style="width: 100%;" />
+          <Textfield variant="outlined" bind:value={session} label="Session Type" required style="width: 100%;" />
         </div>
       </div>
 
@@ -261,7 +260,7 @@
         <h3>Equipment Setup</h3>
         
         <div class="form-group">
-          <Select variant="outlined" bind:value={tyreId} label="Tyre Used *" required style="width: 100%;">
+          <Select variant="outlined" bind:value={tyreId} label="Tyre Used" required style="width: 100%;">
             <Option value="">Select a tyre...</Option>
             {#each tyres as tyre (tyre.id)}
               <Option value={tyre.id}>{tyre.name || `${tyre.make} ${tyre.type}`}</Option>
@@ -275,7 +274,7 @@
         </div>
 
         <div class="form-group">
-          <Select variant="outlined" bind:value={engineId} label="Engine *" required style="width: 100%;">
+          <Select variant="outlined" bind:value={engineId} label="Engine" required style="width: 100%;">
             <Option value="">Select an engine...</Option>
             {#each engines as engine (engine.id)}
               <Option value={engine.id}>{engine.name || `${engine.make} ${engine.model}`}</Option>
@@ -295,17 +294,17 @@
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={rearSprocket} label="Rear Sprocket (teeth) *" required input$min="1" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={rearSprocket} label="Rear Sprocket (teeth)" required input$min="1" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={frontSprocket} label="Front Sprocket (teeth) *" required input$min="1" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={frontSprocket} label="Front Sprocket (teeth)" required input$min="1" style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <Select variant="outlined" bind:value={caster} label="Caster *" required style="width: 100%;">
+            <Select variant="outlined" bind:value={caster} label="Caster" required style="width: 100%;">
               {#each casterOptions as casterOption}
                 <Option value={casterOption}>{casterOption}</Option>
               {/each}
@@ -313,35 +312,31 @@
           </div>
 
           <div class="form-group">
-            <Select variant="outlined" bind:value={rideHeight} label="Ride Height *" required style="width: 100%;">
-              {#each rideHeightOptions as heightOption}
-                <Option value={heightOption}>{heightOption}</Option>
-              {/each}
-            </Select>
+            <Textfield variant="outlined" bind:value={rideHeight} label="Ride Height" required style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={jet} label="Jet Size *" required input$min="1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={jet} label="Jet Size" required input$min="1" style="width: 100%;" />
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={rearInner} label="Rear Inner Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={rearInner} label="Rear Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={rearOuter} label="Rear Outer Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={rearOuter} label="Rear Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={frontInner} label="Front Inner Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={frontInner} label="Front Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={frontOuter} label="Front Outer Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={frontOuter} label="Front Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
         </div>
       </div>
@@ -352,7 +347,7 @@
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={laps} label="Number of Laps *" required input$min="1" style="width: 100%;" />
+            <Textfield variant="outlined" type="number" bind:value={laps} label="Number of Laps" required input$min="1" style="width: 100%;" />
           </div>
 
           <div class="form-group">

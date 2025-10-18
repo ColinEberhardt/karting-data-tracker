@@ -103,7 +103,7 @@
             <Textfield
               variant="outlined"
               bind:value={name}
-              label="Name *"
+              label="Name"
               required
               disabled={loading}
               style="width: 100%;"
@@ -115,7 +115,7 @@
               <Textfield
                 variant="outlined"
                 bind:value={make}
-                label="Make *"
+                label="Make"
                 required
                 disabled={loading}
                 style="width: 100%;"
@@ -123,7 +123,7 @@
             </div>
 
             <div class="form-group">
-              <Select variant="outlined" bind:value={type} label="Type *" required disabled={loading} style="width: 100%;">
+              <Select variant="outlined" bind:value={type} label="Type" required disabled={loading} style="width: 100%;">
                 <Option value="">Select type</Option>
                 <Option value="Wet">Wet</Option>
                 <Option value="Slick">Slick</Option>

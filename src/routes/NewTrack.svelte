@@ -90,7 +90,7 @@
         <h3>Track Information</h3>
         
         <div class="form-group">
-          <Textfield variant="outlined" bind:value={name} label="Track Name *" required disabled={loading} style="width: 100%;" />
+          <Textfield variant="outlined" bind:value={name} label="Track Name" required disabled={loading} style="width: 100%;" />
         </div>
       </div>
 
@@ -119,7 +119,7 @@
               variant="outlined" 
               type="number" 
               bind:value={latitude} 
-              label="Latitude *" 
+              label="Latitude" 
               required 
               disabled={loading || gettingLocation}
               input$step="any"
@@ -135,7 +135,7 @@
               variant="outlined" 
               type="number" 
               bind:value={longitude} 
-              label="Longitude *" 
+              label="Longitude" 
               required 
               disabled={loading || gettingLocation}
               input$step="any"

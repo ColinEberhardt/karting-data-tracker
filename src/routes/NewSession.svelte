@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { push, link } from 'svelte-spa-router';
-  import { addSession } from '../lib/sessions.js';
+  import { addSession, getUserSessions } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
@@ -27,7 +27,7 @@
   let rearSprocket = '';
   let frontSprocket = '';
   let caster = 'Half';
-  let rideHeight = 'Middle';
+  let rideHeight = '';
   let jet = '';
   let rearInner = '';
   let rearOuter = '';
@@ -54,18 +54,40 @@
 
   const conditionOptions = ['Dry', 'Wet', 'Damp', 'Mixed'];
   const casterOptions = ['None', 'Quarter', 'Half', 'Three Quarter', 'Full'];
-  const rideHeightOptions = ['Low', 'Middle', 'High'];
 
   const loadData = async () => {
     try {
-      const [tyresData, tracksData, enginesData] = await Promise.all([
+      const [tyresData, tracksData, enginesData, sessionsData] = await Promise.all([
         getUserTyres(),
         getUserTracks(),
-        getUserEngines()
+        getUserEngines(),
+        getUserSessions()
       ]);
       tyres = tyresData.filter(tyre => !tyre.retired);
       tracks = tracksData;
       engines = enginesData.filter(engine => !engine.retired);
+      
+      // If there's a most recent session, use its values as defaults
+      if (sessionsData && sessionsData.length > 0) {
+        const recentSession = sessionsData[0]; // Already sorted by date desc
+        
+        // Only set defaults for fields that are likely to be reused
+        // Don't set date, session type, laps, fastest, or race-specific fields
+        circuitId = recentSession.circuitId || '';
+        temp = recentSession.temp ? String(recentSession.temp) : '';
+        condition = recentSession.condition || 'Dry';
+        tyreId = recentSession.tyreId || '';
+        engineId = recentSession.engineId || '';
+        rearSprocket = recentSession.rearSprocket ? String(recentSession.rearSprocket) : '';
+        frontSprocket = recentSession.frontSprocket ? String(recentSession.frontSprocket) : '';
+        caster = recentSession.caster || 'Half';
+        rideHeight = recentSession.rideHeight || '';
+        jet = recentSession.jet ? String(recentSession.jet) : '';
+        rearInner = recentSession.rearInner ? String(recentSession.rearInner) : '';
+        rearOuter = recentSession.rearOuter ? String(recentSession.rearOuter) : '';
+        frontInner = recentSession.frontInner ? String(recentSession.frontInner) : '';
+        frontOuter = recentSession.frontOuter ? String(recentSession.frontOuter) : '';
+      }
     } catch (err) {
       error = err.message;
     }
@@ -160,7 +182,7 @@
 
 <div class="form-page">
   <div class="header">
-    <h1>Add New Karting Session</h1>
+    <h1>Add Session</h1>
     <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
   </div>
 
@@ -175,11 +197,11 @@
       <h3>Session Information</h3>
       
       <div class="form-group">
-        <Textfield variant="outlined" type="date" bind:value={date} label="Date *" required style="width: 100%;" />
+        <Textfield variant="outlined" type="date" bind:value={date} label="Date" required style="width: 100%;" />
       </div>
 
       <div class="form-group">
-        <Select variant="outlined" bind:value={circuitId} label="Circuit *" required style="width: 100%;">
+        <Select variant="outlined" bind:value={circuitId} label="Circuit" required style="width: 100%;">
           <Option value="">Select a track...</Option>
           {#each tracks as track (track.id)}
             <Option value={track.id}>{track.name}</Option>
@@ -194,11 +216,11 @@
 
       <div class="form-row">
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C) *" required input$min="0" input$max="50" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C)" required input$min="0" input$max="50" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Select variant="outlined" bind:value={condition} label="Track Condition *" required style="width: 100%;">
+          <Select variant="outlined" bind:value={condition} label="Track Condition" required style="width: 100%;">
             {#each conditionOptions as conditionOption}
               <Option value={conditionOption}>{conditionOption}</Option>
             {/each}
@@ -207,7 +229,7 @@
       </div>
 
       <div class="form-group">
-        <Textfield variant="outlined" bind:value={session} label="Session Type *" required style="width: 100%;" />
+        <Textfield variant="outlined" bind:value={session} label="Session Type" required style="width: 100%;" />
       </div>
     </div>
 
@@ -216,7 +238,7 @@
       <h3>Equipment Setup</h3>
       
       <div class="form-group">
-        <Select variant="outlined" bind:value={tyreId} label="Tyre Used *" required style="width: 100%;">
+        <Select variant="outlined" bind:value={tyreId} label="Tyre Used" required style="width: 100%;">
           <Option value="">Select a tyre...</Option>
           {#each tyres as tyre (tyre.id)}
             <Option value={tyre.id}>{tyre.name || `${tyre.make} ${tyre.type}`}</Option>
@@ -230,7 +252,7 @@
       </div>
 
       <div class="form-group">
-        <Select variant="outlined" bind:value={engineId} label="Engine *" required style="width: 100%;">
+        <Select variant="outlined" bind:value={engineId} label="Engine" required style="width: 100%;">
           <Option value="">Select an engine...</Option>
           {#each engines as engine (engine.id)}
             <Option value={engine.id}>{engine.name || `${engine.make} ${engine.model}`}</Option>
@@ -250,17 +272,17 @@
       
       <div class="form-row">
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={rearSprocket} label="Rear Sprocket (teeth) *" required input$min="1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={rearSprocket} label="Rear Sprocket (teeth)" required input$min="1" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={frontSprocket} label="Front Sprocket (teeth) *" required input$min="1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={frontSprocket} label="Front Sprocket (teeth)" required input$min="1" style="width: 100%;" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <Select variant="outlined" bind:value={caster} label="Caster *" required style="width: 100%;">
+          <Select variant="outlined" bind:value={caster} label="Caster" required style="width: 100%;">
             {#each casterOptions as casterOption}
               <Option value={casterOption}>{casterOption}</Option>
             {/each}
@@ -268,35 +290,31 @@
         </div>
 
         <div class="form-group">
-          <Select variant="outlined" bind:value={rideHeight} label="Ride Height *" required style="width: 100%;">
-            {#each rideHeightOptions as heightOption}
-              <Option value={heightOption}>{heightOption}</Option>
-            {/each}
-          </Select>
+          <Textfield variant="outlined" bind:value={rideHeight} label="Ride Height" required style="width: 100%;" />
         </div>
       </div>
 
       <div class="form-group">
-        <Textfield variant="outlined" type="number" bind:value={jet} label="Jet Size *" required input$min="1" style="width: 100%;" />
+        <Textfield variant="outlined" type="number" bind:value={jet} label="Jet Size" required input$min="1" style="width: 100%;" />
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={rearInner} label="Rear Inner Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={rearInner} label="Rear Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={rearOuter} label="Rear Outer Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={rearOuter} label="Rear Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={frontInner} label="Front Inner Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={frontInner} label="Front Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={frontOuter} label="Front Outer Pressure (psi) *" required input$min="0" input$step="0.1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={frontOuter} label="Front Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
         </div>
       </div>
     </div>
@@ -307,7 +325,7 @@
       
       <div class="form-row">
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={laps} label="Number of Laps *" required input$min="1" style="width: 100%;" />
+          <Textfield variant="outlined" type="number" bind:value={laps} label="Number of Laps" required input$min="1" style="width: 100%;" />
         </div>
 
         <div class="form-group">

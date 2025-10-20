@@ -98,7 +98,9 @@
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    date = `${year}-${month}-${day}`;
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    date = `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   const handleSubmit = async () => {
@@ -197,7 +199,7 @@
       <h3>Session Information</h3>
       
       <div class="form-group">
-        <Textfield variant="outlined" type="date" bind:value={date} label="Date" required style="width: 100%;" />
+        <Textfield variant="outlined" type="datetime-local" bind:value={date} label="Date & Time" required style="width: 100%;" />
       </div>
 
       <div class="form-group">

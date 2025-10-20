@@ -69,23 +69,32 @@
         getUserTracks(),
         getUserEngines()
       ]);
-      tyres = tyresData.filter(tyre => !tyre.retired);
+      
+      // Load existing data first to know which IDs are currently selected
+      const sessionTyreId = sessionData.tyreId || '';
+      const sessionEngineId = sessionData.engineId || '';
+      
+      // Filter tyres, but always include the one currently used in this session
+      tyres = tyresData.filter(tyre => !tyre.retired || tyre.id === sessionTyreId);
       tracks = tracksData;
-      engines = enginesData.filter(engine => !engine.retired);
+      // Filter engines, but always include the one currently used in this session
+      engines = enginesData.filter(engine => !engine.retired || engine.id === sessionEngineId);
 
       // Load existing data
       const sessionDate = sessionData.date ? (sessionData.date.toDate ? sessionData.date.toDate() : new Date(sessionData.date)) : new Date();
       const year = sessionDate.getFullYear();
       const month = String(sessionDate.getMonth() + 1).padStart(2, '0');
       const day = String(sessionDate.getDate()).padStart(2, '0');
-      date = `${year}-${month}-${day}`;
+      const hours = String(sessionDate.getHours()).padStart(2, '0');
+      const minutes = String(sessionDate.getMinutes()).padStart(2, '0');
+      date = `${year}-${month}-${day}T${hours}:${minutes}`;
       
       circuitId = sessionData.circuitId || '';
       temp = sessionData.temp ? sessionData.temp.toString() : '';
       condition = sessionData.condition || 'Dry';
       session = sessionData.session || '';
-      tyreId = sessionData.tyreId || '';
-      engineId = sessionData.engineId || '';
+      tyreId = sessionTyreId;
+      engineId = sessionEngineId;
       rearSprocket = sessionData.rearSprocket ? sessionData.rearSprocket.toString() : '';
       frontSprocket = sessionData.frontSprocket ? sessionData.frontSprocket.toString() : '';
       caster = sessionData.caster || 'Half';
@@ -219,7 +228,7 @@
         <h3>Session Information</h3>
         
         <div class="form-group">
-          <Textfield variant="outlined" type="date" bind:value={date} label="Date" required style="width: 100%;" />
+          <Textfield variant="outlined" type="datetime-local" bind:value={date} label="Date & Time" required style="width: 100%;" />
         </div>
 
         <div class="form-group">

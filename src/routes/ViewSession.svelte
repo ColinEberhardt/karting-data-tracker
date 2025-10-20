@@ -42,7 +42,7 @@
   const formatDate = (date) => {
     if (!date) return '';
     const d = date.toDate ? date.toDate() : new Date(date);
-    return d.toLocaleDateString();
+    return d.toLocaleString();
   };
 
   const formatFastestLap = (time) => {
@@ -268,7 +268,7 @@
       <!-- Action Buttons Section -->
       <div class="detail-section action-section">
         <div class="action-buttons">
-          <a href="/sessions/{session.id}" use:link class="text-button">
+          <a href="/sessions/edit/{session.id}" use:link class="text-button">
             Edit
           </a>
           <button on:click={handleDelete} class="text-button delete-button">

@@ -5,6 +5,7 @@
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
+  import { getWeatherCodeOptions, getWeatherDescription } from '../lib/sessionFormat.js';
   import Card from '@smui/card';
   import Textfield from '@smui/textfield';
   import Select, { Option } from '@smui/select';
@@ -16,7 +17,7 @@
   let date = '';
   let circuitId = '';
   let temp = '';
-  let condition = 'Dry';
+  let weatherCode = 0; // WMO Weather interpretation code
   let session = '';
 
   // Equipment Setup
@@ -51,9 +52,10 @@
   let engines = [];
   let loading = false;
   let error = '';
+  let fetchingWeather = false;
 
-  const conditionOptions = ['Dry', 'Wet', 'Damp', 'Mixed'];
   const casterOptions = ['None', 'Quarter', 'Half', 'Three Quarter', 'Full'];
+  const weatherCodeOptions = getWeatherCodeOptions();
 
   const loadData = async () => {
     try {
@@ -75,7 +77,7 @@
         // Don't set date, session type, laps, fastest, or race-specific fields
         circuitId = recentSession.circuitId || '';
         temp = recentSession.temp ? String(recentSession.temp) : '';
-        condition = recentSession.condition || 'Dry';
+        weatherCode = recentSession.weatherCode || 0;
         tyreId = recentSession.tyreId || '';
         engineId = recentSession.engineId || '';
         rearSprocket = recentSession.rearSprocket ? String(recentSession.rearSprocket) : '';
@@ -101,6 +103,46 @@
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     date = `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const fetchWeather = async () => {
+    if (!circuitId) {
+      error = 'Please select a track first';
+      return;
+    }
+
+    const selectedTrack = tracks.find(t => t.id === circuitId);
+    if (!selectedTrack || !selectedTrack.latitude || !selectedTrack.longitude) {
+      error = 'Selected track does not have location data';
+      return;
+    }
+
+    fetchingWeather = true;
+    error = '';
+
+    try {
+      const response = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${selectedTrack.latitude}&longitude=${selectedTrack.longitude}&current_weather=true`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather data');
+      }
+
+      const data = await response.json();
+      
+      if (data.current_weather) {
+        // Set temperature (round to 1 decimal place)
+        temp = String(Math.round(data.current_weather.temperature * 10) / 10);
+        
+        // Store the weather code directly
+        weatherCode = data.current_weather.weathercode;
+      }
+    } catch (err) {
+      error = `Failed to fetch weather: ${err.message}`;
+    } finally {
+      fetchingWeather = false;
+    }
   };
 
   const handleSubmit = async () => {
@@ -144,7 +186,7 @@
         date,
         circuitId,
         temp,
-        condition,
+        weatherCode,
         session,
         tyreId,
         engineId,
@@ -216,15 +258,26 @@
         {/if}
       </div>
 
+      <div class="weather-fetch-section">
+        <Button 
+          type="button" 
+          onclick={fetchWeather} 
+          disabled={!circuitId || fetchingWeather}
+          variant="outlined"
+          style="margin-bottom: 1rem;">
+          {fetchingWeather ? 'Fetching Weather...' : '🌤️ Get Current Weather'}
+        </Button>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C)" required input$min="0" input$max="50" style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Select variant="outlined" bind:value={condition} label="Track Condition" required style="width: 100%;">
-            {#each conditionOptions as conditionOption}
-              <Option value={conditionOption}>{conditionOption}</Option>
+          <Select variant="outlined" bind:value={weatherCode} label="Weather Conditions" required style="width: 100%;">
+            {#each weatherCodeOptions as option (option.code)}
+              <Option value={option.code}>{option.description}</Option>
             {/each}
           </Select>
         </div>

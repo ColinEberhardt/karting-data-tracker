@@ -5,6 +5,7 @@
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
+  import { getWeatherDescription } from '../lib/sessionFormat.js';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
   import './action-buttons.css';
@@ -121,8 +122,8 @@
           </div>
 
           <div class="detail-item">
-            <span class="label">Track Condition:</span>
-            <span class="value">{session.condition}</span>
+            <span class="label">Weather:</span>
+            <span class="value">{getWeatherDescription(session.weatherCode)}</span>
           </div>
 
           <div class="detail-item">

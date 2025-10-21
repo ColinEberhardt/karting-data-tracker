@@ -5,6 +5,7 @@
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
+  import { getWeatherCodeOptions, getWeatherDescription } from '../lib/sessionFormat.js';
   import Card from '@smui/card';
   import Textfield from '@smui/textfield';
   import Select, { Option } from '@smui/select';
@@ -20,7 +21,7 @@
   let date = '';
   let circuitId = '';
   let temp = '';
-  let condition = 'Dry';
+  let weatherCode = 0; // WMO Weather interpretation code
   let session = '';
 
   // Equipment Setup
@@ -57,8 +58,8 @@
   let error = '';
   let initialLoading = true;
 
-  const conditionOptions = ['Dry', 'Wet', 'Damp', 'Mixed'];
   const casterOptions = ['None', 'Quarter', 'Half', 'Three Quarter', 'Full'];
+  const weatherCodeOptions = getWeatherCodeOptions();
 
   const loadData = async () => {
     try {
@@ -91,7 +92,7 @@
       
       circuitId = sessionData.circuitId || '';
       temp = sessionData.temp ? sessionData.temp.toString() : '';
-      condition = sessionData.condition || 'Dry';
+      weatherCode = sessionData.weatherCode || 0;
       session = sessionData.session || '';
       tyreId = sessionTyreId;
       engineId = sessionEngineId;
@@ -168,7 +169,7 @@
         date,
         circuitId,
         temp,
-        condition,
+        weatherCode,
         session,
         tyreId,
         engineId,
@@ -251,12 +252,16 @@
           </div>
 
           <div class="form-group">
-            <Select variant="outlined" bind:value={condition} label="Track Condition" required style="width: 100%;">
-              {#each conditionOptions as conditionOption}
-                <Option value={conditionOption}>{conditionOption}</Option>
+            <Select variant="outlined" bind:value={weatherCode} label="Weather Conditions" required style="width: 100%;">
+              {#each weatherCodeOptions as option (option.code)}
+                <Option value={option.code}>{option.description}</Option>
               {/each}
             </Select>
           </div>
+        </div>
+
+        <div class="form-group">
+          <Textfield variant="outlined" bind:value={session} label="Session Type" required style="width: 100%;" />
         </div>
 
         <div class="form-group">

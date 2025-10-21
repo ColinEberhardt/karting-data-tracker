@@ -25,7 +25,7 @@ export const addSession = async (sessionData) => {
       date: new Date(sessionData.date),
       circuitId: sessionData.circuitId,
       temp: parseFloat(sessionData.temp),
-      condition: sessionData.condition,
+      weatherCode: sessionData.weatherCode !== undefined ? parseInt(sessionData.weatherCode) : null,
       session: sessionData.session,
       
       // Equipment setup
@@ -131,7 +131,7 @@ export const updateSession = async (sessionId, sessionData) => {
       date: new Date(sessionData.date),
       circuitId: sessionData.circuitId,
       temp: parseFloat(sessionData.temp),
-      condition: sessionData.condition,
+      weatherCode: sessionData.weatherCode !== undefined ? parseInt(sessionData.weatherCode) : null,
       session: sessionData.session,
       
       // Equipment setup

@@ -16,7 +16,8 @@
     formatFastestLap,
     formatTyrePressures,
     formatGearing,
-    formatWeather
+    formatWeather,
+    weatherCodeEmoji
   } from '../lib/sessionFormat.js';
 
   let sessions = [];
@@ -358,7 +359,7 @@
             <Cell class="col-datetime">Date</Cell>
             <Cell class="col-session">Session</Cell>
             <Cell class="col-circuit">Circuit</Cell>
-            <Cell class="col-weather">Temp (C)</Cell>
+            <Cell class="col-weather">Weather</Cell>
             <Cell class="col-laps">Laps</Cell>
             <Cell class="col-fastest">Fastest</Cell>
           </Row>
@@ -389,7 +390,9 @@
                   {/if}
                 </Cell>
                 <Cell class="col-circuit">{getTrackName(session.circuitId)}</Cell>
-                <Cell class="col-weather">{formatWeather(session)}</Cell>
+                <Cell class="col-weather">
+                  {weatherCodeEmoji(session.weatherCode)} {formatWeather(session)}°C
+                </Cell>
                 <Cell class="col-laps">
                   {session.laps}
                   {#if selectedView === 'detailed' && session.isRace && session.startPos && session.endPos}

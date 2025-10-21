@@ -1,6 +1,12 @@
 # Tyre Data Upload Script
 
-This script reads the CSV file `Logbook - Tyres.csv` and uploads the data to your Firestore database.
+This directory contains scripts for uploading and updating data in your Firestore database.
+
+## Scripts
+
+- **upload-tyres.js** - Uploads tyre data from CSV
+- **upload-sessions.js** - Uploads session data from CSV
+- **update-sessions-weather.js** - Updates all sessions with historical weather data
 
 ## Setup
 
@@ -19,6 +25,28 @@ This script reads the CSV file `Logbook - Tyres.csv` and uploads the data to you
    - **SECURITY**: This file is automatically ignored by git (.gitignore) - NEVER commit it!
 
 ## Usage
+
+### Update Sessions with Weather Data
+
+This script fetches historical weather data for all sessions that don't have weather codes:
+
+```bash
+npm run update-weather
+```
+
+What it does:
+1. Fetches all sessions from Firestore
+2. For each session without a weather code:
+   - Gets the track's location (latitude/longitude)
+   - Fetches historical weather data from Open-Meteo API for that date/time
+   - Updates the session with the weather code and temperature
+3. Skips sessions that already have weather data
+4. Includes rate limiting to respect API limits (150ms delay between requests)
+
+**Note**: The Open-Meteo Archive API is used for historical data. It's free but has rate limits:
+- 10,000 calls/day
+- 5,000 calls/hour  
+- 600 calls/minute
 
 ### Get Your User ID
 

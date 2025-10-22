@@ -163,3 +163,34 @@
   color: #888;
   margin-top: 0.25em;
 }
+
+/* Inline fallback info for compact view when columns are hidden */
+.session-inline {
+  font-size: 0.9em;
+  color: #888;
+  margin-top: 0.25em;
+}
+.session-inline .inline-circuit,
+.session-inline .inline-weather,
+.session-inline .inline-date {
+  display: none;
+}
+
+/* Show circuit and weather under session when their columns are hidden */
+@media (max-width: 768px) {
+  .session-inline .inline-circuit,
+  .session-inline .inline-weather {
+    display: inline-block;
+  }
+}
+
+/* At smaller widths laps column is hidden; show under fastest */
+.inline-laps { display: none; font-size: 0.9em; color: #888; margin-top: 0.25em; }
+@media (max-width: 640px) {
+  .inline-laps { display: block; }
+}
+
+/* At the smallest width the date column is hidden; show under session */
+@media (max-width: 480px) {
+  .session-inline .inline-date { display: inline-block; }
+}

@@ -386,6 +386,13 @@
                       {#if tyre !== '-' && gear !== '-'} · {/if}
                       {#if gear !== '-'}⚙️ {gear}{/if}
                     </div>
+                  {:else}
+                    <!-- Compact view: inline fallbacks for hidden columns -->
+                    <div class="session-inline">
+                      <div class="inline-date">🗓️ {formatDateTime(session.date)}</div>
+                      <div class="inline-circuit">📍 {getTrackName(session.circuitId)}</div>
+                      <div class="inline-weather">{weatherCodeEmoji(session.weatherCode)} {formatWeather(session)}°C</div>
+                    </div>
                   {/if}
                 </Cell>
                 <Cell class="col-circuit">{getTrackName(session.circuitId)}</Cell>
@@ -414,6 +421,9 @@
                 </Cell>
                 <Cell class="col-fastest">
                   {formatFastestLap(session.fastest)}
+                  {#if selectedView === 'compact' && session.laps != null}
+                    <div class="inline-laps">{session.laps} laps</div>
+                  {/if}
                 </Cell>
               </div>
             </Row>

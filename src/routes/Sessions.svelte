@@ -84,13 +84,6 @@
   ];
   let selectedSort = 'date-desc';
 
-  // Add view options
-  const viewOptions = [
-    { value: 'compact', label: 'Compact' },
-    { value: 'detailed', label: 'Detailed' }
-  ];
-  let selectedView = 'compact';
-
   function getSortValue(session, key) {
     if (key === 'date') {
       const d = session.date?.toDate ? session.date.toDate() : new Date(session.date);
@@ -329,7 +322,7 @@
       <Button href="/sessions/new" tag="a" use={[link]} variant="raised" color="primary">Add Your First Session</Button>
     </div>
   {:else}
-    <div class="table-container {selectedView === 'detailed' ? 'detailed-view' : ''}">
+    <div class="table-container">
       <div class="table-toolbar">
         <div class="session-filter-group">
           <FilterPills
@@ -344,11 +337,6 @@
         </div>
         <select id="sort-select" bind:value={selectedSort}>
           {#each sortOptions as opt}
-            <option value={opt.value}>{opt.label}</option>
-          {/each}
-        </select>
-        <select id="view-select" bind:value={selectedView}>
-          {#each viewOptions as opt}
             <option value={opt.value}>{opt.label}</option>
           {/each}
         </select>
@@ -378,22 +366,18 @@
                     {/if}
                     {session.session}
                   </div>
-                  {#if selectedView === 'detailed'}
-                    {@const tyre = formatTyrePressures(session)}
-                    {@const gear = formatGearing(session)}
-                    <div class="session-details-placeholder">
-                      {#if tyre !== '-'}🛞 {tyre}{/if}
-                      {#if tyre !== '-' && gear !== '-'} · {/if}
-                      {#if gear !== '-'}⚙️ {gear}{/if}
-                    </div>
-                  {:else}
-                    <!-- Compact view: inline fallbacks for hidden columns -->
-                    <div class="session-inline">
-                      <div class="inline-date">🗓️ {formatDateTime(session.date)}</div>
-                      <div class="inline-circuit">📍 {getTrackName(session.circuitId)}</div>
-                      <div class="inline-weather">{weatherCodeEmoji(session.weatherCode)} {formatWeather(session)}°C</div>
-                    </div>
-                  {/if}
+                  {@const tyre = formatTyrePressures(session)}
+                  {@const gear = formatGearing(session)}
+                  <div class="session-details">
+                    {#if tyre !== '-'}🛞 {tyre}{/if}
+                    {#if tyre !== '-' && gear !== '-'} · {/if}
+                    {#if gear !== '-'}⚙️ {gear}{/if}
+                  </div>
+                  <div class="session-inline">
+                    <div class="inline-date">🗓️ {formatDateTime(session.date)}</div>
+                    <div class="inline-circuit">📍 {getTrackName(session.circuitId)}</div>
+                    <div class="inline-weather">{weatherCodeEmoji(session.weatherCode)} {formatWeather(session)}°C</div>
+                  </div>
                 </Cell>
                 <Cell class="col-circuit">{getTrackName(session.circuitId)}</Cell>
                 <Cell class="col-weather">
@@ -401,11 +385,11 @@
                 </Cell>
                 <Cell class="col-laps">
                   {session.laps}
-                  {#if selectedView === 'detailed' && session.isRace && session.startPos && session.endPos}
+                  {#if session.isRace && session.startPos && session.endPos}
                     {#key session.id}
                       {@const delta = session.startPos - session.endPos}
                       {@const deltaSign = delta > 0 ? '+' : ''}
-                      <div class="session-details-placeholder">
+                      <div class="session-details">
                         <span class="race-result">
                           {session.endPos}/{session.entries} 
                           <span class="delta {delta > 0 ? 'positive' : delta < 0 ? 'negative' : 'neutral'}">
@@ -421,7 +405,7 @@
                 </Cell>
                 <Cell class="col-fastest">
                   {formatFastestLap(session.fastest)}
-                  {#if selectedView === 'compact' && session.laps != null}
+                  {#if session.laps != null}
                     <div class="inline-laps">{session.laps} laps</div>
                   {/if}
                 </Cell>

@@ -3,13 +3,6 @@
   margin: 0 auto;
 }
 
-
-/* Make session row taller in detailed view */
-.table-container.detailed-view .session-row .mdc-data-table__cell {
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-}
-
 .race-icon {
   font-size: 1.1em;
 }
@@ -142,29 +135,13 @@
   margin-bottom: 0;
 }
 
-.sort-dir-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.25em;
-  cursor: pointer;
-  padding: 0 0.5em;
-  display: flex;
-  align-items: center;
-  transition: color 0.2s;
-}
-
-.sort-dir-btn:focus {
-  outline: 2px solid #fff;
-}
-
-.session-details-placeholder {
-  font-size: 0.95em;
+.session-details {
+  font-size: 0.9em;
   color: #888;
   margin-top: 0.25em;
 }
 
-/* Inline fallback info for compact view when columns are hidden */
+/* Inline fallback info when columns are hidden */
 .session-inline {
   font-size: 0.9em;
   color: #888;

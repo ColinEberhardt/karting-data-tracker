@@ -370,11 +370,6 @@
               <div class="clickable-row" on:click={() => handleRowClick(session.id)} on:keydown={(e) => e.key === 'Enter' && handleRowClick(session.id)} tabindex="0" role="button">
                 <Cell class="col-datetime">
                   {formatDateTime(session.date)}
-                  {#if selectedView === 'detailed'}
-                    <div class="session-details-placeholder">
-                      {formatGearing(session)}
-                    </div>
-                  {/if}
                 </Cell>
                 <Cell class="col-session">
                   <div class="session-name">
@@ -384,8 +379,12 @@
                     {session.session}
                   </div>
                   {#if selectedView === 'detailed'}
+                    {@const tyre = formatTyrePressures(session)}
+                    {@const gear = formatGearing(session)}
                     <div class="session-details-placeholder">
-                      {formatTyrePressures(session)}
+                      {#if tyre !== '-'}🛞 {tyre}{/if}
+                      {#if tyre !== '-' && gear !== '-'} · {/if}
+                      {#if gear !== '-'}⚙️ {gear}{/if}
                     </div>
                   {/if}
                 </Cell>

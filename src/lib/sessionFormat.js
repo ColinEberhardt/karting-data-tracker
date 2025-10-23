@@ -32,14 +32,9 @@ export function formatTyrePressures(session) {
   ) {
     return `${frontOuter} psi`;
   }
-  if (
-    frontOuter === frontInner &&
-    rearOuter === rearInner &&
-    frontOuter !== rearOuter
-  ) {
-    return `f ${frontOuter} / r ${rearOuter} psi`;
-  }
-  return `fo ${frontOuter} / fi ${frontInner} / ro ${rearOuter} / ri ${rearInner} psi`;
+  // Calculate average
+  const avg = (frontOuter + frontInner + rearOuter + rearInner) / 4;
+  return `${avg.toFixed(1)} psi`;
 }
 
 export function formatGearing(session) {

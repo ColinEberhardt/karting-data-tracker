@@ -48,6 +48,12 @@
   .col-circuit {
     display: none !important;
   }
+
+  /* Add more padding when inline info is visible */
+  .session-row .mdc-data-table__cell {
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+  }
 }
 
 @media (max-width: 640px) {
@@ -55,6 +61,12 @@
   .col-circuit,
   .col-laps {
     display: none !important;
+  }
+
+  /* More padding as more inline info is shown */
+  .session-row .mdc-data-table__cell {
+    padding-top: 0.85em;
+    padding-bottom: 0.85em;
   }
 }
 
@@ -69,6 +81,12 @@
   .session-name {
     max-width: 200px;
   }
+
+  /* Maximum padding at smallest width with 3 lines */
+  .session-row .mdc-data-table__cell {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
 }
 
 /* Sessions-specific responsive overrides */
@@ -78,18 +96,18 @@
     margin-left: -1rem;
     margin-right: -1rem;
     border-radius: 0;
-    overflow-x: auto;
+    overflow: visible;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
   }
 
   .table-toolbar > * {
-    flex-shrink: 0;
+    flex-shrink: 1;
   }
 
   .session-filter-group {
-    flex-shrink: 0;
-    min-width: 200px;
+    flex-shrink: 1;
+    min-width: 150px;
   }
 }
 
@@ -137,14 +155,14 @@
 
 .session-details {
   font-size: 0.9em;
-  color: #888;
+  opacity: 0.65;
   margin-top: 0.25em;
 }
 
 /* Inline fallback info when columns are hidden */
 .session-inline {
   font-size: 0.9em;
-  color: #888;
+  opacity: 0.65;
   margin-top: 0.25em;
 }
 .session-inline .inline-circuit,

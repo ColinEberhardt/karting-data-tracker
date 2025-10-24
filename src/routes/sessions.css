@@ -41,11 +41,38 @@
   max-width: 250px;
 }
 
+/* Day header styling */
+.day-header-row {
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.08) 0%, rgba(0, 123, 255, 0.12) 100%);
+}
+
+.day-header {
+  padding: 0.75rem 1rem !important;
+  font-weight: 600;
+  font-size: 1rem;
+  border-bottom: 2px solid rgba(0, 123, 255, 0.2);
+  background: transparent;
+}
+
+.day-header-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.day-date {
+  color: var(--color-primary, #007bff);
+}
+
+.day-track {
+  color: var(--color-text-secondary, #666);
+  font-weight: 500;
+}
+
 /* Responsive column handling:
-   Progressive hiding: weather → circuit → laps */
+   Progressive hiding: weather → laps */
 @media (max-width: 768px) {
-  .col-weather,
-  .col-circuit {
+  .col-weather {
     display: none !important;
   }
 
@@ -58,7 +85,6 @@
 
 @media (max-width: 640px) {
   .col-weather,
-  .col-circuit,
   .col-laps {
     display: none !important;
   }
@@ -72,9 +98,8 @@
 
 @media (max-width: 480px) {
   .col-weather,
-  .col-circuit,
   .col-laps,
-  .col-datetime {
+  .col-time {
     display: none !important;
   }
 
@@ -82,10 +107,17 @@
     max-width: 200px;
   }
 
-  /* Maximum padding at smallest width with 3 lines */
+  /* Maximum padding at smallest width with inline info */
   .session-row .mdc-data-table__cell {
     padding-top: 1em;
     padding-bottom: 1em;
+  }
+
+  /* Stack day header content vertically on very small screens */
+  .day-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 }
 
@@ -165,15 +197,13 @@
   opacity: 0.65;
   margin-top: 0.25em;
 }
-.session-inline .inline-circuit,
 .session-inline .inline-weather,
-.session-inline .inline-date {
+.session-inline .inline-time {
   display: none;
 }
 
-/* Show circuit and weather under session when their columns are hidden */
+/* Show weather under session when weather column is hidden */
 @media (max-width: 768px) {
-  .session-inline .inline-circuit,
   .session-inline .inline-weather {
     display: inline-block;
   }
@@ -185,7 +215,7 @@
   .inline-laps { display: block; }
 }
 
-/* At the smallest width the date column is hidden; show under session */
+/* At the smallest width the time column is hidden; show under session */
 @media (max-width: 480px) {
-  .session-inline .inline-date { display: inline-block; }
+  .session-inline .inline-time { display: inline-block; }
 }

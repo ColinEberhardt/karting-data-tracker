@@ -10,6 +10,27 @@ export function formatDateTime(date) {
   });
 }
 
+export function formatDate(date) {
+  if (!date) return '';
+  const d = date.toDate ? date.toDate() : new Date(date);
+  return d.toLocaleDateString('en-US', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+
+export function formatTime(date) {
+  if (!date) return '';
+  const d = date.toDate ? date.toDate() : new Date(date);
+  return d.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+}
+
 export function formatFastestLap(time) {
   if (!time) return '-';
   return `${Number(time).toFixed(2)}`;

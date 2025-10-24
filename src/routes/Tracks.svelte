@@ -50,6 +50,17 @@
     return `${Math.abs(value).toFixed(6)}°${direction}`;
   };
 
+  const handleTrackClick = (track) => {
+    // Navigate to sessions with track filter
+    const filter = {
+      type: 'track',
+      id: track.id,
+      label: track.name
+    };
+    const filterParam = encodeURIComponent(JSON.stringify([filter]));
+    window.location.hash = `/sessions?filters=${filterParam}`;
+  };
+
   onMount(loadTracks);
 </script>
 
@@ -79,28 +90,30 @@
       {#each tracks as track (track.id)}
         <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
           <Card class="card-hover track-card">
-            {#if track.latitude && track.longitude}
-              <img 
-                src="https://maps.googleapis.com/maps/api/staticmap?center={track.latitude},{track.longitude}&zoom=16&size=300x200&maptype=satellite&key=AIzaSyAls1lFlW5xpL4JGB9bss985id7nURl-c4"
-                alt="Satellite view of {track.name}"
-                class="track-map"
-              />
-            {:else}
-              <div class="no-location">No location data available</div>
-            {/if}
-            
-            <div class="card-overlay">
-              <div class="card-header">
-                <h3>{track.name}</h3>
-              </div>
+            <div class="card-clickable" on:click={() => handleTrackClick(track)}>
+              {#if track.latitude && track.longitude}
+                <img 
+                  src="https://maps.googleapis.com/maps/api/staticmap?center={track.latitude},{track.longitude}&zoom=16&size=300x200&maptype=satellite&key=AIzaSyAls1lFlW5xpL4JGB9bss985id7nURl-c4"
+                  alt="Satellite view of {track.name}"
+                  class="track-map"
+                />
+              {:else}
+                <div class="no-location">No location data available</div>
+              {/if}
               
-              <div class="card-actions">
-                <a href="/tracks/{track.id}" use:link class="text-button" title="Edit">
-                  Edit
-                </a>
-                <button on:click|preventDefault={() => handleDelete(track.id)} class="text-button delete-button" title="Delete">
-                  Delete
-                </button>
+              <div class="card-overlay">
+                <div class="card-header">
+                  <h3>{track.name}</h3>
+                </div>
+                
+                <div class="card-actions">
+                  <a href="/tracks/{track.id}" use:link class="text-button" title="Edit" on:click|stopPropagation>
+                    Edit
+                  </a>
+                  <button on:click|stopPropagation|preventDefault={() => handleDelete(track.id)} class="text-button delete-button" title="Delete">
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           </Card>
@@ -111,6 +124,13 @@
 </div>
 
 <style>
+  .card-clickable {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
   .track-map {
     width: 100%;
     height: 100%;

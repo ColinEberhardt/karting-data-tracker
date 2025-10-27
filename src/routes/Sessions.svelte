@@ -75,10 +75,10 @@
 
   // Columns and directions for sorting
   const sortOptions = [
-    { value: 'date-asc', label: 'Date & Time ▲' },
-    { value: 'date-desc', label: 'Date & Time ▼' },
-    { value: 'weather-asc', label: 'Temperature ▲' },
-    { value: 'weather-desc', label: 'Temperature ▼' },
+    { value: 'date-asc', label: 'Date ▲' },
+    { value: 'date-desc', label: 'Date ▼' },
+    { value: 'weather-asc', label: 'Temp ▲' },
+    { value: 'weather-desc', label: 'Temp ▼' },
     { value: 'laps-asc', label: 'Laps ▲' },
     { value: 'laps-desc', label: 'Laps ▼' },
     { value: 'fastest-asc', label: 'Fastest ▲' },

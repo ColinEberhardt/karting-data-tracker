@@ -144,7 +144,7 @@
   {:else}
     <LayoutGrid>
       {#each tracks as track (track.id)}
-        <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
+        <Cell spanDevices={{ desktop: 4, tablet: 4, phone: 4 }}>
           <Card class="card-hover track-card">
             <div class="card-clickable" on:click={() => handleTrackClick(track)}>
               {#if track.latitude && track.longitude}
@@ -221,7 +221,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.7) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%);
     display: flex;
     flex-direction: column;
     justify-content: space-between;

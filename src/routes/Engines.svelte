@@ -111,7 +111,7 @@
   {:else}
     <LayoutGrid>
       {#each engines as engine (engine.id)}
-        <Cell spanDevices={{ desktop: 4, tablet: 8, phone: 4 }}>
+        <Cell spanDevices={{ desktop: 4, tablet: 4, phone: 4 }}>
           <Card class="card-hover {engine.retired ? 'card-retired' : ''}">
             <div class="card-header {engine.retired ? 'card-header-retired' : 'card-header-active'}">
               <h3>{engine.name || `${engine.make} ${engine.model}`}</h3>

@@ -229,6 +229,10 @@
         <h3>Session Information</h3>
         
         <div class="form-group">
+          <Textfield variant="outlined" bind:value={session} label="Session Name" required style="width: 100%;" />
+        </div>
+
+        <div class="form-group">
           <Textfield variant="outlined" type="datetime-local" bind:value={date} label="Date & Time" required style="width: 100%;" />
         </div>
 
@@ -258,14 +262,6 @@
               {/each}
             </Select>
           </div>
-        </div>
-
-        <div class="form-group">
-          <Textfield variant="outlined" bind:value={session} label="Session Type" required style="width: 100%;" />
-        </div>
-
-        <div class="form-group">
-          <Textfield variant="outlined" bind:value={session} label="Session Type" required style="width: 100%;" />
         </div>
       </div>
 

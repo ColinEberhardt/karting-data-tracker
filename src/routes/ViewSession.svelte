@@ -66,6 +66,12 @@
     return engine ? (engine.name || `${engine.make} ${engine.model}`) : 'Unknown Engine';
   };
 
+  const formatSprocket = (front, rear) => {
+    if (!front || !rear) return 'Not recorded';
+    const ratio = (rear / front).toFixed(2);
+    return `${front} / ${rear} (${ratio})`;
+  };
+
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this session? This action cannot be undone.')) {
       return;
@@ -84,7 +90,7 @@
 
 <div class="form-page">
   <div class="header">
-    <h1>Session Details</h1>
+    <h1>{session?.session || 'Session Details'}</h1>
     <div class="header-actions">
       <Button href="/sessions" tag="a" use={[link]} variant="outlined">← Back to Sessions</Button>
     </div>
@@ -125,16 +131,6 @@
             <span class="label">Weather:</span>
             <span class="value">{getWeatherDescription(session.weatherCode)}</span>
           </div>
-
-          <div class="detail-item">
-            <span class="label">Session Type:</span>
-            <span class="value">
-              {#if session.isRace}
-                <span class="race-icon">🏁</span>
-              {/if}
-              {session.session}
-            </span>
-          </div>
         </div>
       </div>
 
@@ -161,13 +157,8 @@
         
         <div class="detail-grid">
           <div class="detail-item">
-            <span class="label">Rear Sprocket:</span>
-            <span class="value">{session.rearSprocket} teeth</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="label">Front Sprocket:</span>
-            <span class="value">{session.frontSprocket} teeth</span>
+            <span class="label">Sprocket:</span>
+            <span class="value">{formatSprocket(session.frontSprocket, session.rearSprocket)}</span>
           </div>
 
           <div class="detail-item">

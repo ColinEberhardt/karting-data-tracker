@@ -177,16 +177,6 @@
           </div>
 
           <div class="detail-item">
-            <span class="label">Rear Inner Pressure:</span>
-            <span class="value">{session.rearInner} psi</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="label">Rear Outer Pressure:</span>
-            <span class="value">{session.rearOuter} psi</span>
-          </div>
-
-          <div class="detail-item">
             <span class="label">Front Inner Pressure:</span>
             <span class="value">{session.frontInner} psi</span>
           </div>
@@ -194,6 +184,16 @@
           <div class="detail-item">
             <span class="label">Front Outer Pressure:</span>
             <span class="value">{session.frontOuter} psi</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Rear Inner Pressure:</span>
+            <span class="value">{session.rearInner} psi</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Rear Outer Pressure:</span>
+            <span class="value">{session.rearOuter} psi</span>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { link, push } from 'svelte-spa-router';
-  import { getSession, deleteSession } from '../lib/sessions.js';
+  import { getSession, deleteSession, getUserSessions } from '../lib/sessions.js';
   import { getUserTyres } from '../lib/tyres.js';
   import { getUserTracks } from '../lib/tracks.js';
   import { getUserEngines } from '../lib/engines.js';
@@ -16,23 +16,26 @@
   let tyres = [];
   let tracks = [];
   let engines = [];
+  let allSessions = [];
   let loading = true;
   let error = '';
 
   const loadData = async () => {
     try {
       loading = true;
-      const [sessionData, tyresData, tracksData, enginesData] = await Promise.all([
+      const [sessionData, tyresData, tracksData, enginesData, allSessionsData] = await Promise.all([
         getSession(params.id),
         getUserTyres(),
         getUserTracks(),
-        getUserEngines()
+        getUserEngines(),
+        getUserSessions()
       ]);
       
       session = sessionData;
       tyres = tyresData;
       tracks = tracksData;
       engines = enginesData;
+      allSessions = allSessionsData;
     } catch (err) {
       error = err.message;
     } finally {
@@ -59,6 +62,27 @@
   const getTyreName = (tyreId) => {
     const tyre = tyres.find(t => t.id === tyreId);
     return tyre ? (tyre.name || `${tyre.make} ${tyre.type}`) : 'Unknown Tyre';
+  };
+
+  const getTyreLaps = (tyreId, currentSessionDate) => {
+    if (!tyreId || !allSessions.length) return 0;
+    
+    // Convert current session date to timestamp for comparison
+    const currentDate = currentSessionDate?.toDate ? currentSessionDate.toDate() : new Date(currentSessionDate);
+    const currentTimestamp = currentDate.getTime();
+    
+    // Filter sessions that use this tyre and occurred on or before the current session
+    const tyreSessions = allSessions.filter(s => {
+      if (s.tyreId !== tyreId) return false;
+      
+      const sessionDate = s.date?.toDate ? s.date.toDate() : new Date(s.date);
+      const sessionTimestamp = sessionDate.getTime();
+      
+      return sessionTimestamp <= currentTimestamp;
+    });
+    
+    // Sum up all the laps
+    return tyreSessions.reduce((total, s) => total + (s.laps || 0), 0);
   };
 
   const getEngineName = (engineId) => {
@@ -140,8 +164,8 @@
         
         <div class="detail-grid">
           <div class="detail-item">
-            <span class="label">Tyre Used:</span>
-            <span class="value">{getTyreName(session.tyreId)}</span>
+            <span class="label">Tyre:</span>
+            <span class="value">{getTyreName(session.tyreId)} ({getTyreLaps(session.tyreId, session.date)} laps)</span>
           </div>
 
           <div class="detail-item">

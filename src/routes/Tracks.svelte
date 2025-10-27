@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { link } from 'svelte-spa-router';
   import { getUserTracks, deleteTrack } from '../lib/tracks.js';
+  import { getUserSessions } from '../lib/sessions.js';
+  import { getUserTyres } from '../lib/tyres.js';
   import Card from '@smui/card';
   import Button from '@smui/button';
   import CircularProgress from '@smui/circular-progress';
@@ -9,13 +11,60 @@
   import './action-buttons.css';
 
   let tracks = [];
+  let sessions = [];
+  let tyres = [];
+  let trackStats = {};
   let loading = true;
   let error = '';
+
+  const calculateTrackStats = () => {
+    const stats = {};
+    
+    // Initialize stats for each track
+    tracks.forEach(track => {
+      stats[track.id] = {
+        sessionCount: 0,
+        fastestByTyreMake: {}
+      };
+    });
+    
+    // Process each session
+    sessions.forEach(session => {
+      const trackId = session.circuitId;
+      if (!trackId || !stats[trackId]) return;
+      
+      // Increment session count
+      stats[trackId].sessionCount++;
+      
+      // Track fastest lap by tyre make
+      if (session.tyreId && session.fastest) {
+        const tyre = tyres.find(t => t.id === session.tyreId);
+        if (tyre && tyre.make) {
+          const tyreMake = tyre.make;
+          if (!stats[trackId].fastestByTyreMake[tyreMake]) {
+            stats[trackId].fastestByTyreMake[tyreMake] = session.fastest;
+          } else {
+            stats[trackId].fastestByTyreMake[tyreMake] = Math.min(
+              stats[trackId].fastestByTyreMake[tyreMake],
+              session.fastest
+            );
+          }
+        }
+      }
+    });
+    
+    return stats;
+  };
 
   const loadTracks = async () => {
     try {
       loading = true;
-      tracks = await getUserTracks();
+      [tracks, sessions, tyres] = await Promise.all([
+        getUserTracks(),
+        getUserSessions(),
+        getUserTyres()
+      ]);
+      trackStats = calculateTrackStats();
     } catch (err) {
       error = err.message;
     } finally {
@@ -61,6 +110,13 @@
     window.location.hash = `/sessions?filters=${filterParam}`;
   };
 
+  const formatLapTime = (seconds) => {
+    if (!seconds) return '';
+    const mins = Math.floor(seconds / 60);
+    const secs = (seconds % 60).toFixed(3);
+    return `${mins}:${secs.padStart(6, '0')}`;
+  };
+
   onMount(loadTracks);
 </script>
 
@@ -104,6 +160,25 @@
               <div class="card-overlay">
                 <div class="card-header">
                   <h3>{track.name}</h3>
+                  {#if trackStats[track.id]}
+                    <div class="track-stats">
+                      <div class="stat-item">
+                        <span class="stat-label">Sessions:</span>
+                        <span class="stat-value">{trackStats[track.id].sessionCount}</span>
+                      </div>
+                      {#if Object.keys(trackStats[track.id].fastestByTyreMake).length > 0}
+                        <div class="fastest-laps">
+                          <div class="stat-label">Fastest Laps:</div>
+                          {#each Object.entries(trackStats[track.id].fastestByTyreMake) as [tyreMake, lapTime]}
+                            <div class="lap-entry">
+                              <span class="tyre-name">{tyreMake}:</span>
+                              <span class="lap-time">{formatLapTime(lapTime)}</span>
+                            </div>
+                          {/each}
+                        </div>
+                      {/if}
+                    </div>
+                  {/if}
                 </div>
                 
                 <div class="card-actions">
@@ -156,6 +231,51 @@
     color: white;
     margin: 0;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  }
+
+  .track-stats {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  }
+
+  .stat-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-weight: 500;
+    margin-right: 0.25rem;
+  }
+
+  .stat-value {
+    font-weight: 600;
+  }
+
+  .fastest-laps {
+    margin-top: 0.5rem;
+  }
+
+  .fastest-laps .stat-label {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .lap-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.125rem 0;
+    font-size: 0.85rem;
+  }
+
+  .tyre-name {
+    font-weight: 500;
+  }
+
+  .lap-time {
+    font-weight: 600;
+    font-family: monospace;
   }
 
   .no-location {

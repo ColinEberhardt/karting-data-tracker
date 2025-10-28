@@ -39,7 +39,15 @@
 <TopAppBar variant="static" style="background-color: #ffffff; border-bottom: 1px solid #dee2e6;">
   <Row>
     <Section>
-      <Title><a href="/" use:link style="text-decoration: none; color: #007bff; font-weight: bold;">Karting Log</a></Title>
+      <Title>
+        <a href="/" use:link class="logo-link">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+            <line x1="4" y1="22" x2="4" y2="15"/>
+          </svg>
+          KartLog
+        </a>
+      </Title>
     </Section>
     <Section align="end" toolbar class="desktop-nav">
       <a href="/tyres" use:link class="nav-link">
@@ -76,7 +84,10 @@
       <div class="user-info">
         <div class="menu-surface-anchor">
           <button class="user-icon-button" on:click={openUserMenu} aria-label="User menu">
-            👤
+            <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
           </button>
           <Menu bind:this={userMenu} anchorCorner="BOTTOM_LEFT">
             <List>
@@ -136,7 +147,13 @@
     Tracks
   </a>
   <div class="mobile-user-info">
-    <span class="user-email">👤 {$user?.email}</span>
+    <span class="user-email">
+      <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 0.5rem;">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      {$user?.email}
+    </span>
     <Button onclick={handleSignOut} variant="raised" color="secondary" style="background-color: #dc3545; width: 100%;">Sign Out</Button>
   </div>
 </div>
@@ -168,6 +185,22 @@
   .hamburger-button:hover {
     background-color: #e9ecef;
     border-radius: 4px;
+  }
+
+  .logo-link {
+    text-decoration: none;
+    color: #000000;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+    stroke: #000000;
+    flex-shrink: 0;
   }
 
   .nav-link {
@@ -222,6 +255,13 @@
 
   .user-icon-button:hover {
     background-color: #e9ecef;
+  }
+
+  .user-icon {
+    width: 20px;
+    height: 20px;
+    stroke: #000000;
+    flex-shrink: 0;
   }
 
   :global(.user-email-menu) {

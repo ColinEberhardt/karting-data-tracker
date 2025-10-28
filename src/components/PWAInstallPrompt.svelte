@@ -6,6 +6,8 @@
   let deferredPrompt = null;
   let showInstallPrompt = false;
   let isInstalled = false;
+  let isIOS = false;
+  let showIOSPrompt = false;
   
   onMount(() => {
     // Check if already installed
@@ -14,7 +16,19 @@
       return;
     }
     
-    // Listen for beforeinstallprompt event
+    // Detect iOS
+    isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    // Show iOS prompt if on iOS and not installed
+    if (isIOS && !isInstalled) {
+      // Check if user has dismissed it before
+      const dismissed = localStorage.getItem('ios-install-prompt-dismissed');
+      if (!dismissed) {
+        showIOSPrompt = true;
+      }
+    }
+    
+    // Listen for beforeinstallprompt event (Chrome, Edge, etc.)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
@@ -48,6 +62,11 @@
   function handleDismiss() {
     showInstallPrompt = false;
   }
+  
+  function handleIOSDismiss() {
+    showIOSPrompt = false;
+    localStorage.setItem('ios-install-prompt-dismissed', 'true');
+  }
 </script>
 
 {#if showInstallPrompt && !isInstalled}
@@ -67,6 +86,27 @@
           </Button>
           <Button on:click={handleDismiss} variant="outlined">
             Not Now
+          </Button>
+        </div>
+      </div>
+    </Paper>
+  </div>
+{/if}
+
+{#if showIOSPrompt && !isInstalled}
+  <div class="install-banner">
+    <Paper elevation={3} class="install-paper">
+      <div class="install-content">
+        <div class="install-icon ios-icon">
+          <span class="material-icons">ios_share</span>
+        </div>
+        <div class="install-text">
+          <h3>Install KartLog</h3>
+          <p>Tap <span class="material-icons share-icon">ios_share</span> then "Add to Home Screen"</p>
+        </div>
+        <div class="install-actions">
+          <Button on:click={handleIOSDismiss} variant="outlined">
+            Got it
           </Button>
         </div>
       </div>
@@ -111,6 +151,16 @@
     font-size: 28px;
   }
   
+  .ios-icon {
+    background: var(--mdc-theme-primary, #1976d2) !important;
+  }
+  
+  .share-icon {
+    font-size: 18px;
+    vertical-align: middle;
+    color: var(--mdc-theme-primary, #1976d2);
+  }
+  
   .install-text {
     flex: 1;
     min-width: 200px;
@@ -126,6 +176,9 @@
     margin: 0;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
   
   .install-actions {

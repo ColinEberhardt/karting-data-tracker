@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#1976d2" rx="24"/>
+  <g fill="#ffffff">
+    <!-- Tire/wheel icon -->
+    <circle cx="96" cy="96" r="50" fill="none" stroke="#ffffff" stroke-width="8"/>
+    <circle cx="96" cy="96" r="25" fill="none" stroke="#ffffff" stroke-width="8"/>
+    <line x1="96" y1="46" x2="96" y2="71" stroke="#ffffff" stroke-width="6"/>
+    <line x1="96" y1="121" x2="96" y2="146" stroke="#ffffff" stroke-width="6"/>
+    <line x1="46" y1="96" x2="71" y2="96" stroke="#ffffff" stroke-width="6"/>
+    <line x1="121" y1="96" x2="146" y2="96" stroke="#ffffff" stroke-width="6"/>
+    <line x1="61" y1="61" x2="77" y2="77" stroke="#ffffff" stroke-width="6"/>
+    <line x1="115" y1="115" x2="131" y2="131" stroke="#ffffff" stroke-width="6"/>
+    <line x1="131" y1="61" x2="115" y2="77" stroke="#ffffff" stroke-width="6"/>
+    <line x1="77" y1="115" x2="61" y2="131" stroke="#ffffff" stroke-width="6"/>
+  </g>
+</svg>

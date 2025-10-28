@@ -12,7 +12,8 @@
     "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/vite-plugin-svelte": "^6.0.0",
     "svelte": "^5.35.5",
-    "vite": "^7.0.4"
+    "vite": "^7.0.4",
+    "vite-plugin-pwa": "^1.1.0"
   },
   "dependencies": {
     "@smui/button": "^8.0.3",

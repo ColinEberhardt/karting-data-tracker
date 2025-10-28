@@ -42,10 +42,37 @@
       <Title><a href="/" use:link style="text-decoration: none; color: #007bff; font-weight: bold;">Karting Log</a></Title>
     </Section>
     <Section align="end" toolbar class="desktop-nav">
-      <a href="/tyres" use:link class="nav-link">Tyres</a>
-      <a href="/engines" use:link class="nav-link">Engines</a>
-      <a href="/sessions" use:link class="nav-link">Sessions</a>
-      <a href="/tracks" use:link class="nav-link">Tracks</a>
+      <a href="/tyres" use:link class="nav-link">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/>
+          <circle cx="12" cy="12" r="4"/>
+        </svg>
+        Tyres
+      </a>
+      <a href="/engines" use:link class="nav-link">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="8" width="18" height="8" rx="2"/>
+          <path d="M3 12h18"/>
+          <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+        Engines
+      </a>
+      <a href="/sessions" use:link class="nav-link">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Sessions
+      </a>
+      <a href="/tracks" use:link class="nav-link">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="10" r="3"/>
+          <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
+        </svg>
+        Tracks
+      </a>
       <div class="user-info">
         <div class="menu-surface-anchor">
           <button class="user-icon-button" on:click={openUserMenu} aria-label="User menu">
@@ -77,10 +104,37 @@
 </TopAppBar>
 
 <div class="mobile-menu" class:open={mobileMenuOpen}>
-  <a href="/tyres" use:link class="mobile-nav-link" on:click={closeMobileMenu}>Tyres</a>
-  <a href="/engines" use:link class="mobile-nav-link" on:click={closeMobileMenu}>Engines</a>
-  <a href="/sessions" use:link class="mobile-nav-link" on:click={closeMobileMenu}>Sessions</a>
-  <a href="/tracks" use:link class="mobile-nav-link" on:click={closeMobileMenu}>Tracks</a>
+  <a href="/tyres" use:link class="mobile-nav-link" on:click={closeMobileMenu}>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="4"/>
+    </svg>
+    Tyres
+  </a>
+  <a href="/engines" use:link class="mobile-nav-link" on:click={closeMobileMenu}>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="8" width="18" height="8" rx="2"/>
+      <path d="M3 12h18"/>
+      <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+    </svg>
+    Engines
+  </a>
+  <a href="/sessions" use:link class="mobile-nav-link" on:click={closeMobileMenu}>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+    Sessions
+  </a>
+  <a href="/tracks" use:link class="mobile-nav-link" on:click={closeMobileMenu}>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="10" r="3"/>
+      <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
+    </svg>
+    Tracks
+  </a>
   <div class="mobile-user-info">
     <span class="user-email">👤 {$user?.email}</span>
     <Button onclick={handleSignOut} variant="raised" color="secondary" style="background-color: #dc3545; width: 100%;">Sign Out</Button>
@@ -122,10 +176,20 @@
     padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .nav-link:hover {
     background-color: #e9ecef;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+    stroke: #000000;
+    flex-shrink: 0;
   }
 
   .user-info {
@@ -211,6 +275,9 @@
       padding: 1rem 1.5rem;
       border-bottom: 1px solid #e9ecef;
       transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
     .mobile-nav-link:hover {

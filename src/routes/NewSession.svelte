@@ -257,7 +257,7 @@
         </Select>
         {#if tracks.length === 0}
           <p class="no-items">
-            No tracks found. <a href="/tracks/new">Add a track first</a>.
+              No tracks found. <a href="#/tracks/new">Add a track first</a>.
           </p>
         {/if}
       </div>
@@ -301,7 +301,7 @@
         </Select>
         {#if tyres.length === 0}
           <p class="no-items">
-            No active tyres found. <a href="/tyres/new">Add a tyre first</a>.
+              No active tyres found. <a href="#/tyres/new">Add a tyre first</a>.
           </p>
         {/if}
       </div>
@@ -315,7 +315,7 @@
         </Select>
         {#if engines.length === 0}
           <p class="no-items">
-            No active engines found. <a href="/engines/new">Add an engine first</a>.
+              No active engines found. <a href="#/engines/new">Add an engine first</a>.
           </p>
         {/if}
       </div>

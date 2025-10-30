@@ -16,6 +16,10 @@
     try {
       await signOut(auth);
       mobileMenuOpen = false;
+      if (userMenu) {
+        userMenu.setOpen(false);
+      }
+      window.location.href = '/login';
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -94,7 +98,7 @@
               <Item disabled>
                 <Text class="user-email-menu">{$user?.email}</Text>
               </Item>
-              <Item on:SMUI:action={handleSignOut}>
+              <Item onSMUIAction={handleSignOut}>
                 <Text class="sign-out-text">Sign Out</Text>
               </Item>
             </List>
@@ -154,7 +158,7 @@
       </svg>
       {$user?.email}
     </span>
-    <Button onclick={handleSignOut} variant="raised" color="secondary" style="background-color: #dc3545; width: 100%;">Sign Out</Button>
+  <Button onclick={handleSignOut} variant="raised" color="secondary" style="background-color: #dc3545; width: 100%;">Sign Out</Button>
   </div>
 </div>
 

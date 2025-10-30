@@ -188,40 +188,16 @@
                       </button>
                       <Menu bind:this={menuMap[tyre.id]}>
                         <List>
-                          <Item>
-                            <div 
-                              on:click={() => handleMenuItemClick('edit', tyre.id)} 
-                              on:keydown={(e) => e.key === 'Enter' && handleMenuItemClick('edit', tyre.id)}
-                              role="button" 
-                              tabindex="0" 
-                              class="menu-item-wrapper"
-                            >
-                              <Text>Edit</Text>
-                            </div>
+                          <Item onSMUIAction={() => handleMenuItemClick('edit', tyre.id)}>
+                            <Text>Edit</Text>
                           </Item>
                           {#if !tyre.retired}
-                            <Item>
-                              <div 
-                                on:click={() => handleMenuItemClick('retire', tyre.id)} 
-                                on:keydown={(e) => e.key === 'Enter' && handleMenuItemClick('retire', tyre.id)}
-                                role="button" 
-                                tabindex="0" 
-                                class="menu-item-wrapper"
-                              >
-                                <Text>Retire</Text>
-                              </div>
+                            <Item onSMUIAction={() => handleMenuItemClick('retire', tyre.id)}>
+                              <Text>Retire</Text>
                             </Item>
                           {/if}
-                          <Item>
-                            <div 
-                              on:click={() => handleMenuItemClick('delete', tyre.id)} 
-                              on:keydown={(e) => e.key === 'Enter' && handleMenuItemClick('delete', tyre.id)}
-                              role="button" 
-                              tabindex="0" 
-                              class="menu-item-wrapper"
-                            >
-                              <Text class="delete-text">Delete</Text>
-                            </div>
+                          <Item onSMUIAction={() => handleMenuItemClick('delete', tyre.id)}>
+                            <Text class="delete-text">Delete</Text>
                           </Item>
                         </List>
                       </Menu>

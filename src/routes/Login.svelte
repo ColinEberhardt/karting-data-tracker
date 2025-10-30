@@ -55,7 +55,7 @@
 
 <div class="login-container">
   <Card style="max-width: 400px; width: 100%; padding: 3rem;">
-    <h1>🏎️ Kart Manager</h1>
+    <h1>KartLog</h1>
     <h2>{isSignUp ? 'Create Account' : 'Sign In'}</h2>
 
     {#if error}

@@ -76,7 +76,7 @@
       <div class="form-group">
         <Select variant="outlined" bind:value={type} label="Type" required disabled={loading} style="width: 100%;">
           <Option value="">Select type</Option>
-          <Option value="Dry">Dry</Option>
+          <Option value="Slick">Slick</Option>
           <Option value="Wet">Wet</Option>
         </Select>
       </div>
@@ -91,13 +91,6 @@
           style="width: 100%;"
           input$rows={4}
         />
-      </div>
-
-      <div class="form-group">
-        <FormField>
-          <Checkbox bind:checked={retired} disabled={loading} />
-          <span slot="label">Retired</span>
-        </FormField>
       </div>
 
       <div class="form-actions">

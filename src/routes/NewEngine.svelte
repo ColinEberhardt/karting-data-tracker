@@ -97,7 +97,7 @@
 
         <div class="form-group">
           <Textfield variant="outlined" type="date" bind:value={purchaseDate} label="Purchase Date" style="width: 100%;" />
-          <Button type="button" onclick={setDefaultDate} variant="outlined" style="position: absolute; right: 10px; top: 35px; min-width: auto; padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+          <Button type="button" onclick={setDefaultDate} class="date-button" variant="outlined">
             Set to Today
           </Button>
         </div>

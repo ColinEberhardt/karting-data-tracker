@@ -2,14 +2,14 @@
   import { link } from 'svelte-spa-router';
   // Marketing page for the KartLog app
   const features = [
-    {title: 'Track tyres & engines', desc: 'Record tyre and engine usage, wear, and history to know what works best.'},
-    {title: 'Session logging', desc: 'Log lap sessions, times, and notes per track and conditions.'},
-    {title: 'Auto weather lookup', desc: 'Automatically fetch weather for session locations and attach temperature, humidity and track conditions to each session.'},
-    {title: 'User-based data', desc: 'Secure user accounts with Firebase Auth so your data stays private.'},
-    {title: 'Search and filters', desc: 'Quickly find sessions and tyres with powerful filters and tags.'},
-    {title: 'Track storage & lap times', desc: 'Save tracks and record your fastest lap time per track so you can compare personal bests and progress.'},
-    {title: 'Save race results', desc: 'Record race finishing positions, points and notes.'},
-    {title: 'Progressive Web App (PWA)', desc: 'Install the app to your device directly from the browser — no App Store needed. Works offline and supports add-to-home-screen.'}
+    {icon: '🛞', title: 'Track tyres & engines', desc: 'Record tyre and engine usage, wear, and history to know what works best.'},
+    {icon: '⏱️', title: 'Session logging', desc: 'Log lap sessions, times, and notes per track and conditions.'},
+    {icon: '🌤️', title: 'Auto weather lookup', desc: 'Automatically fetch weather for session locations and attach temperature, humidity and track conditions to each session.'},
+    {icon: '🔒', title: 'User-based data', desc: 'Secure user accounts with Firebase Auth so your data stays private.'},
+    {icon: '🔎', title: 'Search and filters', desc: 'Quickly find sessions and tyres with powerful filters and tags.'},
+    {icon: '🏁', title: 'Track storage & lap times', desc: 'Save tracks and record your fastest lap time per track so you can compare personal bests and progress.'},
+    {icon: '🏆', title: 'Save race results', desc: 'Record race finishing positions, points and notes.'},
+    {icon: '📱', title: 'Progressive Web App (PWA)', desc: 'Install the app to your device directly from the browser — no App Store needed. Works offline and supports add-to-home-screen.'}
   ];
 </script>
 
@@ -43,7 +43,7 @@
   <div class="feature-grid">
     {#each features as f}
       <article class="feature">
-        <h3>{f.title}</h3>
+        <h3><span class="feature-icon" aria-hidden="true">{f.icon}</span> {f.title}</h3>
         <p>{f.desc}</p>
       </article>
     {/each}
@@ -119,6 +119,7 @@
   .features { padding: 2rem; }
   .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
   .feature { background: #fff; border: 1px solid #e9ecef; padding: 1rem; border-radius: 8px; }
+  .feature-icon { font-size: 1.25rem; margin-right: 0.5rem; vertical-align: middle; display: inline-block; }
 
   .gallery { padding: 2rem; background: #f8f9fa; }
   .screens { display: flex; gap: 1rem; flex-wrap: wrap; }

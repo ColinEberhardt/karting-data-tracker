@@ -123,7 +123,7 @@
             </div>
 
             <div class="form-group">
-              <Select variant="outlined" bind:value={type} label="Type" required disabled={loading} style="width: 100%;">
+              <Select bind:value={type} label="Type" required disabled={loading} style="width: 100%;">
                 <Option value="">Select type</Option>
                 <Option value="Wet">Wet</Option>
                 <Option value="Slick">Slick</Option>
@@ -152,7 +152,7 @@
         </div>
 
         <div class="form-actions">
-          <Button type="button" onclick={handleCancel} variant="outlined" disabled={loading}>
+          <Button type="button" onclick={handleCancel} disabled={loading}>
             Cancel
           </Button>
           <Button type="submit" variant="raised" disabled={loading} style="background-color: #007bff;">

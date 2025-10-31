@@ -96,7 +96,7 @@
       <span>or</span>
     </div>
 
-    <Button onclick={handleGoogleAuth} variant="outlined" disabled={loading} style="width: 100%; margin-bottom: 1rem;">
+    <Button onclick={handleGoogleAuth} disabled={loading} style="width: 100%; margin-bottom: 1rem;">
       <span class="google-icon">🔑</span>
       <span style="margin-left: 0.5rem;">Continue with Google</span>
     </Button>

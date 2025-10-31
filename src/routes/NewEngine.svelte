@@ -71,39 +71,39 @@
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={name} label="Name" required style="width: 100%;" />
+            <Textfield bind:value={name} label="Name" required style="width: 100%;" />
           </div>
         </div>
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={make} label="Make" required style="width: 100%;" />
+            <Textfield bind:value={make} label="Make" required style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={model} label="Model" required style="width: 100%;" />
+            <Textfield bind:value={model} label="Model" required style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={serialNumber} label="Serial Number" style="width: 100%;" />
+            <Textfield bind:value={serialNumber} label="Serial Number" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={sealNumber} label="Seal Number" style="width: 100%;" />
+            <Textfield bind:value={sealNumber} label="Seal Number" style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" type="date" bind:value={purchaseDate} label="Purchase Date" style="width: 100%;" />
+          <Textfield type="date" bind:value={purchaseDate} label="Purchase Date" style="width: 100%;" />
           <Button type="button" onclick={setDefaultDate} class="date-button" variant="outlined">
             Set to Today
           </Button>
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" bind:value={notes} label="Notes" textarea style="width: 100%;" input$rows={4} />
+          <Textfield bind:value={notes} label="Notes" textarea style="width: 100%;" input$rows={4} />
         </div>
       </div>
 

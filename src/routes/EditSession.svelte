@@ -229,15 +229,15 @@
         <h3>Session Information</h3>
         
         <div class="form-group">
-          <Textfield variant="outlined" bind:value={session} label="Session Name" required style="width: 100%;" />
+          <Textfield bind:value={session} label="Session Name" required style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" type="datetime-local" bind:value={date} label="Date & Time" required style="width: 100%;" />
+          <Textfield type="datetime-local" bind:value={date} label="Date & Time" required style="width: 100%;" />
         </div>
 
         <div class="form-group">
-          <Select variant="outlined" bind:value={circuitId} label="Circuit" required style="width: 100%;">
+          <Select bind:value={circuitId} label="Circuit" required style="width: 100%;">
             <Option value="">Select a track...</Option>
             {#each tracks as track (track.id)}
               <Option value={track.id}>{track.name}</Option>
@@ -252,11 +252,11 @@
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={temp} label="Temperature (°C)" required input$min="0" input$max="50" input$step="0.01" style="width: 100%;" />
+            <Textfield type="number" bind:value={temp} label="Temperature (°C)" required input$min="0" input$max="50" input$step="0.01" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Select variant="outlined" bind:value={weatherCode} label="Weather Conditions" required style="width: 100%;">
+            <Select bind:value={weatherCode} label="Weather Conditions" required style="width: 100%;">
               {#each weatherCodeOptions as option (option.code)}
                 <Option value={option.code}>{option.description}</Option>
               {/each}
@@ -270,7 +270,7 @@
         <h3>Equipment Setup</h3>
         
         <div class="form-group">
-          <Select variant="outlined" bind:value={tyreId} label="Tyre Used" required style="width: 100%;">
+          <Select bind:value={tyreId} label="Tyre Used" required style="width: 100%;">
             <Option value="">Select a tyre...</Option>
             {#each tyres as tyre (tyre.id)}
               <Option value={tyre.id}>{tyre.name || `${tyre.make} ${tyre.type}`}</Option>
@@ -284,7 +284,7 @@
         </div>
 
         <div class="form-group">
-          <Select variant="outlined" bind:value={engineId} label="Engine" required style="width: 100%;">
+          <Select bind:value={engineId} label="Engine" required style="width: 100%;">
             <Option value="">Select an engine...</Option>
             {#each engines as engine (engine.id)}
               <Option value={engine.id}>{engine.name || `${engine.make} ${engine.model}`}</Option>
@@ -304,17 +304,17 @@
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={rearSprocket} label="Rear Sprocket (teeth)" required input$min="1" style="width: 100%;" />
+            <Textfield type="number" bind:value={rearSprocket} label="Rear Sprocket (teeth)" required input$min="1" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={frontSprocket} label="Front Sprocket (teeth)" required input$min="1" style="width: 100%;" />
+            <Textfield type="number" bind:value={frontSprocket} label="Front Sprocket (teeth)" required input$min="1" style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <Select variant="outlined" bind:value={caster} label="Caster" required style="width: 100%;">
+            <Select bind:value={caster} label="Caster" required style="width: 100%;">
               {#each casterOptions as casterOption}
                 <Option value={casterOption}>{casterOption}</Option>
               {/each}
@@ -322,31 +322,31 @@
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" bind:value={rideHeight} label="Ride Height" required style="width: 100%;" />
+            <Textfield bind:value={rideHeight} label="Ride Height" required style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-group">
-          <Textfield variant="outlined" type="number" bind:value={jet} label="Jet Size" required input$min="1" style="width: 100%;" />
+          <Textfield type="number" bind:value={jet} label="Jet Size" required input$min="1" style="width: 100%;" />
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={rearInner} label="Rear Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield type="number" bind:value={rearInner} label="Rear Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={rearOuter} label="Rear Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield type="number" bind:value={rearOuter} label="Rear Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={frontInner} label="Front Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield type="number" bind:value={frontInner} label="Front Inner Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={frontOuter} label="Front Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
+            <Textfield type="number" bind:value={frontOuter} label="Front Outer Pressure (psi)" required input$min="0" input$step="0.1" style="width: 100%;" />
           </div>
         </div>
       </div>
@@ -357,11 +357,11 @@
         
         <div class="form-row">
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={laps} label="Number of Laps" required input$min="1" style="width: 100%;" />
+            <Textfield type="number" bind:value={laps} label="Number of Laps" required input$min="1" style="width: 100%;" />
           </div>
 
           <div class="form-group">
-            <Textfield variant="outlined" type="number" bind:value={fastest} label="Fastest Lap Time (seconds)" input$min="0" input$step="0.001" style="width: 100%;" />
+            <Textfield type="number" bind:value={fastest} label="Fastest Lap Time (seconds)" input$min="0" input$step="0.001" style="width: 100%;" />
           </div>
         </div>
       </div>
@@ -381,26 +381,26 @@
           <div class="race-fields">
             <div class="form-row">
               <div class="form-group">
-                <Textfield variant="outlined" type="number" bind:value={entries} label="Number of Entries" input$min="1" style="width: 100%;" />
+                <Textfield type="number" bind:value={entries} label="Number of Entries" input$min="1" style="width: 100%;" />
               </div>
 
               <div class="form-group">
-                <Textfield variant="outlined" type="number" bind:value={startPos} label="Starting Position" input$min="1" style="width: 100%;" />
+                <Textfield type="number" bind:value={startPos} label="Starting Position" input$min="1" style="width: 100%;" />
               </div>
 
               <div class="form-group">
-                <Textfield variant="outlined" type="number" bind:value={endPos} label="Finishing Position" input$min="1" style="width: 100%;" />
+                <Textfield type="number" bind:value={endPos} label="Finishing Position" input$min="1" style="width: 100%;" />
               </div>
             </div>
 
             <div class="form-group">
-              <Textfield variant="outlined" bind:value={penalties} label="Penalties" style="width: 100%;" />
+              <Textfield bind:value={penalties} label="Penalties" style="width: 100%;" />
             </div>
           </div>
         {/if}
 
         <div class="form-group">
-          <Textfield variant="outlined" bind:value={notes} label="Session Notes" textarea style="width: 100%;" input$rows={4} />
+          <Textfield bind:value={notes} label="Session Notes" textarea style="width: 100%;" input$rows={4} />
         </div>
       </div>
 

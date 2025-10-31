@@ -9,7 +9,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['vite.svg'],
-      base: '/karting-data-tracker/',
+      base: '/kartlog/',
       manifest: {
         name: 'KartLog',
         short_name: 'KartLog',
@@ -17,26 +17,26 @@ export default defineConfig({
         theme_color: '#1976d2',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '/karting-data-tracker/',
-        scope: '/karting-data-tracker/',
+  start_url: '/kartlog/',
+  scope: '/kartlog/',
         icons: [
-          {
-            src: '/karting-data-tracker/icon-192x192.png',
+            {
+              src: '/kartlog/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
-          {
-            src: '/karting-data-tracker/icon-512x512.png',
+            {
+              src: '/kartlog/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: '/karting-data-tracker/icon-512x512.png',
+            src: '/kartlog/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
           }
-        ]
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
@@ -87,7 +87,7 @@ export default defineConfig({
       }
     })
   ],
-  base: process.env.NODE_ENV === 'production' ? '/karting-data-tracker/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/kartlog/' : '/',
   build: {
     outDir: 'build'
   }

@@ -61,14 +61,6 @@
         </svg>
         Tyres
       </a>
-      <a href="/marketing" use:link class="nav-link">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-          <path d="M2 17l10 5 10-5"/>
-          <path d="M2 12l10 5 10-5"/>
-        </svg>
-        About
-      </a>
       <a href="/engines" use:link class="nav-link">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="8" width="18" height="8" rx="2"/>

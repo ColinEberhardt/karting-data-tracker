@@ -1,5 +1,7 @@
 <script>
   import { link } from 'svelte-spa-router';
+  // base URL (useful in production when site is served from a subpath)
+  const base = import.meta.env.BASE_URL || '/';
   // Marketing page for the KartLog app
   const features = [
     {icon: '🛞', title: 'Track tyres & engines', desc: 'Record tyre and engine usage, wear, and history to know what works best.'},
@@ -33,8 +35,8 @@
       </a>
     </p>
   </div>
-  <div class="hero-image">
-    <img src="/tracks.png" alt="Tracks screenshot" />
+    <div class="hero-image">
+    <img src="{base}tracks.png" alt="Tracks screenshot" />
   </div>
 </section>
 
@@ -52,10 +54,10 @@
 
 <section class="gallery">
   <h2>Screenshots</h2>
-  <div class="screens">
-    <img src="/sessions.png" alt="Sessions screen" />
-    <img src="/dashboard.png" alt="Dashboard screen" />
-    <img src="/tracks.png" alt="Tracks screen" />
+    <div class="screens">
+    <img src="{base}sessions.png" alt="Sessions screen" />
+    <img src="{base}dashboard.png" alt="Dashboard screen" />
+    <img src="{base}tracks.png" alt="Tracks screen" />
   </div>
 </section>
 

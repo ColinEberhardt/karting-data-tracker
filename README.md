@@ -1,4 +1,4 @@
-# 🏎️ Karting Performance Tracker (SvelteKit + Firebase)
+# KartLog (SvelteKit + Firebase)
 
 A comprehensive web application for tracking go-kart performance data. Manage your karting equipment, sessions, and performance data with secure user authentication and real-time data synchronization.
 

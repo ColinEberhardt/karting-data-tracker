@@ -18,7 +18,7 @@
   import EditTrack from './routes/EditTrack.svelte';
   import Tyres from './routes/Tyres.svelte';
   import Navigation from './lib/Navigation.svelte';
-  import PWAInstallPrompt from './components/PWAInstallPrompt.svelte';
+  
   import Marketing from './routes/marketing.svelte';
 
   const routes = {
@@ -60,7 +60,7 @@
     <div class="container">
       <Router {routes} />
     </div>
-    <PWAInstallPrompt />
+    
   {:else}
     <!-- Show public routes (marketing, login) when not authenticated -->
     <div class="container">

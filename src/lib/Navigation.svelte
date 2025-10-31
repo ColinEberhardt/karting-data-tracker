@@ -1,5 +1,5 @@
 <script>
-  import { link } from 'svelte-spa-router';
+  import { link, push } from 'svelte-spa-router';
   import { signOut } from 'firebase/auth';
   import { auth } from './firebase.js';
   import { user } from './stores.js';
@@ -19,7 +19,8 @@
       if (userMenu) {
         userMenu.setOpen(false);
       }
-      window.location.href = '/login';
+      // Navigate to the public marketing/root page after sign out
+      push('/');
     } catch (error) {
       console.error('Error signing out:', error);
     }

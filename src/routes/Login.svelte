@@ -1,5 +1,6 @@
 <script>
   import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+  import { push } from 'svelte-spa-router';
   import { auth } from '../lib/firebase.js';
   import Card from '@smui/card';
   import Textfield from '@smui/textfield';
@@ -26,6 +27,8 @@
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
+      // After successful authentication, navigate to dashboard
+      push('/');
     } catch (err) {
       error = err.message;
     } finally {
@@ -38,8 +41,9 @@
     error = '';
 
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+  const provider = new GoogleAuthProvider();
+  await signInWithPopup(auth, provider);
+  push('/');
     } catch (err) {
       error = err.message;
     } finally {

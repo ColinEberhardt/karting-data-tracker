@@ -19,10 +19,13 @@
   import Tyres from './routes/Tyres.svelte';
   import Navigation from './lib/Navigation.svelte';
   import PWAInstallPrompt from './components/PWAInstallPrompt.svelte';
+  import Marketing from './routes/marketing.svelte';
 
   const routes = {
     '/': Dashboard,
     '/login': Login,
+    '/marketing': Marketing,
+    '/advertise': Marketing,
     '/tyres': Tyres,
     '/tyres/new': NewTyre,
     '/tyres/:id': EditTyre,
@@ -36,6 +39,13 @@
     '/tracks': Tracks,
     '/tracks/new': NewTrack,
     '/tracks/:id': EditTrack
+  };
+
+  const publicRoutes = {
+    '/': Marketing,
+    '/login': Login,
+    '/marketing': Marketing,
+    '/advertise': Marketing
   };
 </script>
 
@@ -52,7 +62,10 @@
     </div>
     <PWAInstallPrompt />
   {:else}
-    <Login />
+    <!-- Show public routes (marketing, login) when not authenticated -->
+    <div class="container">
+      <Router routes={publicRoutes} />
+    </div>
   {/if}
 </main>
 
